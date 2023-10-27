@@ -575,7 +575,11 @@ export default defineComponent({
       state.filterSpanSubTitle = subTitle;
       state.isCollapsefilter = true;
     };
-    /** span list 面板拖拽 */
+    /**
+     *
+     * @param width span list 宽度
+     * @description span list 宽度变化
+     */
     const handleSpanListResizing = (width: number) => {
       spanListWidth.value = width;
       localSpanListWidth.value = width;

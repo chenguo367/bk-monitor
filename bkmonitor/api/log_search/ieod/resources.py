@@ -8,17 +8,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
-from django.conf.urls import url
+from ..default import ESQuerySearchResource
 
-from . import views
-
-urlpatterns = [
-    url(r"^$", views.GrafanaSwitchOrgView.as_view()),
-    url(r"^home$", views.GrafanaSwitchOrgView.as_view()),
-    url(r"^d/[a-zA-Z_0-9]+$", views.GrafanaSwitchOrgView.as_view()),
-    url(r"^public/", views.StaticView.as_view()),
-    url(r"^avatar/", views.StaticView.as_view()),
-    url(r"^api/", views.ApiProxyView.as_view()),
-    url("^dashboard$", views.RedirectDashboardView.as_view()),
-    url(r"^", views.GrafanaProxyView.as_view()),
-]
+ESQuerySearchResource.action = "esquery_monitor/"

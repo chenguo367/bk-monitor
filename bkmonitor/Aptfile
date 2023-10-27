@@ -1,0 +1,7 @@
+linux-libc-dev
+libssl-dev
+libc6-dev:amd64
+libpthread-stubs0-dev
+http://radosgw.open.oa.com/paas-assets/buildpacks/apt/deb-packages/z-libc-bp-fix.deb
+default-libmysqlclient-dev
+g++

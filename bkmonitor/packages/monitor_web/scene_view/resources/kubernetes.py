@@ -1865,6 +1865,19 @@ class GetKubernetesMonitorPanels(Resource, abc.ABC):
             }
         )
 
+        # 兼容未升级transfer的情况
+        if is_shared_cluster and not data:
+            dimension_name = "bk_monitor_name"
+            dimension_value = params["name"]
+            data = api.metadata.query_bcs_metrics(
+                {
+                    "bk_biz_ids": [bk_biz_id],
+                    "cluster_ids": [bcs_cluster_id],
+                    "dimension_name": dimension_name,
+                    "dimension_value": dimension_value,
+                }
+            )
+
         # 根据指标名构造panel
         table_name = ""
         data_source_label = "bk_monitor"

@@ -448,10 +448,14 @@ class PluginDataAccessor(DataAccessor):
         if self.enable_field_blacklist:
             is_split_measurement = True
         else:
-            result_table_info = api.metadata.get_result_table(table_id=f"{self.db_name}.__default__")
-            # 对于白名单模式，如果resulttableoption 的 is_split_measurement 为 True，则说明开启过单指标单表
-            if result_table_info["option"].get("is_split_measurement"):
-                is_split_measurement = True
+            try:
+                result_table_info = api.metadata.get_result_table(table_id=f"{self.db_name}.__default__")
+                # 对于白名单模式，如果resulttableoption 的 is_split_measurement 为 True，则说明开启过单指标单表
+                if result_table_info["option"].get("is_split_measurement"):
+                    is_split_measurement = True
+            except Exception:
+                # 兼容非单指标单表插件
+                pass
         if is_split_measurement:
             self.modify_is_split_measurement()
             metric_info_list = self.format_time_series_metric_info_data(self.metric_json, self.enable_field_blacklist)

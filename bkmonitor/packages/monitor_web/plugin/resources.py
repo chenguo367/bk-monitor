@@ -29,7 +29,6 @@ from django.core.files.storage import default_storage
 from django.db import IntegrityError, transaction
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy as _lazy
-from monitor.models import GlobalConfig
 from monitor_web.commons.data_access import PluginDataAccessor
 from monitor_web.commons.file_manager import PluginFileManager
 from monitor_web.models import CollectConfigMeta
@@ -174,6 +173,8 @@ class SaveMetricResource(Resource):
                 ]
             )
             if metric_num > MAX_METRIC_NUM:
+                from monitor.models import GlobalConfig
+
                 # 超限制之后，将配置写入GlobalConfig，提供更改能力
                 config, _ = GlobalConfig.objects.get_or_create(key="MAX_METRIC_NUM", defaults={"value": MAX_METRIC_NUM})
                 if metric_num > safe_int(config.value, dft=MAX_METRIC_NUM):

@@ -8,6 +8,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
+import os
+import re
+
+import requests
+from django.conf import settings
+from django.core.files.storage import default_storage
 from django.db import transaction
 from django.db.models import Prefetch
 from django.utils.translation import ugettext_lazy as _
@@ -388,9 +394,29 @@ class CollectorPluginViewSet(PermissionMixin, viewsets.ModelViewSet):
                     **{"config_version": config_version, "info_version": info_version, "token": ret["token"]}
                 )
 
+        if settings.PLATFORM == "ieod":
+            url = plugin_manager.run_export()["download_url"]
+            with requests.get(url, stream=True, verify=False) as r:
+                r.raise_for_status()
+                d = r.headers["content-disposition"]
+                file_name = re.findall(r"filename=\"?(.+?\.tgz)\"?", d)[0]
+                tmp_path = os.path.join(settings.MEDIA_ROOT, "node_man_plugins", "tmp", file_name)
+                os.makedirs(os.path.dirname(tmp_path), exist_ok=True)
+                with open(tmp_path, "wb+") as f:
+                    for chunk in r.iter_content(chunk_size=1024):
+                        f.write(chunk)
+
+                with open(tmp_path, "rb") as f:
+                    default_storage.save(tmp_path, f)
+
+                download_url = default_storage.url(tmp_path)
+                download_url = download_url.replace("http://", "https://")
+            result = {"download_url": download_url}
+        else:
+            result = plugin_manager.run_export()
         # 刷新metric json
         instance.refresh_metric_json()
-        return Response(plugin_manager.run_export())
+        return Response(result)
 
     @action(methods=["GET"], detail=False)
     def check_id(self, request, *args, **kwargs):
