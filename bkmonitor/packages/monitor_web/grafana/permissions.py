@@ -91,7 +91,9 @@ class DashboardPermission(BasePermission):
         )
         if role < GrafanaRole.Editor and edit_policy and p.iam_client._eval_expr(make_expression(edit_policy), obj_set):
             role = GrafanaRole.Editor
-        elif role < GrafanaRole.Viewer and view_policy and p.iam_client._eval_expr(make_expression(view_policy), obj_set):
+        elif (
+            role < GrafanaRole.Viewer and view_policy and p.iam_client._eval_expr(make_expression(view_policy), obj_set)
+        ):
             role = GrafanaRole.Viewer
 
         # 如果用户拥有编辑以上权限, 则不需要再同步仪表盘权限

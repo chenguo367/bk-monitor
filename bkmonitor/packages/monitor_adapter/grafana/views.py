@@ -20,14 +20,14 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
-from monitor.models import GlobalConfig
+from bk_dataview.api import get_or_create_org
+from bk_dataview.views import ProxyView, StaticView, SwitchOrgView
 from bkmonitor.models.external_iam import ExternalPermission
+from core.drf_resource import api
+from monitor.models import GlobalConfig
 from monitor_web.grafana.utils import patch_home_panels
 
-from bk_dataview.views import ProxyView, StaticView, SwitchOrgView
-from core.drf_resource import api
-
-__all__ = ["ProxyView", "StaticView", "SwitchOrgView"]
+__all__ = ["ProxyView", "StaticView", "SwitchOrgView", "RedirectDashboardView"]
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +36,7 @@ class RedirectDashboardView(ProxyView):
     """
     仪表盘跳转
     """
+
     @method_decorator(escape_exempt)
     def dispatch(self, request, *args, **kwargs):
         org_name = request.GET.get("bizId")
@@ -44,6 +45,7 @@ class RedirectDashboardView(ProxyView):
             raise Http404
 
         request.org_name = org_name
+        self.org = get_or_create_org(org_name)
         try:
             self.initial(request, *args, **kwargs)
         except Exception as err:
@@ -191,10 +193,10 @@ class ApiProxyView(GrafanaProxyView):
         org_name = self.get_org_name(request)
         if request and getattr(request, "external_user", None) and org_name:
             for external_permission in ExternalPermission.objects.filter(
-                    authorized_user=request.external_user,
-                    bk_biz_id=int(org_name),
-                    action_id="view_grafana",
-                    expire_time__gt=timezone.now(),
+                authorized_user=request.external_user,
+                bk_biz_id=int(org_name),
+                action_id="view_grafana",
+                expire_time__gt=timezone.now(),
             ):
                 filter_resources.extend(external_permission.resources)
             result = json.loads(response.content)
