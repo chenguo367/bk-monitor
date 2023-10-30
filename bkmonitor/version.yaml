@@ -1,6 +1,6 @@
 version: 3.9.0
 submodules:
-  transfer: 3.8.1291
+  transfer: 3.8.1294
   unify-query: 3.8.1288
   ingester: 3.7.799
   influxdb-proxy: 3.7.858
