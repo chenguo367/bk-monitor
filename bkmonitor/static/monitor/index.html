@@ -1,0 +1,85 @@
+<!doctype html><html><head><title>${PAGE_TITLE}</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/><meta http-equiv="X-UA-Compatible" content="ie=edge"/><link rel="manifest" as="fetch" crossorigin="use-credentials" href="${SITE_URL}manifest.json"/><link rel="icon" type="image/png" href="${STATIC_URL}monitor/img/monitor-64.png"/><meta name="theme-color" content="#FAFBFD"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="default"/><meta name="apple-mobile-web-app-title" content="监控平台|蓝鲸"/><link rel="apple-touch-icon" href="${STATIC_URL}monitor/img/monitor-256.png"/><meta name="application-name" content="监控平台|蓝鲸"/><meta name="msapplication-TileColor" content="#222"/><meta name="msapplication-square70x70logo" content="${STATIC_URL}monitor/img/monitor-128.png"/><meta name="msapplication-square150x150logo" content="${STATIC_URL}monitor/img/monitor-256.png"/><meta name="msapplication-square310x310logo" content="${STATIC_URL}monitor/img/monitor-512.png"/>
+<script>
+<%
+import json
+def to_json(val):
+    return json.dumps(val)
+%>
+window.platform = {
+    "te": ${to_json(PLATFORM.te)},
+    "ee": ${to_json(PLATFORM.ee)},
+    "ce": ${to_json(PLATFORM.ce)}
+}
+window.bk_biz_list = ${to_json(BK_BIZ_LIST) | n}
+window.space_list = ${to_json(SPACE_LIST) | n}
+window.app_code = "${APP_CODE}"
+window.enable_grafana = "${ENABLE_GRAFANA}" == "True" ? true : false
+window.site_url = "${SITE_URL}"
+window.static_url = "${STATIC_URL}"
+window.cc_biz_id = ${to_json(BK_BIZ_ID) | n}
+window.csrf_cookie_name = "${CSRF_COOKIE_NAME}"
+window.csrf_token = "${csrf_token}"
+window.doc_host = "${DOC_HOST}"
+window.job_url = "${BK_JOB_URL}"
+window.cmdb_url = "${BK_CC_URL}"
+window.agent_setup_url = "${AGENT_SETUP_URL}"
+window.user_name = "${UIN}"
+window.utcOffset = ${UTC_OFFSET}
+window.bk_url = "${BK_URL}"
+window.bkPaasHost = "${BK_PAAS_HOST}"
+window.bkchat_manage_url = "${BKCHAT_MANAGE_URL}"
+window.version_log_url = "version_log/"
+window.userInfo = {
+    username: "${UIN}",
+    isSuperuser: ${IS_SUPERUSER},
+}
+window.enable_message_queue = ${ENABLE_MESSAGE_QUEUE}
+window.message_queue_dsn = "${MESSAGE_QUEUE_DSN}"
+window.ce_url = "${CE_URL}"
+window.max_available_duration_limit = ${MAX_AVAILABLE_DURATION_LIMIT}
+window.bk_log_search_url = "${BKLOGSEARCH_HOST}"
+window.bk_nodeman_host = "${BK_NODEMAN_HOST}"
+window.graph_watermark = "${GRAPH_WATERMARK}" == "True" ? true : false
+window.ageisId = "${TAM_ID}"
+window.mail_report_biz = "${MAIL_REPORT_BIZ}"
+window.enable_aiops =  ${ENABLE_AIOPS}
+window.enable_apm = ${ENABLE_APM}
+window.collecting_config_file_maxsize = ${COLLECTING_CONFIG_FILE_MAXSIZE}
+window.enable_cmdb_level = "${ENABLE_CMDB_LEVEL}" == "True" ? true : false
+window.bk_docs_site_url = "${BK_DOCS_SITE_URL}"
+window.migrate_guide_url = "${MIGRATE_GUIDE_URL}"
+window.bk_bcs_url = "${BK_BCS_URL}"
+window.enable_create_chat_group = "${ENABLE_CREATE_CHAT_GROUP}" == "True" ? true : false
+window.is_container_mode = "${IS_CONTAINER_MODE}" == "True" ? true : false
+window.space_introduce = ${to_json(SPACE_INTRODUCE) | n}
+window.monitor_managers = ${to_json(MONITOR_MANAGERS) | n}
+window.cluster_setup_url = "${CLUSTER_SETUP_URL}"
+window.loginUrl = "${LOGIN_URL}"
+window.uptimecheck_out_fields =${to_json(UPTIMECHECK_OUTPUT_FIELDS) | n}
+window.wxwork_bot_send_image = "${WXWORK_BOT_SEND_IMAGE}" == "True" ? true : false
+window.host_data_fields = ${to_json(HOST_DATA_FIELDS) | n}
+window.bk_component_api_url = "${BK_COMPONENT_API_URL}"
+window.bk_domain = "${BK_DOMAIN}"
+window.show_realtime_strategy = "${SHOW_REALTIME_STRATEGY}" == "True" ? true : false
+window.apm_ebpf_enabled = ${APM_EBPF_ENABLED}
+</script><script defer="defer" src="${STATIC_URL}monitor/js/runtime~main.63c771feb5b611bbd949.js"></script><script defer="defer" src="${STATIC_URL}monitor/js/main.49bd4df5293bd04cb79a.js"></script><link href="${STATIC_URL}monitor/css/main7af5325.css" rel="stylesheet">
+    <script src="//tam.cdn-go.cn/aegis-sdk/latest/aegis.min.js?max_age=3600"></script>
+    <script>
+      if(window.ageisId) {
+        window.aegis = new Aegis({
+            id: window.ageisId, // 项目ID
+            uin: window.userInfo ? window.userInfo.username : 'dev_test', // 用户唯一 ID（可选）
+            reportApiSpeed: false, // 接口测速
+            reportAssetSpeed: false, // 静态资源测速
+            pagePerformance: false, // 页面测速
+            onError: true, // 当前实例是否需要进行错误监听，获取错误日志
+            delay: 1000, // 上报节流时间，在该时间段内的上报将会合并到一个上报请求中
+            repeat: 3, // 重复上报次数，对于同一个错误超过多少次不上报
+            offlineLog: false, // 是否使用离线日志
+            restfulApiList: [], // 当开启了接口测速，且项目中有些接口采用了 restful 规范，需要在该配置中列出，帮助 Aegis 识别哪些接口是同一条接
+            spa: true
+        })
+      }
+    </script>
+  </head>
+    <body><noscript>This is your fallback content in case JavaScript fails to load.</noscript><div id="app"></div></body></html>
