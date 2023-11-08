@@ -10,20 +10,20 @@ specific language governing permissions and limitations under the License.
 """
 import copy
 
-from core.drf_resource import api
-from core.errors.api import BKAPIError
 from django.conf import settings
 from django.utils.encoding import force_str
 from django.utils.translation import ugettext as _
+from six.moves import map
+
+from bkmonitor.utils.common_utils import safe_int
+from core.drf_resource import api
+from core.errors.api import BKAPIError
 from monitor_web.plugin.constant import (
     ORIGIN_PLUGIN_EXCLUDE_DIMENSION,
     PLUGIN_REVERSED_DIMENSION,
     ParamMode,
     PluginType,
 )
-from six.moves import map
-
-from bkmonitor.utils.common_utils import safe_int
 
 
 class ResultTableField(object):
