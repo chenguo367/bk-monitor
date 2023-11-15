@@ -1096,7 +1096,6 @@ BKHCAT_APP_CODE = os.getenv("BKHCAT_APP_CODE", "")
 BKHCAT_APP_SECRET = os.getenv("BKHCAT_APP_SECRET", "")
 BKCHAT_BIZ_ID = os.getenv("BKCHAT_BIZ_ID", "2")
 
-BK_NODEMAN_VERSION = "2.0"  # 节点管理版本，默认是2.0，如果还是老的版本，需要在全局配置页面修改为1.3
 BK_NODEMAN_HOST = AGENT_SETUP_URL = os.getenv("BK_NODEMAN_SITE_URL") or os.getenv(
     "BKAPP_NODEMAN_OUTER_HOST", get_service_url("bk_nodeman", bk_paas_host=BK_PAAS_HOST)
 )
@@ -1148,9 +1147,6 @@ OFFICIAL_PLUGINS_MANAGERS = []
 
 # 跳过权限中心
 SKIP_IAM_PERMISSION_CHECK = False
-
-# 特别的AES加密配置信息
-SPECIFY_AES_KEY = ""
 
 # 聚合网关默认业务ID
 AGGREGATION_BIZ_ID = int(os.getenv("BKAPP_AGGREGATION_BIZ_ID", 2))
@@ -1288,9 +1284,15 @@ BKCRYPTO = {
     },
 }
 
+# 特别的AES加密配置信息(全局配置)
+SPECIFY_AES_KEY = ""
+BK_CRYPTO_KEY = os.getenv("BKAPP_BK_CRYPTO_KEY", "")
+
+
 # 前端事件上报
 FRONTEND_REPORT_DATA_ID = 0
 FRONTEND_REPORT_DATA_TOKEN = ""
+FRONTEND_REPORT_DATA_HOST = ""
 
 KUBERNETES_CMDB_ENRICH_BIZ_WHITE_LIST = []
 
@@ -1304,3 +1306,6 @@ IS_SUBSCRIPTION_ENABLED = True
 
 # 允许限制空间功能开关， 默认限制
 IS_RESTRICT_DS_BELONG_SPACE = True
+
+# 最大的指标分片查询大小
+MAX_FIELD_PAGE_SIZE = 1000

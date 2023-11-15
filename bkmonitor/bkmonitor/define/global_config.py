@@ -29,6 +29,7 @@ ADVANCED_OPTIONS = OrderedDict(
         ),
         ("FRONTEND_REPORT_DATA_ID", slz.IntegerField(label=_("前端上报数据ID"), default=0)),
         ("FRONTEND_REPORT_DATA_TOKEN", slz.CharField(label=_("前端上报数据Token"), default="")),
+        ("FRONTEND_REPORT_DATA_HOST", slz.CharField(label=_("前端上报地址"), default="")),
         ("QOS_DROP_ALARM_THREADHOLD", slz.IntegerField(label=_("流控丢弃阈值"), default=3)),
         ("QOS_DROP_ACTION_THRESHOLD", slz.IntegerField(label=_("处理动作流控丢弃阈值"), default=100)),
         ("QOS_DROP_ACTION_WINDOW", slz.IntegerField(label=_("处理动作流控窗口大小(秒)"), default=60)),
@@ -239,6 +240,7 @@ ADVANCED_OPTIONS = OrderedDict(
         ("MAIL_REPORT_FULL_PAGE_WAIT_TIME", slz.IntegerField(label="邮件报表整屏渲染等待时间", default=60)),
         ("KUBERNETES_CMDB_ENRICH_BIZ_WHITE_LIST", slz.ListField(label=_("容器关联关系丰富业务白名单"), default=[])),
         ("IS_RESTRICT_DS_BELONG_SPACE", slz.BooleanField(label="是否限制数据源归属具体空间", default=True)),
+        ("MAX_FIELD_PAGE_SIZE", slz.IntegerField(label="最大的指标分片页查询的大小", default=1000)),
     ]
 )
 
@@ -291,7 +293,6 @@ STANDARD_CONFIGS = OrderedDict(
         ("CUSTOM_REPORT_DEFAULT_PROXY_IP", slz.ListField(label=_("自定义上报默认服务器"), default=[])),
         ("CUSTOM_REPORT_DEFAULT_PROXY_DOMAIN", slz.ListField(label=_("自定义上报默认服务器(域名显示)"), default=[])),
         ("PING_SERVER_TARGET_NUMBER_LIMIT", slz.IntegerField(label=_("单台机器Ping采集目标数量限制"), default=6000)),
-        ("BK_NODEMAN_VERSION", slz.CharField(label=_("节点管理版本号"), default="2.0")),
         (
             "MAX_AVAILABLE_DURATION_LIMIT",
             slz.IntegerField(label=_("拨测任务最大超时限制(ms)"), default=60000, min_value=1000),
