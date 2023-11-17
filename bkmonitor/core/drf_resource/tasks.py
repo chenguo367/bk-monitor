@@ -77,7 +77,7 @@ def query_task_result(task_id):
             message = e.message
             data = e.data
         except Exception as e:
-            logger.exception("Caught exception when running async resource task : %s" % str(e))
+            logger.exception("Caught exception when running async resource task : %s" % e)
             message = "%s" % e
             data = None
 
