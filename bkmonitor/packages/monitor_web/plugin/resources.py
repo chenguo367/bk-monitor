@@ -29,6 +29,35 @@ from django.core.files.storage import default_storage
 from django.db import IntegrityError, transaction
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy as _lazy
+from rest_framework import serializers
+from six.moves import map
+
+from bkmonitor.utils.common_utils import safe_int
+from bkmonitor.utils.request import get_request
+from bkmonitor.utils.serializers import MetricJsonBaseSerializer
+from constants.result_table import (
+    RT_RESERVED_WORD_EXACT,
+    RT_RESERVED_WORD_FUZZY,
+    RT_TABLE_NAME_WORD_EXACT,
+)
+from core.drf_resource import Resource, api, resource
+from core.drf_resource.tasks import step
+from core.errors.api import BKAPIError
+from core.errors.export_import import ExportImportError
+from core.errors.plugin import (
+    BizChangedError,
+    MetricNumberError,
+    PluginIDExist,
+    PluginIDFormatError,
+    PluginIDNotExist,
+    PluginParseError,
+    PluginVersionNotExist,
+    RegisterPackageError,
+    RelatedItemsExist,
+    SNMPMetricNumberError,
+    UnsupportedPluginTypeError,
+)
+from monitor.models import GlobalConfig
 from monitor_web.commons.data_access import PluginDataAccessor
 from monitor_web.commons.file_manager import PluginFileManager
 from monitor_web.models import CollectConfigMeta
@@ -57,35 +86,7 @@ from monitor_web.plugin.serializers import (
     SNMPTrapSerializer,
 )
 from monitor_web.plugin.signature import Signature
-from rest_framework import serializers
-from six.moves import map
 from utils import count_md5
-
-from bkmonitor.utils.common_utils import safe_int
-from bkmonitor.utils.request import get_request
-from bkmonitor.utils.serializers import MetricJsonBaseSerializer
-from constants.result_table import (
-    RT_RESERVED_WORD_EXACT,
-    RT_RESERVED_WORD_FUZZY,
-    RT_TABLE_NAME_WORD_EXACT,
-)
-from core.drf_resource import Resource, api, resource
-from core.drf_resource.tasks import step
-from core.errors.api import BKAPIError
-from core.errors.export_import import ExportImportError
-from core.errors.plugin import (
-    BizChangedError,
-    MetricNumberError,
-    PluginIDExist,
-    PluginIDFormatError,
-    PluginIDNotExist,
-    PluginParseError,
-    PluginVersionNotExist,
-    RegisterPackageError,
-    RelatedItemsExist,
-    SNMPMetricNumberError,
-    UnsupportedPluginTypeError,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -173,8 +174,6 @@ class SaveMetricResource(Resource):
                 ]
             )
             if metric_num > MAX_METRIC_NUM:
-                from monitor.models import GlobalConfig
-
                 # 超限制之后，将配置写入GlobalConfig，提供更改能力
                 config, _ = GlobalConfig.objects.get_or_create(key="MAX_METRIC_NUM", defaults={"value": MAX_METRIC_NUM})
                 if metric_num > safe_int(config.value, dft=MAX_METRIC_NUM):
@@ -289,7 +288,7 @@ class PluginRegisterResource(Resource):
             version.save()
         except Exception as e:
             logger.exception(e)
-            raise RegisterPackageError
+            raise RegisterPackageError({"msg": str(e)})
         finally:
             if os.path.exists(self.plugin_manager.tmp_path):
                 shutil.rmtree(self.plugin_manager.tmp_path)
@@ -298,7 +297,6 @@ class PluginRegisterResource(Resource):
 
     @step(state="MAKE_PACKAGE", message=_lazy("文件正在打包中..."))
     def mack_package(self):
-
         return self.plugin_manager.make_package()
 
     def get_file_md5(self, file_name):
