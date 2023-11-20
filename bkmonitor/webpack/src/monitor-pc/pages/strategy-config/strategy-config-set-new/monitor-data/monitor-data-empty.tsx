@@ -100,12 +100,12 @@ export default class MonitorDataEmpty extends tsc<{}, IMonitorDataEmptyEvent> {
         name: this.$t('关联告警'),
         id: MetricType.ALERT,
         show: true
-      },
-      {
-        name: this.$t('场景智能检测'),
-        id: MetricType.MultivariateAnomalyDetection,
-        show: true
       }
+      // {
+      //   name: this.$t('场景智能检测'),
+      //   id: MetricType.MultivariateAnomalyDetection,
+      //   show: true
+      // }
     ].filter(item => item.show);
   }
   mounted() {
