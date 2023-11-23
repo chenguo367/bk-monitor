@@ -230,7 +230,6 @@ if USE_DJANGO_CACHE_REDIS:
         },
     }
     CACHES["default"] = CACHES["redis"]
-    CACHES["login_db"] = CACHES["redis"]
 
 #
 # Cookies & Sessions

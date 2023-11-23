@@ -496,7 +496,6 @@ if USE_DJANGO_CACHE_REDIS:
         },
     }
     CACHES["default"] = CACHES["redis"]
-    CACHES["login_db"] = CACHES["redis"]
 
 # 全局告警屏蔽开关
 GLOBAL_SHIELD_ENABLED = False
