@@ -9,6 +9,7 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 specific language governing permissions and limitations under the License.
 """
 import copy
+import logging
 
 from django.conf import settings
 from django.utils.encoding import force_str
@@ -24,6 +25,8 @@ from monitor_web.plugin.constant import (
     ParamMode,
     PluginType,
 )
+
+logger = logging.getLogger("monitor_web")
 
 
 class ResultTableField(object):
@@ -266,14 +269,16 @@ class DataAccessor(object):
                         "external_storage": external_storage,
                     }
                 )
-                if operation == "create":
-                    if self.etl_config == "bk_exporter":
-                        param.update({"option": {"enable_default_value": False}})
-                    create_rt_result = api.metadata.create_result_table(param)
-                else:
-                    create_rt_result = api.metadata.modify_result_table(param)
-
-                create_rt_result_list.append(create_rt_result)
+                try:
+                    if operation == "create":
+                        if self.etl_config == "bk_exporter":
+                            param.update({"option": {"enable_default_value": False}})
+                        create_rt_result = api.metadata.create_result_table(param)
+                    else:
+                        create_rt_result = api.metadata.modify_result_table(param)
+                    create_rt_result_list.append(create_rt_result)
+                except BKAPIError as e:
+                    logger.exception("create result table error: %s", e)
 
         return create_rt_result_list
 
