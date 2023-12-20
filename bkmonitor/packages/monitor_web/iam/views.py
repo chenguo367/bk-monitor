@@ -253,8 +253,7 @@ class SpaceProvider(BaseResourceProvider):
 
 class GrafanaDashboardProvider(BaseResourceProvider):
     def list_instance(self, filter, page, **options):
-        queryset = Dashboard.objects.filter(is_folder=False)
-        folder_queryset = Dashboard.objects.filter(is_folder=True)
+        queryset = Dashboard.objects.filter(is_folder=0)
 
         # 业务过滤
         if filter.parent and filter.parent["id"]:
@@ -262,7 +261,6 @@ class GrafanaDashboardProvider(BaseResourceProvider):
             if not org:
                 return ListResult(results=[], count=0)
             queryset = queryset.filter(org_id=org["id"])
-            folder_queryset = folder_queryset.filter(org_id=org["id"])
 
         # 关键字搜索
         if filter.search:
@@ -270,13 +268,12 @@ class GrafanaDashboardProvider(BaseResourceProvider):
             if keywords:
                 queryset = queryset.filter(reduce(operator.or_, [Q(title__icontains=keyword) for keyword in keywords]))
 
-        folders = {folder.id: folder.title for folder in folder_queryset}
         results = []
         org_map = {}
         for dashboard in queryset[page.slice_from : page.slice_to]:
             result = {
-                "id": f"{dashboard.org_id}|{dashboard.uid}",
-                "display_name": f"{folders.get(dashboard.folder_id, 'General')}/{dashboard.title}",
+                "id": dashboard.uid,
+                "display_name": dashboard.title,
             }
 
             # 返回结果需要带上资源拓扑路径信息
@@ -306,20 +303,20 @@ class GrafanaDashboardProvider(BaseResourceProvider):
         if filter.ids:
             ids = [str(i) for i in filter.ids]
 
-        queryset = Dashboard.objects.filter(uid__in=ids)
+        queryset = Dashboard.objects.filter(uid__in=ids, is_folder=0)
 
         results = [{"id": item.uid, "display_name": item.title} for item in queryset]
         return ListResult(results=results, count=queryset.count())
 
     def list_instance_by_policy(self, filter, page, **options):
         if not filter.parent or "id" not in filter.parent:
-            queryset = Dashboard.objects.all()
+            queryset = Dashboard.objects.filter(is_folder=0)
         else:
             parent_id = filter.parent.get("id")
             org = get_org_by_name(parent_id)
             if not org:
                 return ListResult(results=[], count=0)
-            queryset = Dashboard.objects.filter(org_id=org["id"])
+            queryset = Dashboard.objects.filter(org_id=org["id"], is_folder=0)
 
         if filter.keyword:
             queryset = queryset.filter(title__icontains=filter.keyword)
@@ -329,13 +326,13 @@ class GrafanaDashboardProvider(BaseResourceProvider):
 
     def search_instance(self, filter, page, **options):
         if not filter.parent or "id" not in filter.parent:
-            queryset = Dashboard.objects.all()
+            queryset = Dashboard.objects.filter(is_folder=0)
         else:
             parent_id = filter.parent.get("id")
             org = get_org_by_name(parent_id)
             if not org:
                 return ListResult(results=[], count=0)
-            queryset = Dashboard.objects.filter(org_id=org["id"])
+            queryset = Dashboard.objects.filter(org_id=org["id"], is_folder=0)
 
         if filter.keyword:
             queryset = queryset.filter(title__icontains=filter.keyword)
