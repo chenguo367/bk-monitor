@@ -4,6 +4,6 @@ submodules:
   unify-query: 3.8.1332
   ingester: 3.7.799
   influxdb-proxy: 3.7.858
-  grafana: 1.0.313
+  grafana: 1.0.316
 dependency:
   open_paas: 2.14.58
