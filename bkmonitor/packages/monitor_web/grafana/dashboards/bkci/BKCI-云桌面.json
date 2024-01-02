@@ -814,6 +814,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": 1,
             "axisSoftMin": 60,
             "barAlignment": 0,
             "drawStyle": "line",
@@ -843,6 +844,7 @@
               "mode": "off"
             }
           },
+          "decimals": 2,
           "mappings": [],
           "max": 100,
           "min": 0,
@@ -859,7 +861,7 @@
               }
             ]
           },
-          "unit": "percent"
+          "unit": "percentunit"
         },
         "overrides": []
       },
@@ -1907,6 +1909,6 @@
   "timezone": "",
   "title": "BKCI-云桌面",
   "uid": "bT8qy3NVz",
-  "version": 11,
+  "version": 19,
   "weekStart": ""
 }
