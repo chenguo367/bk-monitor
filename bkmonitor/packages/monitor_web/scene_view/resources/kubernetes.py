@@ -2014,7 +2014,7 @@ class GetKubernetesObjectCount(ApiAuthResource):
             "label": _("节点(Node)"),
         },
         "pod": {
-            "label": _("Pod"),
+            "label": "Pod",
         },
         "master_node": {
             "label": _("Master节点"),
@@ -2397,7 +2397,7 @@ class GetKubernetesWorkloadCountByNamespace(ApiAuthResource):
         return [
             {
                 "id": "namespace",
-                "name": _("Namespace"),
+                "name": "Namespace",
                 "type": "string",
                 "sortable": False,
                 "disabled": False,
@@ -2405,7 +2405,7 @@ class GetKubernetesWorkloadCountByNamespace(ApiAuthResource):
             },
             {
                 "id": "count",
-                "name": _("Workload"),
+                "name": "Workload",
                 "type": "string",
                 "sortable": False,
                 "disabled": False,
@@ -2512,7 +2512,7 @@ class GetKubernetesEvents(ApiAuthResource):
         return [
             {
                 "id": "time",
-                "name": _("Time"),
+                "name": "Time",
                 "type": "string",
                 "sortable": False,
                 "disabled": False,
@@ -2520,7 +2520,7 @@ class GetKubernetesEvents(ApiAuthResource):
             },
             {
                 "id": "namespace/name",
-                "name": _("Namespace/Name"),
+                "name": "Namespace/Name",
                 "type": "string",
                 "sortable": False,
                 "disabled": False,
@@ -2528,7 +2528,7 @@ class GetKubernetesEvents(ApiAuthResource):
             },
             {
                 "id": "event_name",
-                "name": _("Event Name"),
+                "name": "Event Name",
                 "type": "string",
                 "sortable": False,
                 "disabled": False,
@@ -2536,7 +2536,7 @@ class GetKubernetesEvents(ApiAuthResource):
             },
             {
                 "id": "count",
-                "name": _("Count"),
+                "name": "Count",
                 "props": {"width": 70},
                 "type": "string",
                 "sortable": False,
@@ -2937,7 +2937,7 @@ class GetKubernetesEventCountByType(Resource):
                 value = bucket["doc_count"]
                 data.append(
                     {
-                        "name": _("Warning"),
+                        "name": "Warning",
                         "value": value,
                         "color": "#e89e42",
                         "borderColor": "#e89e42",
@@ -2948,7 +2948,7 @@ class GetKubernetesEventCountByType(Resource):
                 value = bucket["doc_count"]
                 data.append(
                     {
-                        "name": _("Normal"),
+                        "name": "Normal",
                         "value": value,
                         "color": "#2dcb56",
                         "borderColor": "#2dcb56",
