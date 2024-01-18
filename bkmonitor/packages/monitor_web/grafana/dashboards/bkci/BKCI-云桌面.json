@@ -861,7 +861,7 @@
               }
             ]
           },
-          "unit": "percentunit"
+          "unit": "percent"
         },
         "overrides": []
       },
@@ -934,12 +934,12 @@
             }
           ],
           "refId": "A",
-          "source": "max by (device_name)(devx_system:cpu_detail:idle{bk_target_ip=\"$server\"})",
+          "source": "max by (device_name)(devx_system:cpu_detail:usage{bk_target_ip=\"$server\"})",
           "step": "",
           "type": "range"
         }
       ],
-      "title": "CPU 空闲率",
+      "title": "CPU 使用率",
       "type": "timeseries"
     },
     {
@@ -1015,10 +1015,14 @@
       "links": [],
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
           "placement": "bottom",
-          "showLegend": false
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -1038,7 +1042,7 @@
           "host": [],
           "mode": "code",
           "module": [],
-          "promqlAlias": "",
+          "promqlAlias": "$tag_bk_target_ip",
           "query_configs": [
             {
               "alias": "$target_ip $metric_name",
@@ -1075,7 +1079,7 @@
           "type": "range"
         }
       ],
-      "title": "MEM使用率",
+      "title": "应用内存使用率",
       "type": "timeseries"
     },
     {
@@ -1909,6 +1913,6 @@
   "timezone": "",
   "title": "BKCI-云桌面",
   "uid": "bT8qy3NVz",
-  "version": 19,
+  "version": 21,
   "weekStart": ""
 }
