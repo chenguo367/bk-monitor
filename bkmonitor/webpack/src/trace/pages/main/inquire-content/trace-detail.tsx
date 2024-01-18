@@ -850,6 +850,7 @@ export default defineComponent({
                   <img
                     class='service-icon'
                     src={card.icon}
+                    alt=''
                   />
                 ) : (
                   ''
