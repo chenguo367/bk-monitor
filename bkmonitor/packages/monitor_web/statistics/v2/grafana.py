@@ -36,7 +36,7 @@ class GrafanaCollector(BaseCollector):
             new_organizatios.append(org)
         return new_organizatios
 
-    @register(labelnames=("bk_biz_id", "bk_biz_name", "type"))
+    @register(labelnames=("bk_biz_id", "bk_biz_name", "type"), run_every=7200)
     def grafana_datasource_count(self, metric: Metric):
         """
         Grafana数据源实例数
@@ -51,7 +51,7 @@ class GrafanaCollector(BaseCollector):
                     bk_biz_id=int(org_name), bk_biz_name=self.get_biz_name(org_name), type=datasource["type"]
                 ).inc()
 
-    @register(labelnames=("bk_biz_id", "bk_biz_name"))
+    @register(labelnames=("bk_biz_id", "bk_biz_name"), run_every=7200)
     def grafana_dashboard_count(self, metric: Metric):
         """
         仪表盘数
@@ -61,7 +61,7 @@ class GrafanaCollector(BaseCollector):
             dashboards = api.grafana.search_folder_or_dashboard(type="dash-db", org_id=org["id"])["data"]
             metric.labels(bk_biz_id=int(org_name), bk_biz_name=self.get_biz_name(org_name)).set(len(dashboards))
 
-    @register(labelnames=("bk_biz_id", "bk_biz_name"))
+    @register(labelnames=("bk_biz_id", "bk_biz_name"), run_every=7200)
     def grafana_dashboard_panel_count(self, metric: Metric):
         """
         仪表盘面板数
@@ -83,7 +83,7 @@ class GrafanaCollector(BaseCollector):
                         num = 1
                     metric.labels(bk_biz_id=int(org_name), bk_biz_name=self.get_biz_name(org_name)).inc(num)
 
-    @register(labelnames=("bk_biz_id", "bk_biz_name"))
+    @register(labelnames=("bk_biz_id", "bk_biz_name"), run_every=7200)
     def grafana_dashboard_favorite_count(self, metric: Metric):
         """
         仪表盘收藏数
