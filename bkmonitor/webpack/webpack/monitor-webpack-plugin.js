@@ -120,26 +120,9 @@ module.exports = class MonitorWebpackPlugin {
     return text;
   }
   addAigest(chunk) {
-    return chunk.replace('</head>', `
-    <script src="//tam.cdn-go.cn/aegis-sdk/latest/aegis.min.js?max_age=3600"></script>
-    <script>
-      if(window.ageisId) {
-        window.aegis = new Aegis({
-            id: window.ageisId, // 项目ID
-            uin: window.userInfo ? window.userInfo.username : 'dev_test', // 用户唯一 ID（可选）
-            reportApiSpeed: false, // 接口测速
-            reportAssetSpeed: false, // 静态资源测速
-            pagePerformance: false, // 页面测速
-            onError: true, // 当前实例是否需要进行错误监听，获取错误日志
-            delay: 1000, // 上报节流时间，在该时间段内的上报将会合并到一个上报请求中
-            repeat: 3, // 重复上报次数，对于同一个错误超过多少次不上报
-            offlineLog: false, // 是否使用离线日志
-            restfulApiList: [], // 当开启了接口测速，且项目中有些接口采用了 restful 规范，需要在该配置中列出，帮助 Aegis 识别哪些接口是同一条接
-            spa: true
-        })
-      }
-    </script>
-  </head>
+    return chunk.replace('</body>', `
+    <script defer src="//tam.cdn-go.cn/aegis-sdk/latest/aegis.min.js?max_age=3600"></script>
+  </body>
     `);
   }
   resolveCssFont(chunk) {

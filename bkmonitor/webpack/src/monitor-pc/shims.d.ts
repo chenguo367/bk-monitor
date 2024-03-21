@@ -120,6 +120,9 @@ declare global {
     timezone: string;
     show_realtime_strategy: boolean;
     bk_paas_host: string;
+    tam_id: string;
+    Aegis: any;
+    aegis: any;
   }
   namespace VueTsxSupport.JSX {
     type Element = base.Element;
