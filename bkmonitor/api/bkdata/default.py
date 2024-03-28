@@ -67,12 +67,6 @@ class BkDataAPIGWResource(six.with_metaclass(abc.ABCMeta, APIResource)):
     def full_request_data(self, validated_request_data):
         validated_request_data = super().full_request_data(validated_request_data)
         validated_request_data["bk_app_code"] = settings.SAAS_APP_CODE
-        request = get_request(peaceful=True)
-        if request and hasattr(request, "user"):
-            username = request.user.username
-        else:
-            username = settings.COMMON_USERNAME
-        validated_request_data["bk_username"] = username
         return validated_request_data
 
 
