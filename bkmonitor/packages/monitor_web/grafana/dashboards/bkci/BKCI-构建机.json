@@ -232,7 +232,7 @@
           "promqlAlias": "",
           "query_configs": [],
           "refId": "B",
-          "source": "max by (hostIp,hostName) ( agentmetric:mem:available_percent) / 100",
+          "source": "max by (hostIp,hostName) ( agentmetric:mem:pct_used) / 100",
           "step": "",
           "type": "range"
         },
