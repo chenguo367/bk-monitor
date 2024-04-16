@@ -17,7 +17,6 @@ import zipfile
 from collections import namedtuple
 
 import rarfile
-from django.core.files.base import ContentFile
 from django.utils.translation import ugettext as _
 
 from core.drf_resource import resource
@@ -295,9 +294,8 @@ class ExtFilePluginManager(PluginFileManager):
         if not extension:
             raise Exception("file extension is required")
         try:
-            fd = ContentFile(request_file_data)
             handler = cls.get_compression_handler(extension)
-            root_tree = handler(fd)
+            root_tree = handler(request_file_data)
             # 压缩包，解压出一个根目录
             return root_tree["children"][0]
         except Exception as ex:
@@ -320,12 +318,12 @@ class ExtFilePluginManager(PluginFileManager):
     def build_tar_tree(cls, fd):
         # 初始化根节点
         tree = {"name": "root", "type": "directory", "children": []}
+        fd.seek(0)
         with tarfile.open(fileobj=fd) as tf:
             for member in tf.getmembers():
                 if member.name.rsplit("/")[-1].startswith('._'):
                     continue
                 parts = member.name.split('/')
-                print(parts)
                 current_level = tree
                 for part in parts:
                     found = False

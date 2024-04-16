@@ -122,8 +122,10 @@ class PluginFileUploadResource(Resource):
         plugin_file_manager = PluginFileManagerFactory.get_ext_file_manager()
         file_manager = plugin_file_manager.save_file(**validated_request_data)
         file_name = validated_request_data["file_name"]
-        extension = file_name.split(".")[-1].lower()
-        if self.is_zipfile(extension):
+        if self.is_zipfile(file_name):
+            extension = os.path.splitext(file_name)[1]
+            if extension == ".gz" and file_name.endswith(".tar.gz"):
+                extension = ".tar.gz"
             file_tree = file_manager.prev_structure(validated_request_data["file_data"], extension)
         else:
             file_tree = {"name": file_name, "type": "file"}
@@ -135,8 +137,8 @@ class PluginFileUploadResource(Resource):
             "file_tree": file_tree,
         }
 
-    def is_zipfile(self, extension):
-        return extension in (".tar.gz", ".tgz", ".zip", ".rar", ".tar")
+    def is_zipfile(self, file_name):
+        return file_name.endswith((".tar.gz", ".tgz", ".zip", ".rar", ".tar"))
 
 class DataDogPluginUploadResource(Resource):
     class RequestSerializer(serializers.Serializer):
