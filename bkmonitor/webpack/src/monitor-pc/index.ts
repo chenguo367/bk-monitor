@@ -138,7 +138,7 @@ if (hasRouteHash) {
             repeat: 3, // 重复上报次数，对于同一个错误超过多少次不上报
             offlineLog: false, // 是否使用离线日志
             restfulApiList: [], // 当开启了接口测速，且项目中有些接口采用了 restful 规范，需要在该配置中列出，帮助 Aegis 识别哪些接口是同一条接
-            spa: true
+            spa: true,
           });
         }
         Api.model

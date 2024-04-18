@@ -70,6 +70,7 @@ module.exports = class MonitorWebpackPlugin {
             }
           } catch (err) {
             log.error(err);
+            process.exit(1);
           }
         }
       });
@@ -117,16 +118,18 @@ module.exports = class MonitorWebpackPlugin {
           res = res.replace(script, this.variates);
         });
       }
-      return res;
     }
-    if(['monitor'].includes(this.modePath)) return this.addAigest(res)
-    return chunk;
+    if (['monitor'].includes(this.modePath)) return this.addAigest(res);
+    return res;
   }
   addAigest(chunk) {
-    return chunk.replace('</body>', `
+    return chunk.replace(
+      '</body>',
+      `
     <script defer src="//tam.cdn-go.cn/aegis-sdk/latest/aegis.min.js?max_age=3600"></script>
   </body>
-    `);
+    `,
+    );
   }
   resolveCssFont(chunk) {
     if (!chunk) return chunk;
