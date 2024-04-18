@@ -91,8 +91,8 @@ module.exports = class MonitorWebpackPlugin {
 
   resolveIndexHtml(chunk) {
     const urls = chunk.match(/(href|src|content)="([^"]+)"/gim);
+    let res = chunk;
     if (urls) {
-      let res = chunk;
       urls.forEach(url => {
         let machUrl = url.replace(`${this.staticUrl}${this.modePath}/`, '');
         if (
@@ -111,7 +111,7 @@ module.exports = class MonitorWebpackPlugin {
         }
         res = res.replace(url, machUrl);
       });
-      const scripts = text.match(/<script template>([^<]+)<\/script>/gim);
+      const scripts = res.match(/<script template>([^<]+)<\/script>/gim);
       if (scripts) {
         scripts.forEach(script => {
           res = res.replace(script, this.variates);
@@ -119,7 +119,7 @@ module.exports = class MonitorWebpackPlugin {
       }
       return res;
     }
-    if(['monitor'].includes(this.modePath)) return this.addAigest(text)
+    if(['monitor'].includes(this.modePath)) return this.addAigest(res)
     return chunk;
   }
   addAigest(chunk) {
