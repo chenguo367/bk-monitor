@@ -1,5 +1,3 @@
-/* eslint-disable max-len */
-/* eslint-disable no-underscore-dangle */
 const webpackLog = require('webpack-log');
 const crypto = require('crypto');
 const log = webpackLog({ name: 'monitor-webpack-plugin' });
@@ -16,22 +14,24 @@ module.exports = class MonitorWebpackPlugin {
     this.isExternal = app === 'external';
     this.modePath = this.isMobile ? '' : transformDistDir(app);
     this.staticUrl = !this.isMobile ? 'STATIC_URL' : 'WEIXIN_STATIC_URL';
-    this.variates = this.isExternal ?  externalBuildVariates : (this.isMobile ? mobileBuildVariates : pcBuildVariates) || '';
+    this.variates = this.isExternal
+      ? externalBuildVariates
+      : (this.isMobile ? mobileBuildVariates : pcBuildVariates) || '';
     this.hasChanged = false;
   }
 
   apply(compiler) {
     const hookOption = {
       name: 'MonitorWebpackPlugin',
-      stage: 'PROCESS_ASSETS_STAGE_ANALYSE'
+      stage: 'PROCESS_ASSETS_STAGE_ANALYSE',
     };
-    compiler.hooks.thisCompilation.tap(hookOption, (compilation) => {
+    compiler.hooks.thisCompilation.tap(hookOption, compilation => {
       compilation.hooks.afterProcessAssets.tap(hookOption, () => {
         if (!this.hasChanged && compilation.assets) {
           try {
             this.hasChanged = true;
             const assetManifestData = [];
-            Object.keys(compilation.assets).forEach((key) => {
+            Object.keys(compilation.assets).forEach(key => {
               const chunkItem = compilation.assets[key];
               const isCahedSource = !!chunkItem._source;
               let chunkSource = isCahedSource ? chunkItem._source._value : chunkItem._value;
@@ -65,7 +65,7 @@ module.exports = class MonitorWebpackPlugin {
             });
             const assetChunk = `self.assetData =${JSON.stringify(assetManifestData)}`;
             compilation.assets['asset-manifest.js'] = new RawSource(assetChunk);
-            if(['monitor'].includes(this.modePath)) {
+            if (['monitor'].includes(this.modePath)) {
               compilation.assets['static_version.txt'] = new RawSource(crypto.randomBytes(16).toString('hex'));
             }
           } catch (err) {
@@ -91,33 +91,36 @@ module.exports = class MonitorWebpackPlugin {
 
   resolveIndexHtml(chunk) {
     const urls = chunk.match(/(href|src|content)="([^"]+)"/gim);
-    let text = chunk
     if (urls) {
-      urls.forEach((url) => {
+      let res = chunk;
+      urls.forEach(url => {
         let machUrl = url.replace(`${this.staticUrl}${this.modePath}/`, '');
         if (
-          !/(data:|manifest\.json|http|\/\/)|\$\{STATIC_URL\}| \$\{WEIXIN_STATIC_URL\} |\$\{SITE_URL\}/gim.test(machUrl)
-          && /\.(png|css|js)/gim.test(machUrl)
+          !/(data:|manifest\.json|http|\/\/)|\$\{STATIC_URL\}| \$\{WEIXIN_STATIC_URL\} |\$\{SITE_URL\}/gim.test(
+            machUrl,
+          ) &&
+          /\.(png|css|js)/gim.test(machUrl)
         ) {
           machUrl = machUrl.replace(
             /([^"])"([^"]+)"/gim,
-            `$1"\${${this.staticUrl}}${this.modePath}${this.isMobile ? '' : '/'}$2"`
+            `$1"\${${this.staticUrl}}${this.modePath}${this.isMobile ? '' : '/'}$2"`,
           );
         }
         if (this.isMobile) {
           machUrl = machUrl.replace(/\$\{SITE_URL\}/gm, '${WEIXIN_SITE_URL}');
         }
-        text = text.replace(url, machUrl);
+        res = res.replace(url, machUrl);
       });
       const scripts = text.match(/<script template>([^<]+)<\/script>/gim);
       if (scripts) {
-        scripts.forEach((script) => {
-          text = text.replace(script, this.variates);
+        scripts.forEach(script => {
+          res = res.replace(script, this.variates);
         });
       }
+      return res;
     }
     if(['monitor'].includes(this.modePath)) return this.addAigest(text)
-    return text;
+    return chunk;
   }
   addAigest(chunk) {
     return chunk.replace('</body>', `
@@ -130,7 +133,7 @@ module.exports = class MonitorWebpackPlugin {
     const urls = chunk.match(/url\((\/fonts\/|img\/)[^)]+\)/gim);
     if (urls) {
       let res = chunk;
-      urls.forEach((url) => {
+      urls.forEach(url => {
         const machUrl = url
           .replace(/url\(((\/fonts\/)[^)]+)\)/gim, 'url("..$1")')
           .replace(/url\(((img\/)[^)]+)\)/gim, 'url("../$1")');
@@ -151,13 +154,13 @@ module.exports = class MonitorWebpackPlugin {
         },
         size() {
           return res.length;
-        }
+        },
       };
     }
     return null;
   }
   resolveServiceWorker(chunk) {
-    const key = crypto.randomBytes(16).toString('hex')
+    const key = crypto.randomBytes(16).toString('hex');
     chunk = chunk.replace(/__cache_version___/gm, key);
     if (this.isMobile) {
       chunk = chunk.replace('${STATIC_URL}', '${WEIXIN_STATIC_URL}');
