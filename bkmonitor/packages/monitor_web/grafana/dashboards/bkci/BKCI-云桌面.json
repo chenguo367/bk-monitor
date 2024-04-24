@@ -168,6 +168,30 @@
                 "value": "auto"
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "拥有者"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "auto"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "实例ID/别名"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "auto"
+              }
+            ]
           }
         ]
       },
@@ -205,7 +229,7 @@
           "promqlAlias": "CPU使用率(Last)",
           "query_configs": [],
           "refId": "A",
-          "source": "max by (bk_target_ip,hostname) (devx_system:cpu_summary:usage)",
+          "source": "max by (bk_target_ip,hostname,owner,workspaceName) (devx_system:cpu_summary:usage)",
           "step": "",
           "type": "range"
         },
@@ -224,7 +248,7 @@
           "promqlAlias": "磁盘空间使用率(max)",
           "query_configs": [],
           "refId": "B",
-          "source": "max by (bk_target_ip,hostname) (devx_system:disk:in_use) ",
+          "source": "max by (bk_target_ip,hostname,owner,workspaceName) (devx_system:disk:in_use)",
           "step": "",
           "type": "range"
         },
@@ -243,7 +267,7 @@
           "promqlAlias": "磁盘IO使用率(max)",
           "query_configs": [],
           "refId": "C",
-          "source": "max by (bk_target_ip,hostname) (devx_system:io:util) * 100",
+          "source": "max by (bk_target_ip,hostname,owner,workspaceName) (devx_system:io:util) * 100",
           "step": "",
           "type": "range"
         },
@@ -262,7 +286,7 @@
           "promqlAlias": "物理内存占比(last)",
           "query_configs": [],
           "refId": "D",
-          "source": "max by (bk_target_ip,hostname) (devx_system:mem:psc_pct_used) ",
+          "source": "max by (bk_target_ip,hostname,owner,workspaceName) (devx_system:mem:psc_pct_used)",
           "step": "",
           "type": "range"
         },
@@ -281,7 +305,7 @@
           "promqlAlias": "应用内存占比(last)",
           "query_configs": [],
           "refId": "E",
-          "source": "max by (bk_target_ip,hostname) (devx_system:mem:pct_used)  ",
+          "source": "max by (bk_target_ip,hostname,owner,workspaceName) (devx_system:mem:pct_used)  ",
           "step": "",
           "type": "range"
         }
@@ -307,10 +331,48 @@
               "hostname 2": true,
               "hostname 3": true,
               "hostname 4": true,
-              "hostname 5": true
+              "hostname 5": true,
+              "owner 1": false,
+              "owner 2": true,
+              "owner 3": true,
+              "owner 4": true,
+              "owner 5": true,
+              "workspaceName 1": false,
+              "workspaceName 2": true,
+              "workspaceName 3": true,
+              "workspaceName 4": true,
+              "workspaceName 5": true
             },
-            "indexByName": {},
+            "indexByName": {
+              "Time 1": 3,
+              "Time 2": 6,
+              "Time 3": 11,
+              "Time 4": 16,
+              "Time 5": 21,
+              "Value #A": 5,
+              "Value #B": 10,
+              "Value #C": 15,
+              "Value #D": 20,
+              "Value #E": 25,
+              "bk_target_ip": 1,
+              "hostname 1": 4,
+              "hostname 2": 7,
+              "hostname 3": 12,
+              "hostname 4": 17,
+              "hostname 5": 22,
+              "owner 1": 2,
+              "owner 2": 8,
+              "owner 3": 13,
+              "owner 4": 18,
+              "owner 5": 23,
+              "workspaceName 1": 0,
+              "workspaceName 2": 9,
+              "workspaceName 3": 14,
+              "workspaceName 4": 19,
+              "workspaceName 5": 24
+            },
             "renameByName": {
+              "Time 1": "",
               "Value #A": "CPU使用率(Last)",
               "Value #B": "磁盘空间使用率(max)",
               "Value #C": "磁盘IO使用率(max)",
@@ -319,7 +381,11 @@
               "bk_target_ip": "IP",
               "hostname 1": "HostName",
               "hostname 2": "",
-              "hostname 4": ""
+              "hostname 4": "",
+              "owner": "拥有者",
+              "owner 1": "拥有者",
+              "workspaceName": "实例ID/别名",
+              "workspaceName 1": "实例ID/别名"
             }
           }
         },
@@ -1474,8 +1540,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1680,8 +1745,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1845,6 +1909,30 @@
   "templating": {
     "list": [
       {
+        "allValue": "__BKMONITOR_ALL__",
+        "current": {},
+        "datasource": {
+          "type": "bkmonitor-timeseries-datasource",
+          "uid": "${DS_蓝鲸监控_- 指标数据}"
+        },
+        "definition": "- Blueking Monitor - prometheus",
+        "hide": 0,
+        "includeAll": true,
+        "label": "实例ID/别名",
+        "multi": false,
+        "name": "workspaceName",
+        "options": [],
+        "query": {
+          "promql": "label_values(devx_system:disk:in_use{},workspaceName) ",
+          "queryType": "prometheus"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
         "current": {},
         "datasource": {
           "type": "bkmonitor-timeseries-datasource",
@@ -1858,7 +1946,31 @@
         "name": "server",
         "options": [],
         "query": {
-          "promql": "label_values(devx_system:disk:in_use,bk_target_ip)",
+          "promql": "label_values(devx_system:disk:in_use{owner=\"${owner}\",workspaceName=\"${workspaceName}\"},bk_target_ip)",
+          "queryType": "prometheus"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": "__BKMONITOR_ALL__",
+        "current": {},
+        "datasource": {
+          "type": "bkmonitor-timeseries-datasource",
+          "uid": "${DS_蓝鲸监控_- 指标数据}"
+        },
+        "definition": "- Blueking Monitor - prometheus",
+        "hide": 0,
+        "includeAll": true,
+        "label": "拥有者",
+        "multi": false,
+        "name": "owner",
+        "options": [],
+        "query": {
+          "promql": "label_values(devx_system:disk:in_use{workspaceName=\"${workspaceName}\"},owner)",
           "queryType": "prometheus"
         },
         "refresh": 1,
@@ -1913,6 +2025,6 @@
   "timezone": "",
   "title": "BKCI-云桌面",
   "uid": "bT8qy3NVz",
-  "version": 21,
+  "version": 17,
   "weekStart": ""
 }
