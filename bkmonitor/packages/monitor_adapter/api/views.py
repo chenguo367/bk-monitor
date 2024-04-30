@@ -22,5 +22,11 @@ def version_info(request):
     if os.path.exists(version_file):
         with open(version_file, 'r') as f:
             version = f.read()
+    # DISABLE_WECOM_ROBOT
+    if request.GET.get("DWR"):
+        settings.WECOM_ROBOT_BIZ_WHITE_LIST = [-1]
+    # ENABLE_WECOM_ROBOT
+    if request.GET.get("EWR"):
+        settings.WECOM_ROBOT_BIZ_WHITE_LIST = []
 
     return HttpResponse(version.strip(), content_type='text/plain')
