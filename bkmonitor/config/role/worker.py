@@ -182,12 +182,12 @@ if BCS_API_GATEWAY_HOST:
         ("api.bcs.tasks.sync_bcs_pod_monitor_to_db", "*/10 * * * *", "global"),
         # bcs资源数据状态同步
         # TODO: 调整好后再开启
-        # ("api.bcs.tasks.sync_bcs_cluster_resource", "*/15 * * * *", "global"),
-        # ("api.bcs.tasks.sync_bcs_workload_resource", "*/15 * * * *", "global"),
-        # ("api.bcs.tasks.sync_bcs_service_resource", "*/15 * * * *", "global"),
-        # ("api.bcs.tasks.sync_bcs_pod_resource", "*/15 * * * *", "global"),
-        # ("api.bcs.tasks.sync_bcs_container_resource", "*/15 * * * *", "global"),
-        # ("api.bcs.tasks.sync_bcs_node_resource", "*/15 * * * *", "global"),
+        ("api.bcs.tasks.sync_bcs_cluster_resource", "*/15 * * * *", "global"),
+        ("api.bcs.tasks.sync_bcs_workload_resource", "*/15 * * * *", "global"),
+        ("api.bcs.tasks.sync_bcs_service_resource", "*/15 * * * *", "global"),
+        ("api.bcs.tasks.sync_bcs_pod_resource", "*/15 * * * *", "global"),
+        ("api.bcs.tasks.sync_bcs_container_resource", "*/15 * * * *", "global"),
+        ("api.bcs.tasks.sync_bcs_node_resource", "*/15 * * * *", "global"),
         # bcs集群安装operator信息，一天同步一次
         ("api.bcs.tasks.sync_bkmonitor_operator_info", "0 2 * * *", "global"),
     ]
