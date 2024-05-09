@@ -96,7 +96,7 @@ export default defineComponent({
     watch(
       () => toolsFormData.value.timeRange,
       () => {
-        getLabelList();
+        // getLabelList();
         getApplicationList();
       }
     );
@@ -234,9 +234,12 @@ export default defineComponent({
       localFormData.comparisonWhere = localFormData.comparisonWhere.filter(item => !item.key);
       labelList.value = [];
       if (localFormData.type === SearchType.Profiling && !localFormData.server.app_name) return;
-      const labels = await queryLabels({
-        ...labelCommonParams.value,
-      }).catch(() => ({ label_keys: [] }));
+      const labels = await queryLabels(
+        {
+          ...labelCommonParams.value,
+        },
+        { needMessage: false }
+      ).catch(() => ({ label_keys: [] }));
       labelList.value = labels.label_keys;
     }
 
@@ -312,7 +315,7 @@ export default defineComponent({
             ]}
 
             <div class='search-panel'>
-              <div class='search-title'>{this.t('查询项')}</div>
+              <div class='search-title'>{this.t('当前查询项')}</div>
               {this.localFormData.where.map((item, index) => (
                 <ConditionItem
                   class='condition-item'
@@ -333,7 +336,7 @@ export default defineComponent({
             </div>
             {this.localFormData.isComparison && (
               <div class='search-panel'>
-                <div class='search-title'>{this.t('对比项')}</div>
+                <div class='search-title'>{this.t('参照查询项')}</div>
                 {this.localFormData.comparisonWhere.map((item, index) => (
                   <ConditionItem
                     class='condition-item'
