@@ -185,7 +185,7 @@ class AccessHandler(base.BaseHandler):
         data_ids = [
             settings.GSE_BASE_ALARM_DATAID,
             settings.GSE_CUSTOM_EVENT_DATAID,
-            settings.GSE_PROCESS_REPORT_DATAID,
+            # settings.GSE_PROCESS_REPORT_DATAID,
         ]
         for data_id in data_ids:
             self.run_access(run_access_event_handler, data_id)
