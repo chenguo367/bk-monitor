@@ -213,7 +213,7 @@
           "promqlAlias": "",
           "query_configs": [],
           "refId": "A",
-          "source": "max by (hostIp,hostName) ( agentmetric:disk:in_use{path!~\".+kubelet.+\"}) / 100",
+          "source": "max by (hostIp,hostName) ( agentmetric:disk:in_use{fstype!~\"^(CDFS|PS4_FS)$\",path!~\".+kubelet.+|.+System.+|.+Library.+|.+Volumes.+\"}) / 100\n",
           "step": "",
           "type": "range"
         },
@@ -461,6 +461,10 @@
       "targets": [
         {
           "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
           "expressionList": [],
           "format": "time_series",
           "host": [],
@@ -498,11 +502,7 @@
           "refId": "A",
           "source": "sum(sum_over_time(agentmetric:load:uptime{hostIp=\"$server\"}[1m]))",
           "step": "",
-          "type": "range",
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_- 指标数据}"
-          }
+          "type": "range"
         }
       ],
       "title": "运行时长",
@@ -564,6 +564,10 @@
       "targets": [
         {
           "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
           "expressionList": [],
           "format": "time_series",
           "host": [],
@@ -603,11 +607,7 @@
           "refId": "A",
           "source": "count(agentmetric:cpu_detail:idle{hostIp=\"$server\"})-1",
           "step": "",
-          "type": "range",
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_- 指标数据}"
-          }
+          "type": "range"
         }
       ],
       "title": "CPU 核数",
@@ -659,6 +659,10 @@
       "targets": [
         {
           "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
           "expressionList": [],
           "format": "time_series",
           "host": [],
@@ -696,11 +700,7 @@
           "refId": "A",
           "source": "max(max_over_time(agentmetric:mem:total{hostIp=\"$server\"}[1m]))",
           "step": "",
-          "type": "range",
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_- 指标数据}"
-          }
+          "type": "range"
         }
       ],
       "title": "内存总量",
@@ -752,6 +752,10 @@
       "targets": [
         {
           "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
           "expressionList": [],
           "format": "time_series",
           "host": [],
@@ -789,11 +793,7 @@
           "refId": "A",
           "source": "sum(sum_over_time(agentmetric:disk:total{hostIp=\"$server\"}[1m]))",
           "step": "",
-          "type": "range",
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_- 指标数据}"
-          }
+          "type": "range"
         }
       ],
       "title": "磁盘总量",
@@ -848,6 +848,10 @@
       "targets": [
         {
           "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
           "expressionList": [],
           "format": "time_series",
           "hide": false,
@@ -886,14 +890,14 @@
           "refId": "A",
           "source": "sum(sum_over_time(agentmetric:load:load1{hostIp=\"$server\"}[1m]))",
           "step": "",
-          "type": "range",
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_- 指标数据}"
-          }
+          "type": "range"
         },
         {
           "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
           "expressionList": [],
           "format": "time_series",
           "host": [],
@@ -931,14 +935,14 @@
           "refId": "B",
           "source": "sum(sum_over_time(agentmetric:load:load5{hostIp=\"$server\"}[1m]))",
           "step": "",
-          "type": "range",
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_- 指标数据}"
-          }
+          "type": "range"
         },
         {
           "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
           "expressionList": [],
           "format": "time_series",
           "host": [],
@@ -976,11 +980,7 @@
           "refId": "C",
           "source": "sum(sum_over_time(agentmetric:load:load15{hostIp=\"$server\"}[1m]))",
           "step": "",
-          "type": "range",
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_- 指标数据}"
-          }
+          "type": "range"
         }
       ],
       "title": "系统负载",
@@ -1091,6 +1091,10 @@
       "targets": [
         {
           "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
           "expressionList": [],
           "format": "time_series",
           "host": [],
@@ -1130,11 +1134,7 @@
           "refId": "A",
           "source": "max by (cpu)(agentmetric:cpu_detail:idle{hostIp=\"$server\"})",
           "step": "",
-          "type": "range",
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_- 指标数据}"
-          }
+          "type": "range"
         }
       ],
       "title": "CPU 空闲率",
@@ -1227,6 +1227,10 @@
       "targets": [
         {
           "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
           "expressionList": [],
           "format": "time_series",
           "host": [],
@@ -1266,11 +1270,7 @@
           "refId": "A",
           "source": "sum by (hostIp) ( agentmetric:mem:pct_used{hostIp=\"$server\"}) ",
           "step": "",
-          "type": "range",
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_- 指标数据}"
-          }
+          "type": "range"
         }
       ],
       "title": "MEM使用率",
@@ -1347,6 +1347,10 @@
       "targets": [
         {
           "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
           "expressionList": [],
           "format": "time_series",
           "host": [],
@@ -1362,36 +1366,48 @@
               "filter_dict": {},
               "functions": [],
               "group_by": [
-                "device",
                 "path"
               ],
               "interval": 60,
               "interval_unit": "s",
-              "method": "SUM",
-              "metric_field": "used_percent",
+              "method": "max_without_time",
+              "metric_field": "in_use",
               "refId": "a",
-              "result_table_id": "agentmetrix.disk",
+              "result_table_id": "agentmetric.disk",
               "result_table_label": "others",
-              "time_field": "",
+              "time_field": "time",
               "where": [
                 {
-                  "key": "host",
+                  "key": "fstype",
+                  "method": "neq",
+                  "value": [
+                    "CDFS",
+                    "PS4_FS"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "hostIp",
                   "method": "eq",
                   "value": [
                     "$server"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "path",
+                  "method": "nreg",
+                  "value": [
+                    ".+kubelet.+|.+System.+|.+Library.+|.+Volumes.+"
                   ]
                 }
               ]
             }
           ],
           "refId": "A",
-          "source": "max (agentmetric:disk:in_use{hostIp=\"$server\",path!~\".+kubelet.+|.+System.+\"}) by (path) ",
+          "source": "max by (path) (bkmonitor:agentmetric:disk:in_use{fstype!~\"^(CDFS|PS4_FS)$\",hostIp=\"$server\",path!~\".+kubelet.+|.+System.+|.+Library.+|.+Volumes.+\"})",
           "step": "",
-          "type": "range",
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_- 指标数据}"
-          }
+          "type": "range"
         }
       ],
       "title": "磁盘空间使用率",
@@ -1488,6 +1504,10 @@
       "targets": [
         {
           "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
           "expressionList": [],
           "format": "time_series",
           "host": [],
@@ -1527,14 +1547,14 @@
           "refId": "A",
           "source": "avg by (hostIp) (rate(agentmetric:io:rkb_s{hostIp=\"$server\"}[1m]))",
           "step": "",
-          "type": "range",
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_- 指标数据}"
-          }
+          "type": "range"
         },
         {
           "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
           "expressionList": [],
           "format": "time_series",
           "hide": false,
@@ -1575,11 +1595,7 @@
           "refId": "B",
           "source": "avg by (hostIp) (rate(agentmetric:io:wkb_s{hostIp=\"$server\"}[1m]))",
           "step": "",
-          "type": "range",
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_- 指标数据}"
-          }
+          "type": "range"
         }
       ],
       "title": "IO读写率/s",
@@ -1657,8 +1673,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1699,6 +1714,10 @@
       "targets": [
         {
           "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
           "expressionList": [],
           "format": "time_series",
           "host": [],
@@ -1747,14 +1766,14 @@
           "refId": "A",
           "source": "sum (increase(agentmetric:net:speed_recv{hostIp=\"$server\"}[1m]))",
           "step": "",
-          "type": "range",
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_- 指标数据}"
-          }
+          "type": "range"
         },
         {
           "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
           "expressionList": [],
           "format": "time_series",
           "hide": false,
@@ -1804,11 +1823,7 @@
           "refId": "B",
           "source": "sum (increase(agentmetric:net:speed_sent{hostIp=\"$server\"}[1m]))",
           "step": "",
-          "type": "range",
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_- 指标数据}"
-          }
+          "type": "range"
         }
       ],
       "title": "网卡出入流量",
@@ -1863,8 +1878,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1905,6 +1919,10 @@
       "targets": [
         {
           "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
           "expressionList": [],
           "format": "time_series",
           "host": [],
@@ -1953,14 +1971,14 @@
           "refId": "A",
           "source": "sum (increase(agentmetric:net:speed_packets_recv{hostIp=\"$server\"}[1m]))by (hostIp)",
           "step": "",
-          "type": "range",
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_- 指标数据}"
-          }
+          "type": "range"
         },
         {
           "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
           "expressionList": [],
           "format": "time_series",
           "hide": false,
@@ -2010,11 +2028,7 @@
           "refId": "B",
           "source": "sum (increase(agentmetric:net:speed_packets_sent{hostIp=\"$server\"}[1m])) by (hostIp) ",
           "step": "",
-          "type": "range",
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_- 指标数据}"
-          }
+          "type": "range"
         }
       ],
       "title": "网卡出入包数量",
@@ -2096,6 +2110,6 @@
   "timezone": "",
   "title": "BKCI-构建机",
   "uid": "bT8qy3NVa",
-  "version": 68,
+  "version": 8,
   "weekStart": ""
 }
