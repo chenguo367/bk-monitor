@@ -28,7 +28,6 @@ from django.utils.translation import ugettext as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from bkm_space.utils import bk_biz_id_to_space_uid
 from bkmonitor.action.serializers import (
     ConvergeConfigSlz,
     NoiseReduceConfigSlz,
@@ -99,7 +98,6 @@ from constants.strategy import (
     DataTarget,
     TargetFieldType,
 )
-from core.drf_resource import api
 from core.errors.strategy import CreateStrategyError, StrategyNotExist
 
 logger = logging.getLogger(__name__)
@@ -2294,18 +2292,9 @@ class Strategy(AbstractConfig):
                 for field in query_config_fields:
                     new_query_config[field] = getattr(query_config, field, None)
 
-                # promql需要去除条件，todo: 暂时停止
-                # if getattr(query_config, "promql", None):
-                #     try:
-                #         origin_config = api.unify_query.promql_to_struct(promql=query_config.promql)["data"]
-                #         for _query in origin_config["query_list"]:
-                #             _query["conditions"] = {"field_list": [], "condition_list": []}
-                #         origin_config["space_uid"] = bk_biz_id_to_space_uid(bk_biz_id)
-                #         promql = api.unify_query.struct_to_promql(origin_config)["promql"]
-                #         new_query_config["promql"] = promql
-                #     except Exception as e:
-                #         logger.error(f"promql转换失败：{query_config.promql}, {e}")
-                #         new_query_config["promql"] = query_config.promql
+                # 聚合维度排序
+                if new_query_config["agg_dimension"]:
+                    new_query_config["agg_dimension"] = sorted(new_query_config["agg_dimension"])
 
                 item_query["query_configs"].append(new_query_config)
             query.append(item_query)

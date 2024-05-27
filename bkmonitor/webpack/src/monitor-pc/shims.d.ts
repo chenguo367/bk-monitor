@@ -131,6 +131,7 @@ declare global {
     page_title: string;
     wxwork_bot_send_image?: boolean;
     showLoginModal: (option: ShowLoginModalOption) => void;
+    BLUEKING?: Record<string, any>;
     tam_id: string;
     Aegis: any;
     aegis: any;
