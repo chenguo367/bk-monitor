@@ -131,7 +131,7 @@ if (hasRouteHash) {
           // 前端监控配置
           window.aegis = new window.Aegis({
             id: window.tam_id, // 项目ID
-            uin: window.userInfo ? window.user_name || window.username : 'dev_test', // 用户唯一 ID（可选）
+            uin: window.user_name || window.username || 'dev_test', // 用户唯一 ID（可选）
             reportApiSpeed: false, // 接口测速
             reportAssetSpeed: false, // 静态资源测速
             pagePerformance: false, // 页面测速
