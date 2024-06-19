@@ -131,7 +131,6 @@ DEFAULT_CRONTAB = [
     ("alarm_backends.core.cache.strategy", "*/6 * * * *", "global"),
     # 策略增量更新
     ("alarm_backends.core.cache.strategy.smart_refresh", "* * * * *", "global"),
-    ("alarm_backends.core.cache.shield", "* * * * *", "global"),
     ("alarm_backends.core.cache.models.collect_config", "* * * * *", "global"),
     ("alarm_backends.core.cache.models.uptimecheck", "* * * * *", "global"),
     ("alarm_backends.core.cache.action_config.refresh_total", "*/60 * * * *", "global"),
@@ -193,6 +192,8 @@ if BCS_API_GATEWAY_HOST:
     ]
 
 ACTION_TASK_CRONTAB = [
+    # 策略缓存更新
+    ("alarm_backends.core.cache.shield.main", "* * * * *", "global"),
     # 分集群任务
     # 定期检测异常告警
     ("alarm_backends.service.alert.manager.tasks.check_abnormal_alert", "* * * * *", "cluster"),
@@ -281,6 +282,8 @@ if os.getenv("DISABLE_METADATA_TASK") != "True":
         ("metadata.task.sync_space.push_and_publish_space_router_task", "* */1 * * *", "global"),
         # 检查并执行接入vm命令, 每天执行一次
         ("metadata.task.vm.check_access_vm_task", "0 2 * * *", "global"),
+        # 自定义事件休眠检查，对长期没有数据的自定义事件进行休眠
+        ("metadata.task.custom_report.check_custom_event_group_sleep", "0 4 * * *", "global"),
     ]
 
 # Timeout for image exporter service, default set to 10 seconds
