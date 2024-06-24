@@ -103,11 +103,11 @@ export default class MonitorDataEmpty extends tsc<IProps> {
         id: MetricType.ALERT,
         show: true
       },
-      // {
-      //   name: this.$t('场景智能检测'),
-      //   id: MetricType.MultivariateAnomalyDetection,
-      //   show: this.showMultivariateAnomalyDetection,
-      // },
+      {
+        name: this.$t('场景智能检测'),
+        id: MetricType.MultivariateAnomalyDetection,
+        show: this.showMultivariateAnomalyDetection,
+      },
     ].filter(item => item.show);
   }
   mounted() {
