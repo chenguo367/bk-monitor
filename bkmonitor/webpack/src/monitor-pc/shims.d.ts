@@ -135,6 +135,8 @@ declare global {
     tam_id: string;
     Aegis: any;
     aegis: any;
+    bk_shared_res_url: string;
+    footer_version: string;
   }
   namespace VueTsxSupport.JSX {
     type Element = base.Element;
