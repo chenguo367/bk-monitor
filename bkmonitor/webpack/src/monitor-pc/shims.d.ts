@@ -133,8 +133,6 @@ declare global {
     showLoginModal: (option: ShowLoginModalOption) => void;
     BLUEKING?: Record<string, any>;
     tam_id: string;
-    Aegis: any;
-    aegis: any;
     bk_shared_res_url: string;
     footer_version: string;
   }

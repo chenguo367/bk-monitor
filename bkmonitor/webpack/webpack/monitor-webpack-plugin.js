@@ -98,13 +98,13 @@ module.exports = class MonitorWebpackPlugin {
         let machUrl = url.replace(`${this.staticUrl}${this.modePath}/`, '');
         if (
           !/(data:|manifest\.json|http|\/\/)|\$\{STATIC_URL\}| \$\{WEIXIN_STATIC_URL\} |\$\{SITE_URL\}/gim.test(
-            machUrl,
+            machUrl
           ) &&
           /\.(png|css|js)/gim.test(machUrl)
         ) {
           machUrl = machUrl.replace(
             /([^"])"([^"]+)"/gim,
-            `$1"\${${this.staticUrl}}${this.modePath}${this.isMobile ? '' : '/'}$2"`,
+            `$1"\${${this.staticUrl}}${this.modePath}${this.isMobile ? '' : '/'}$2"`
           );
         }
         if (this.isMobile) {
@@ -119,7 +119,7 @@ module.exports = class MonitorWebpackPlugin {
         });
       }
     }
-    if (['monitor'].includes(this.modePath)) return this.addAigest(res);
+    // if (['monitor'].includes(this.modePath)) return this.addAigest(res);
     return res;
   }
   addAigest(chunk) {
@@ -128,7 +128,7 @@ module.exports = class MonitorWebpackPlugin {
       `
     <script defer src="//tam.cdn-go.cn/aegis-sdk/latest/aegis.min.js?max_age=3600"></script>
   </body>
-    `,
+    `
     );
   }
   resolveCssFont(chunk) {
