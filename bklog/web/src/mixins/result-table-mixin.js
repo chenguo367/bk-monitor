@@ -135,6 +135,7 @@ export default {
       isUnionSearch: 'isUnionSearch',
       unionIndexList: 'unionIndexList',
       unionIndexItemList: 'unionIndexItemList',
+      isLimitExpandView: 'isLimitExpandView',
     }),
     showHandleOption() {
       return Boolean(this.tableList.length);
@@ -396,12 +397,12 @@ export default {
         .replace(/<\/mark>/g, '');
       if (type === 'search') {
         // 将表格单元添加到过滤条件
-        this.$emit('addfilter-condition', field.field_name, 'eq', value, isLink);
+        this.$emit('add-filter-condition', field.field_name, 'eq', value, isLink);
       } else if (type === 'copy') {
         // 复制单元格内容
         copyMessage(value);
       } else if (['is', 'is not'].includes(type)) {
-        this.$emit('addfilter-condition', field.field_name, type, value === '--' ? '' : value.toString(), isLink);
+        this.$emit('add-filter-condition', field.field_name, type, value === '--' ? '' : value.toString(), isLink);
       }
     },
     getFieldIcon(fieldType) {
@@ -412,7 +413,7 @@ export default {
         case 'is':
         case 'is not':
           const { fieldName, operation, value } = option;
-          this.$emit('addfilter-condition', fieldName, operation, value === '--' ? '' : value.toString(), isLink);
+          this.$emit('add-filter-condition', fieldName, operation, value === '--' ? '' : value.toString(), isLink);
           break;
         case 'copy':
           copyMessage(option.value);
@@ -445,6 +446,10 @@ export default {
         );
       }
       return this.tableRowDeepView(row, field.field_name, field.field_type);
+    },
+    getLimitState(index) {
+      if (this.isLimitExpandView) return false;
+      return !this.cacheExpandStr.includes(index);
     },
   },
 };

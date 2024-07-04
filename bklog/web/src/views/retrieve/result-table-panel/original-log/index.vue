@@ -81,6 +81,14 @@
         </div>
       </div>
       <div class="tools-more">
+        <div style="margin-right: 12px">
+          <span class="switch-label">{{ $t('展开长字段') }}</span>
+          <bk-switcher
+            v-model="expandTextView"
+            theme="primary"
+            @change="handleChangeExpandView"
+          />
+        </div>
         <div :style="`margin-right: ${showOriginalLog ? 0 : 26}px`">
           <span class="switch-label">{{ $t('换行') }}</span>
           <bk-switcher
@@ -188,6 +196,7 @@
         exportLoading: false,
         fieldsConfigList: [],
         fieldConfigIsLoading: false,
+        expandTextView: false,
       };
     },
     computed: {
@@ -226,6 +235,9 @@
     },
     created() {
       this.contentType = localStorage.getItem('SEARCH_STORAGE_ACTIVE_TAB') || 'table';
+      const expandStr = localStorage.getItem('EXPAND_SEARCH_VIEW');
+      this.expandTextView = expandStr ? JSON.parse(expandStr) : false;
+      this.handleChangeExpandView(this.expandTextView);
     },
     methods: {
       // 字段设置
@@ -245,8 +257,8 @@
       },
       /** 更新显示字段 */
       modifyFields(displayFieldNames, showFieldAlias) {
-        this.$emit('fieldsUpdated', displayFieldNames, showFieldAlias);
-        this.$emit('shouldRetrieve');
+        this.$emit('fields-updated', displayFieldNames, showFieldAlias);
+        this.$emit('should-retrieve');
       },
       closeDropdown() {
         this.showFieldsSetting = false;
@@ -310,6 +322,9 @@
       handleClickTableBtn(active = 'table') {
         this.contentType = active;
         localStorage.setItem('SEARCH_STORAGE_ACTIVE_TAB', active);
+      },
+      handleChangeExpandView(val) {
+        this.$store.commit('updateIsLimitExpandView', val);
       },
     },
   };
