@@ -102,7 +102,7 @@ def create_actions(
         logger.info("[create actions](%s) end for alert(%s), action count(%s)", notice_type, alert_id, len(actions))
     except BaseException as e:
         exc = e
-        logger.exception("create actions for alert(%s) failed: %s", alert_id, e)
+        logger.exception("[create actions ERROR] alert(%s) detail: %s", alert_id, e)
 
     metrics.ACTION_CREATE_PROCESS_COUNT.labels(
         status=metrics.StatusEnum.from_exc(exc), exception=exc, **public_labels
@@ -525,7 +525,7 @@ class CreateActionProcessor:
     def do_create_actions(self):
         if not self.alerts:
             logger.info(
-                "create actions failed: empty alerts(%s), strategy_id(%s), signal(%s)",
+                "[create actions failed]: empty alerts(%s), strategy_id(%s), signal(%s)",
                 self.alert_ids,
                 self.strategy_id,
                 self.signal,
@@ -533,7 +533,7 @@ class CreateActionProcessor:
             return []
 
         logger.info(
-            "Ready to create actions strategy_id(%s), signal(%s), alert_ids(%s), severity(%s),"
+            "[create actions] strategy_id(%s), signal(%s), alert_ids(%s), severity(%s),"
             " execute_times(%s), relation_id(%s)",
             self.strategy_id,
             self.signal,
@@ -594,12 +594,20 @@ class CreateActionProcessor:
                 supervisors = assignee_manager.get_supervisors()
                 followers = assignee_manager.get_supervisors(user_type=UserGroupType.FOLLOWER)
                 if not supervisors:
-                    logger.info("ignore to send supervise notice for alert(%s) due to empty supervisor", alert.id)
+                    logger.info(
+                        "[ignore send supervise notice]alert(%s) strategy_id(%s): empty supervisor",
+                        alert.id,
+                        self.strategy_id,
+                    )
                     continue
                 is_qos, current_qos_count = self.alert_objs[alert.id].qos_calc(self.signal)
                 if is_qos:
                     qos_alerts.append(alert.id)
-                    logger.info("ignore to send supervise notice for alert(%s) due to notice qos", alert.id)
+                    logger.info(
+                        "[ignore send supervise notice] alert(%s) strategy_id(%s): notice qos",
+                        alert.id,
+                        self.strategy_id,
+                    )
                     continue
             else:
                 assignees = assignee_manager.get_assignees()
@@ -626,7 +634,7 @@ class CreateActionProcessor:
                     continue
                 action_plugin = action_plugins.get(str(action_config["plugin_id"]))
                 action_instances.append(
-                    self.do_create_action(
+                    self.do_create_one_action(
                         action_config,
                         action_plugin,
                         alert,
@@ -640,19 +648,30 @@ class CreateActionProcessor:
                 if alert_log:
                     alert_logs.append(AlertLog(**alert_log))
         if action_instances:
+            # 父 action 初步创建
             ActionInstance.objects.bulk_create(action_instances)
-            new_actions.extend(
-                PushActionProcessor.push_actions_to_queue(
+            for action in action_instances:
+                logger.info(
+                    "[parent action created] action(%s) plugin(%) alert(%s) uuid(%s)",
+                    action.id,
+                    action.action_plugin["plugin_type"],
+                    action.alerts[0],
                     self.generate_uuid,
-                    alerts=self.alerts,
-                    is_shielded=self.is_alert_shielded,
-                    need_noise_reduce=self.noise_reduce_result,
-                    notice_config=self.notice,
                 )
-            )
+            # 创建子action（notice）
+            if self.alerts:
+                new_actions.extend(
+                    PushActionProcessor.push_actions_to_queue(
+                        self.generate_uuid,
+                        alerts=self.alerts,
+                        is_shielded=self.is_alert_shielded,
+                        need_noise_reduce=self.noise_reduce_result,
+                        notice_config=self.notice,
+                    )
+                )
 
         logger.info(
-            "create actions finished, strategy_id %s, alerts %s, signal %s, created actions(%s) %s",
+            "[create actions] finished, strategy(%s), alerts(%s), signal(%s), created actions(%s) %s",
             self.strategy_id,
             self.alert_ids,
             self.signal,
@@ -771,7 +790,7 @@ class CreateActionProcessor:
         PushActionProcessor.push_action_to_execute_queue(action_instance, self.alerts)
         new_actions.append(action_instance.id)
 
-    def do_create_action(
+    def do_create_one_action(
         self,
         action_config: dict,
         action_plugin: dict,

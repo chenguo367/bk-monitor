@@ -53,21 +53,13 @@ class PushActionProcessor:
         cls, generate_uuid, alerts=None, is_shielded=False, need_noise_reduce=False, notice_config=None
     ):
         """推送处理事件至收敛队列"""
-        if not alerts:
-            logger.info(
-                "[push_actions_to_queue]skip to create sub action for generate_uuid(%s) because of no alert",
-                generate_uuid,
-            )
-            return []
-
         if is_shielded or need_noise_reduce:
             logger.info(
-                "[push_actions_to_queue]current alert(%s) is shielded(%s) or need_noise_reduce(%s), "
-                "skip to create sub action for generate_uuid(%s)",
+                "[push_actions_to_queue]skip create sub action for uuid(%s)" " alert(%s) shielded(%s) noise_reduce(%s)",
+                generate_uuid,
                 alerts[0].id,
                 is_shielded,
                 need_noise_reduce,
-                generate_uuid,
             )
         else:
             # 如果没有屏蔽，才创建子任务
@@ -75,10 +67,10 @@ class PushActionProcessor:
                 # 有父任务的事件，先需要创建对应的子任务
                 sub_actions = action_instance.create_sub_actions()
                 logger.info(
-                    "create sub notice actions %s for parent action %s, exclude_notice_ways(%s)",
+                    "[create sub notice] %s actions created for parent action(%s), exclude_notice_ways(%s)",
                     len(sub_actions),
                     action_instance.id,
-                    "|".join(action_instance.inputs.get("exlude_notice_ways") or []),
+                    "|".join(action_instance.inputs.get("exclude_notice_ways") or []),
                 )
 
         action_instances = ActionInstance.objects.filter(generate_uuid=generate_uuid)

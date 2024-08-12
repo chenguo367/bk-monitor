@@ -351,7 +351,6 @@ class ActionInstance(AbstractRecordModel):
         sub_actions = self.batch_create_sub_actions() + self.batch_create_sub_actions(followed=True)
         if sub_actions and need_create:
             ActionInstance.objects.bulk_create(sub_actions)
-        logger.info("create sub notice actions %s for parent action %s", len(sub_actions), self.id)
         return sub_actions
 
     def batch_create_sub_actions(self, followed=False):
