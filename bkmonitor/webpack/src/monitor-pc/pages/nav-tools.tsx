@@ -153,7 +153,7 @@ class NavTools extends DocumentLinkMixin {
 
   handleShowSetting(key: string) {
     const item = this.setList.find(item => item.id === key);
-    if (!!item) {
+    if (item) {
       this.handleSet(item);
     }
   }
@@ -234,7 +234,7 @@ class NavTools extends DocumentLinkMixin {
       item.id,
       undefined,
       '/',
-      `${window.bk_domain && location.hostname.includes(window.bk_domain) ? window.bk_domain : location.hostname}`
+      `${window.bk_domain && location.hostname.includes(window.bk_domain) ? window.bk_domain : location.hostname.split('.').slice(-2).join('.')}`
     );
     if (window.bk_component_api_url) {
       useJSONP(
@@ -485,6 +485,7 @@ class NavTools extends DocumentLinkMixin {
           // #if APP !== 'external'
           [
             <SettingModal
+              key='SettingModal'
               activeMenu={this.activeSetting}
               menuList={this.setList}
               show={this.show}
@@ -495,6 +496,7 @@ class NavTools extends DocumentLinkMixin {
             >
               {this.show && this.createAsyncComponent()}
             </SettingModal>,
+            // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
             <keep-alive>
               {this.globalSearchShow && (
                 <GlobalSearchModal
