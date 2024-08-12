@@ -82,6 +82,7 @@ def get_logger_config(log_path, logger_level, log_file_prefix):
             "kernel_api": LOGGER_DEFAULT,
             "project": LOGGER_DEFAULT,
             "bkmonitor": LOGGER_DEFAULT,
+            "fta_action": LOGGER_DEFAULT,
             "kernel": LOGGER_DEFAULT,
             "metadata": LOGGER_DEFAULT,
             "kubernetes": LOGGER_DEFAULT,
