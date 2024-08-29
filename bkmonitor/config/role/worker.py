@@ -147,7 +147,7 @@ DEFAULT_CRONTAB = [
     ("alarm_backends.core.detect_result.tasks.clean_expired_detect_result", "0 */2 * * *", "global"),
     ("alarm_backends.core.detect_result.tasks.clean_md5_to_dimension_cache", "0 23 * * *", "global"),
     # 定期清理超时未执行任务
-    ("alarm_backends.service.fta_action.tasks.check_timeout_actions", "* * * * *", "global"),
+    # ("alarm_backends.service.fta_action.tasks.check_timeout_actions", "* * * * *", "global"),
     # 定期清理mysql内半个月前的数据
     ("alarm_backends.service.fta_action.tasks.clear_mysql_action_data", "* * * * *", "global"),
     # mail_report 配置管理和告警接收人信息缓存
