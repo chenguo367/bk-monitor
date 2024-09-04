@@ -135,6 +135,7 @@ declare global {
     tam_id: string;
     bk_shared_res_url: string;
     footer_version: string;
+    __AuthMap__: Map<string, Map<string, boolean>>;
   }
   namespace VueTsxSupport.JSX {
     type Element = base.Element;
