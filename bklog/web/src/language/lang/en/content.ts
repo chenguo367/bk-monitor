@@ -918,8 +918,7 @@ export default {
   检索内容: 'Retrieval content',
   '平台获取蓝鲸 CMDB 主机信息，您可通过 IP 选择器选择主机，快速过滤日志':
     'To obtain host information from the Blue Whale CMDB on the platform, you can use the IP selector to choose hosts and quickly filter logs.',
-  '按【Enter】或点击【确定】，唤起IP选择器点击取消，关闭窗口':
-    'Press “Enter” or click “OK” to bring up the IP selector. Click “Cancel” to close the window.',
+  '【Enter】唤起IP选择器，点击取消关闭窗口': '[Enter] Call up the IP selector and click Cancel to close the window.',
   暂无字段数据: 'No field data yet',
   索引集为空: 'Index collection is empty',
   请选择索引集: 'Please select an index set',
@@ -928,4 +927,6 @@ export default {
   副本: 'copy',
   新建检索: 'New search',
   '收起查询/弹出选项': 'Collapse query/Popup options',
+  '导入{0}的权限配置': 'Import the permission configuration of {0}',
+  至少选择一个操作权限: 'Select at least one operation permission',
 };

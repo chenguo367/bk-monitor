@@ -37,11 +37,14 @@ DEPLOYMENT = DeploymentNotSet
 
 
 def refresh_deployment():
-    with open('/etc/hostname', 'r') as f:
-        hostname = f.read().strip()
-    if hostname.count("-") < 2:
+    try:
+        with open('/etc/hostname', 'r') as f:
+            hostname = f.read().strip()
+        if hostname.count("-") < 2:
+            return ""
+        return hostname.rsplit("-", 2)[0]
+    except FileNotFoundError:
         return ""
-    return hostname.rsplit("-", 2)[0]
 
 
 def report_all(job: str = settings.DEFAULT_METRIC_PUSH_JOB, registry: BkCollectorRegistry = REGISTRY):
@@ -49,6 +52,8 @@ def report_all(job: str = settings.DEFAULT_METRIC_PUSH_JOB, registry: BkCollecto
     批量上报指标
     """
     global DEPLOYMENT
+    if registry.is_empty():
+        return
     if DEPLOYMENT is DeploymentNotSet:
         DEPLOYMENT = refresh_deployment()
     if not get_metric_agg_gateway_url():
