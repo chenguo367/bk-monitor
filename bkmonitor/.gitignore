@@ -216,5 +216,13 @@ src/tapd-manager
 .codecc
 build.yml
 
+# static files
+static/fta/
+static/monitor/
+static/weixin/
+static/trace/
+static/apm/
+static/external/
+
 # develop config
 .vscode
