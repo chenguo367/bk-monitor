@@ -13,6 +13,7 @@ import re
 from datetime import datetime
 from typing import Dict, List
 
+import requests
 from django.conf import settings
 from django.core.files.storage import default_storage
 from django.db import transaction
@@ -23,7 +24,6 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer
-import requests
 
 from bkmonitor.iam import ActionEnum, Permission
 from bkmonitor.iam.drf import BusinessActionPermission, IAMPermission
@@ -488,7 +488,7 @@ class CollectorPluginViewSet(PermissionMixin, viewsets.ModelViewSet):
                 )
 
         if settings.PLATFORM == "ieod":
-            url = plugin_manager.run_export()["download_url"]
+            url = plugin_manager.run_export()
             with requests.get(url, stream=True, verify=False) as r:
                 r.raise_for_status()
                 d = r.headers["content-disposition"]
