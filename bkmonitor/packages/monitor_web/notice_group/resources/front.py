@@ -15,6 +15,8 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext as _
 
+from bkm_space.api import SpaceApi
+from bkm_space.define import SpaceTypeEnum
 from bkmonitor.models import Action, ActionNoticeMapping, StrategyModel
 from bkmonitor.utils.request import get_request
 from bkmonitor.views import serializers
@@ -35,6 +37,12 @@ class GetReceiverResource(Resource):
 
     def perform_request(self, validated_request_data):
         bk_biz_id = validated_request_data.get("bk_biz_id", 0)
+        if bk_biz_id < 0:
+            # todo 告警后台需要同步支持
+            space_uid = SpaceApi.get_space_detail(bk_biz_id=bk_biz_id).space_uid
+            target_space = SpaceApi.get_related_space(space_uid, SpaceTypeEnum.BKCC.value)
+            if target_space:
+                bk_biz_id = target_space.bk_biz_id
         # 获取user_list
         if not bk_biz_id:
             business = None
