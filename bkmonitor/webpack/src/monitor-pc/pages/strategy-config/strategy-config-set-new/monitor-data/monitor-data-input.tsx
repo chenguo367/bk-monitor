@@ -558,7 +558,7 @@ class MericDataInput extends Mixins(metricTipsContentMixin) {
                   />
                 )}
                 {/* =======函数====== */}
-                {!this.isRealTimeModel && item.canSetFunction && !this.hasAiOpsDetect && !item.isNullMetric && (
+                {!this.isRealTimeModel && item.canSetFunction && !item.isNullMetric && (
                   <FunctionSelect
                     v-model={item.functions}
                     onValueChange={this.emitFunctionChange}
