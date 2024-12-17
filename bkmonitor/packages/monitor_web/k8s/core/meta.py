@@ -69,7 +69,21 @@ class FilterCollection(object):
         return orm_filter_dict
 
     def filter_string(self):
+        for filter_type, filter_obj in self.filters.items():
+            if filter_type.startswith("workload") and len(filter_obj.value) > 1:
+                # 多个 workload_id 查询支持
+                filter_obj.value = filter_obj.value[:1]
+                # workload_filters = [load_resource_filter("workload", value, fuzzy=filter_obj.fuzzy)
+                #                     for value in filter_obj.value]
+                # self.filters.pop(filter_type, None)
+                # return list(self.make_multi_workload_filter_string(workload_filters))
         return ",".join([filter_obj.filter_string() for filter_obj in self.filters.values()])
+
+    def make_multi_workload_filter_string(self, workload_filters):
+        for workload_filter in workload_filters:
+            self.filters[workload_filter.filter_uid] = workload_filter
+            yield self.filter_string()
+            self.filters.pop(workload_filter.filter_uid, None)
 
 
 class K8sResourceMeta(object):
@@ -112,7 +126,7 @@ class K8sResourceMeta(object):
         """
         return self.filter.filter_queryset
 
-    def get_from_promql(self, start_time, end_time, order_by=""):
+    def get_from_promql(self, start_time, end_time, order_by="", page_size=20):
         """
         数据获取来源
         TODO
@@ -129,7 +143,7 @@ class K8sResourceMeta(object):
                 {
                     "data_source_label": "prometheus",
                     "data_type_label": "time_series",
-                    "promql": self.meta_prom_by_sort(order_by=order_by),
+                    "promql": self.meta_prom_by_sort(order_by=order_by, page_size=page_size),
                     "interval": get_interval_number(start_time, end_time, interval="auto"),
                     "alias": "result",
                 }
@@ -279,7 +293,10 @@ class K8sNamespaceMeta(K8sResourceMeta):
 
     @property
     def meta_prom(self):
-        return f"""sum by ({",".join(NameSpace.columns)}) (kube_namespace_labels{{{self.filter.filter_string()}}})"""
+        return (
+            f"""sum by ({",".join(NameSpace.columns)}) """
+            f"""(container_cpu_system_seconds_total{{{self.filter.filter_string()}}})"""
+        )
 
     def get_from_meta(self):
         return self.distinct(self.filter.filter_queryset)
@@ -301,6 +318,7 @@ class K8sNamespaceMeta(K8sResourceMeta):
 
 
 class K8sWorkloadMeta(K8sResourceMeta):
+    # todo 支持多workload
     resource_field = "workload_name"
     resource_class = BCSWorkload
     column_mapping = {"workload_kind": "type", "workload_name": "name"}
