@@ -280,6 +280,11 @@
       .tag-symbol {
         color: #ff9c01;
       }
+      .bk-tag {
+        &:first-child {
+          margin-left: 0;
+        }
+      }
     }
     .dashboard-panel {
       .flex-dashboard {
