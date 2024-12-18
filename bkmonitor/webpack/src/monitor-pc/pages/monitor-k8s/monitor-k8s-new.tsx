@@ -28,11 +28,13 @@ import { Component, Mixins, ProvideReactive, Watch } from 'vue-property-decorato
 import { listBcsCluster, scenarioMetricList } from 'monitor-api/modules/k8s';
 import { random } from 'monitor-common/utils';
 
+import introduce from '../../common/introduce';
+import GuidePage from '../../components/guide-page/guide-page';
 import { DEFAULT_TIME_RANGE, handleTransformToTimestamp } from '../../components/time-range/utils';
 import { getDefaultTimezone } from '../../i18n/dayjs';
 import UserConfigMixin from '../../mixins/userStoreConfig';
 import FilterByCondition from './components/filter-by-condition/filter-by-condition';
-import GroupByCondition, { type IGroupByChangeEvent } from './components/group-by-condition/group-by-condition';
+import GroupByCondition from './components/group-by-condition/group-by-condition';
 import K8SCharts from './components/k8s-charts/k8s-charts';
 import K8sDimensionList from './components/k8s-left-panel/k8s-dimension-list';
 import K8sLeftPanel from './components/k8s-left-panel/k8s-left-panel';
@@ -40,14 +42,19 @@ import K8sMetricList from './components/k8s-left-panel/k8s-metric-list';
 import K8sNavBar from './components/k8s-nav-bar/K8s-nav-bar';
 import K8sTableNew, {
   type K8sTableColumnResourceKey,
-  type K8sTableFilterByEvent,
   type K8sTableGroupByEvent,
 } from './components/k8s-table-new/k8s-table-new';
-import { type K8sGroupDimension, K8sPerformanceGroupDimension } from './k8s-dimension';
-import { type IK8SMetricItem, K8sNewTabEnum, K8sTableColumnKeysEnum, SceneEnum } from './typings/k8s-new';
+import { type K8sGroupDimension, K8sPerformanceGroupDimension, sceneDimensionMap } from './k8s-dimension';
+import {
+  type IK8SMetricItem,
+  type ICommonParams,
+  K8sNewTabEnum,
+  K8sTableColumnKeysEnum,
+  SceneEnum,
+  EDimensionKey,
+} from './typings/k8s-new';
 
 import type { TimeRangeType } from '../../components/time-range/time-range';
-import type { IFilterByItem } from './components/filter-by-condition/utils';
 
 import './monitor-k8s-new.scss';
 
@@ -69,6 +76,7 @@ const tabList = [
     icon: 'icon-mingxi',
   },
 ];
+
 @Component
 export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
   // 数据时间间隔
@@ -90,7 +98,7 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
   clusterLoading = true;
   // 当前 tab
   activeTab = K8sNewTabEnum.LIST;
-  filterBy: IFilterByItem[] = [];
+  filterBy: Record<string, string[]> = {};
   // Group By 选择器的值
   groupInstance: K8sGroupDimension = new K8sPerformanceGroupDimension();
 
@@ -98,7 +106,7 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
   showCancelDrill = false;
   groupList = [];
 
-  cacheFilterBy: IFilterByItem[] = [];
+  cacheFilterBy: Record<string, string[]> = {};
   cacheGroupBy = [];
 
   /** 指标列表 */
@@ -107,7 +115,10 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
   hideMetrics: string[] = [];
 
   metricLoading = true;
+  /** 自动刷新定时器 */
   timer = null;
+  /** 各维度数据总和 */
+  dimensionTotal: Record<string, number> = {};
 
   get isChart() {
     return this.activeTab === K8sNewTabEnum.CHART;
@@ -117,35 +128,53 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
     return this.groupInstance.groupFilters;
   }
 
+  /** 当前场景下的维度列表 */
+  get sceneDimensionList() {
+    return sceneDimensionMap[this.scene] || [];
+  }
+
+  // 获取引导页状态
+  get showGuidePage() {
+    return introduce.getShowGuidePageByRoute(this.$route.meta?.navId);
+  }
+
+  /** 公共参数 */
+  @ProvideReactive('commonParams')
+  get commonParams(): ICommonParams {
+    return {
+      scenario: this.scene,
+      bcs_cluster_id: this.cluster,
+      start_time: this.formatTimeRange[0],
+      end_time: this.formatTimeRange[1],
+    };
+  }
+
   @ProvideReactive('formatTimeRange')
   get formatTimeRange() {
     return handleTransformToTimestamp(this.timeRange);
   }
 
-  get filterCommonParams() {
-    const [start_time, end_time] = this.formatTimeRange;
+  get tableCommonParam() {
     return {
-      bcs_cluster_id: this.cluster,
+      ...this.commonParams,
+      filter_dict: Object.fromEntries(Object.entries(this.filterBy).filter(([, v]) => v?.length)),
+    };
+  }
+
+  get filterCommonParams() {
+    return {
+      ...this.tableCommonParam,
       resource_type: this.groupInstance.groupFilters.at(-1),
-      filter_dict: this.filterBy.reduce((prev, curr) => {
-        if (curr.value?.length) {
-          prev[curr.key] = curr.value;
-        }
-        return prev;
-      }, {}),
-      start_time,
-      end_time,
-      scenario: this.scene,
       with_history: false,
     };
   }
 
-  setGroupFilters(item: { groupId: K8sTableColumnResourceKey; checked: boolean }) {
-    if (item.checked) {
-      this.groupInstance?.addGroupFilter(item.groupId);
+  setGroupFilters(groupId: K8sTableColumnResourceKey, config?: { single: boolean }) {
+    if (this.groupInstance.hasGroupFilter(groupId)) {
+      this.groupInstance.deleteGroupFilter(groupId, config);
       return;
     }
-    this.groupInstance.deleteGroupFilter(item.groupId);
+    this.groupInstance?.addGroupFilter(groupId, config);
   }
 
   @Watch('groupFilters')
@@ -166,6 +195,14 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
       this.hideMetrics = res || [];
     });
     this.setRouteParams();
+  }
+
+  /** 初始化filterBy结构 */
+  initFilterBy() {
+    this.filterBy = this.sceneDimensionList.reduce((pre, cur) => {
+      pre[cur] = [];
+      return pre;
+    }, {});
   }
 
   async getClusterList() {
@@ -192,6 +229,7 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
 
   handleSceneChange(value) {
     this.scene = value;
+    this.initFilterBy();
   }
 
   handleImmediateRefresh() {
@@ -219,6 +257,10 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
     // updateTimezone(timezone);
   }
 
+  dimensionTotalChange(dimensionTotal: Record<string, number>) {
+    this.dimensionTotal = dimensionTotal;
+  }
+
   /** 取消下钻 */
   handleCancelDrillDown() {
     this.filterBy = this.cacheFilterBy;
@@ -226,32 +268,57 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
     this.showCancelDrill = false;
   }
 
-  /** 左侧面板group状态切换 */
-  groupByChange({ groupId, isSelect }) {
+  /**
+   * 修改groupBy
+   * @param groupId
+   * @param isSelect 是否选中
+   */
+  groupByChange(groupId: string, isSelect: boolean) {
     this.showCancelDrill = false;
     if (isSelect) {
-      this.setGroupFilters({ groupId, checked: isSelect });
+      this.groupInstance.addGroupFilter(groupId as K8sTableColumnResourceKey);
     } else {
-      this.groupInstance.deleteGroupFilterForce(groupId);
+      this.setGroupFilters(groupId as K8sTableColumnResourceKey);
     }
   }
 
-  /** 左侧面板下钻功能 */
-  handleDrillDown({ filterBy, groupId }) {
-    this.groupByChange({ groupId, isSelect: true });
-    this.filterByChange({ ids: filterBy.value, groupId: filterBy.key });
+  /**
+   * 下钻功能
+   * @param filterById 下钻数据Id
+   * @param filterByDimension  下钻数据所在维度
+   * @param drillDownDimension 下钻维度
+   */
+  handleDrillDown(filterById: string, filterByDimension: string, drillDownDimension: string) {
+    this.groupByChange(drillDownDimension, true);
+    this.filterByChange(filterById, filterByDimension, true);
   }
 
-  /* 左侧面板检索功能 */
-  filterByChange({ ids, groupId }) {
+  /**
+   * 修改filterBy
+   * @param id 数据Id
+   * @param dimensionId 维度Id
+   * @param isSelect 是否选中
+   */
+  filterByChange(id: string, dimensionId: string, isSelect: boolean) {
     this.showCancelDrill = false;
-    const target = this.filterBy.find(item => item.key === groupId);
-    if (target) {
-      target.value = ids;
-      this.filterBy = [...this.filterBy];
+    if (!this.filterBy[dimensionId]) this.filterBy[dimensionId] = [];
+    if (isSelect) {
+      /** workload维度只能选择一项 */
+      if (dimensionId === EDimensionKey.workload) {
+        this.filterBy[dimensionId] = [id];
+      } else {
+        this.filterBy[dimensionId].push(id);
+      }
     } else {
-      this.filterBy = [...this.filterBy, { key: groupId, value: ids }];
+      this.filterBy[dimensionId] = this.filterBy[dimensionId].filter(item => item !== id);
     }
+    this.filterBy = { ...this.filterBy };
+  }
+
+  /** 清除某个维度的filterBy */
+  clearFilterBy(dimensionId: string) {
+    this.filterBy[dimensionId] = [];
+    this.filterBy = { ...this.filterBy };
   }
 
   /** 隐藏指标项变化 */
@@ -262,7 +329,7 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
 
   handleClusterChange(cluster: string) {
     this.cluster = cluster;
-    this.filterBy = [];
+    this.initFilterBy();
     this.groupInstance.setGroupFilters([K8sTableColumnKeysEnum.NAMESPACE]);
     this.showCancelDrill = false;
     this.getScenarioMetricList();
@@ -274,37 +341,41 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
    */
   async handleTabChange(v: K8sNewTabEnum) {
     this.activeTab = v;
+    this.setRouteParams();
   }
 
-  handleGroupChecked(item: IGroupByChangeEvent) {
+  handleGroupChecked(groupId: K8sTableColumnResourceKey) {
     this.showCancelDrill = false;
-    this.setGroupFilters({ groupId: item.id, checked: item.checked });
-  }
-
-  /**
-   * @description 表格 添加筛选/移除筛选 icon点击回调
-   * @param {K8sTableFilterByEvent} item
-   */
-  handleFilterChange(item: K8sTableFilterByEvent) {
-    this.filterByChange(item);
+    this.setGroupFilters(groupId, { single: true });
   }
 
   /**
    * @description 表格下钻点击回调
    * @param {K8sTableGroupByEvent} item
    */
-  handleTableGroupChange(item: K8sTableGroupByEvent) {
-    this.showCancelDrill = true;
-    this.cacheGroupBy = this.groupInstance.groupFilters;
-    this.setGroupFilters(item);
+  handleTableGroupChange(item: K8sTableGroupByEvent, showCancelDrill = false) {
+    const cacheGroupBy = [...this.groupInstance.groupFilters];
+    const { filterById, id, dimension } = item;
+    this.handleDrillDown(filterById, id, dimension);
+    if (showCancelDrill) {
+      this.showCancelDrill = true;
+      this.cacheGroupBy = cacheGroupBy;
+    }
   }
 
   handleTableClearSearch() {
-    this.filterBy = [];
+    this.initFilterBy();
   }
 
-  handleFilterByChange(v: IFilterByItem[]) {
-    this.filterBy = v;
+  handleFilterByChange(v) {
+    this.filterBy = this.sceneDimensionList.reduce((pre, cur) => {
+      if (v[cur]) {
+        pre[cur] = v[cur];
+      } else {
+        pre[cur] = [];
+      }
+      return pre;
+    }, {});
   }
 
   getRouteParams() {
@@ -312,18 +383,24 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
       from = 'now-1h',
       to = 'now',
       refreshInterval = '-1',
-      filterBy = '[]',
+      filterBy,
       groupBy = '[]',
       cluster = '',
       scene = SceneEnum.Performance,
+      activeTab = K8sNewTabEnum.LIST,
     } = this.$route.query || {};
     this.timeRange = [from as string, to as string];
     this.refreshInterval = Number(refreshInterval);
-    this.filterBy = JSON.parse(filterBy as string);
     this.cluster = cluster as string;
     this.scene = scene as SceneEnum;
+    this.activeTab = activeTab as K8sNewTabEnum;
     if (JSON.parse(groupBy as string).length) {
       this.groupInstance.setGroupFilters(JSON.parse(groupBy as string));
+    }
+    if (!filterBy) {
+      this.initFilterBy();
+    } else {
+      this.filterBy = JSON.parse(filterBy as string);
     }
   }
 
@@ -337,6 +414,7 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
       groupBy: JSON.stringify(this.groupInstance.groupFilters),
       cluster: this.cluster,
       scene: this.scene,
+      activeTab: this.activeTab,
     };
 
     const targetRoute = this.$router.resolve({
@@ -366,18 +444,26 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
         return (
           <K8sTableNew
             activeTab={this.activeTab}
-            clusterId={this.cluster}
             filterBy={this.filterBy}
+            filterCommonParams={this.tableCommonParam}
             groupInstance={this.groupInstance}
-            scene={this.scene}
+            hideMetrics={this.hideMetrics}
+            metricList={this.metricList}
             onClearSearch={this.handleTableClearSearch}
-            onFilterChange={this.handleFilterChange}
+            onFilterChange={this.filterByChange}
             onGroupChange={this.handleTableGroupChange}
           />
         );
     }
   }
   render() {
+    if (this.showGuidePage)
+      return (
+        <GuidePage
+          guideData={introduce.data['k8s-new'].introduce}
+          guideId='k8s'
+        />
+      );
     return (
       <div class='monitor-k8s-new'>
         <div class='monitor-k8s-new-nav-bar'>
@@ -430,17 +516,15 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
               <div class='filter-by-title'>Filter by</div>
               <div class='filter-by-content'>
                 <FilterByCondition
-                  bcsClusterId={this.cluster}
+                  commonParams={this.commonParams}
                   filterBy={this.filterBy}
-                  scene={this.scene}
-                  timeRange={this.timeRange}
                   onChange={this.handleFilterByChange}
                 />
               </div>
             </div>
             <div class='filter-by-wrap __group-by__'>
               <GroupByCondition
-                dimensionOptions={this.groupList}
+                dimensionTotal={this.dimensionTotal}
                 groupInstance={this.groupInstance}
                 title='Group by'
                 onChange={this.handleGroupChecked}
@@ -453,10 +537,11 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
           <div class='content-left'>
             <K8sLeftPanel>
               <K8sDimensionList
-                clusterId={this.cluster}
+                commonParams={this.commonParams}
                 filterBy={this.filterBy}
                 groupBy={this.groupFilters}
-                scene={this.scene}
+                onClearFilterBy={this.clearFilterBy}
+                onDimensionTotal={this.dimensionTotalChange}
                 onDrillDown={this.handleDrillDown}
                 onFilterByChange={this.filterByChange}
                 onGroupByChange={this.groupByChange}
@@ -489,7 +574,7 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
                       slot='label'
                     >
                       <i class={['icon-monitor', panel.icon]} />
-                      <span class='panel-name'>{panel.label}</span>
+                      <span class='panel-name'>{this.$t(panel.label)}</span>
                     </div>
                   </bk-tab-panel>
                 ))}

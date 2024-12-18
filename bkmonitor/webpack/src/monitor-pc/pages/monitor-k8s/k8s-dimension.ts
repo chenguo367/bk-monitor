@@ -35,14 +35,19 @@ import {
 
 import type { K8sTableColumnResourceKey } from './components/k8s-table-new/k8s-table-new';
 
+export const sceneDimensionMap = {
+  [SceneEnum.Performance]: [
+    EDimensionKey.namespace,
+    EDimensionKey.workload,
+    EDimensionKey.pod,
+    EDimensionKey.container,
+  ],
+};
+
 /**
  * k8s维度列表基类
  */
 export abstract class K8sDimensionBase {
-  // 集群Id
-  public bcsClusterId = '';
-  /** 搜索关键字 */
-  public keyword = '';
   /** 所有的维度数据 */
   public originDimensionData: GroupListItem[] = [];
   /** 各维度分页 */
@@ -50,31 +55,14 @@ export abstract class K8sDimensionBase {
   /** 分页数量 */
   public pageSize = 5;
   /** 分页类型 */
-  public pageType: K8sDimensionParams['pageType'] = 'traditional';
-  /** 场景 */
-  public scene: SceneEnum = SceneEnum.Performance;
+  public pageType: K8sDimensionParams['page_type'] = 'scrolling';
   /** 维度列表Key */
   // eslint-disable-next-line perfectionist/sort-classes
   abstract dimensionKey: string[];
 
   constructor(params: K8sDimensionParams) {
-    this.scene = params.scene;
-    this.keyword = params.keyword;
-    this.pageSize = params.pageSize || 5;
-    this.pageType = params.pageType || 'traditional';
-    this.bcsClusterId = params.bcsClusterId || '';
-  }
-
-  public get commonParams() {
-    return {
-      scenario: this.scene,
-      bcs_cluster_id: this.bcsClusterId,
-      page_size: this.pageSize,
-      page_type: this.pageType,
-      query_string: this.keyword,
-      with_history: false,
-      filter_dict: {},
-    };
+    this.pageSize = params.pageSize;
+    this.pageType = params.page_type;
   }
 
   abstract get showDimensionData(): GroupListItem[];
@@ -90,11 +78,14 @@ export abstract class K8sDimensionBase {
  * k8s性能场景维度列表
  */
 export class K8sPerformanceDimension extends K8sDimensionBase {
+  commonParams: K8sDimensionParams = null;
+
   // /** 场景维度枚举 */
-  dimensionKey = [EDimensionKey.namespace, EDimensionKey.workload, EDimensionKey.pod, EDimensionKey.container];
+  dimensionKey = sceneDimensionMap[SceneEnum.Performance];
 
   constructor(params: K8sDimensionParams) {
     super(params);
+    this.commonParams = params;
     this.originDimensionData = this.dimensionKey.map(key => ({
       id: key,
       name: key,
@@ -199,8 +190,8 @@ export class K8sPerformanceDimension extends K8sDimensionBase {
     this.pageMap = {};
     const pageMap = {};
     const workloadCategory = await workloadOverview({
-      bcs_cluster_id: this.bcsClusterId,
-      query_string: this.keyword,
+      bcs_cluster_id: this.commonParams.bcs_cluster_id,
+      query_string: this.commonParams.query_string,
     }).catch(() => []);
 
     const promiseList = this.originDimensionData.map(async item => {
@@ -246,11 +237,6 @@ export class K8sPerformanceDimension extends K8sDimensionBase {
     const [dimension, category] = dimensions;
     if (dimension === EDimensionKey.workload) {
       this.pageMap[category] += 1;
-    } else {
-      this.pageMap[dimension] += 1;
-    }
-
-    if (dimension === EDimensionKey.workload) {
       await this.getWorkloadChildrenData({
         filter_dict: {
           workload: `${category}:`,
@@ -258,6 +244,7 @@ export class K8sPerformanceDimension extends K8sDimensionBase {
         ...params,
       });
     } else {
+      this.pageMap[dimension] += 1;
       await this.getDimensionData({
         resource_type: dimension,
         page: this.pageMap[dimension],
@@ -285,7 +272,7 @@ export class K8sPerformanceDimension extends K8sDimensionBase {
    */
   async search(keyword: string, params = {}, dimensions = []) {
     const [dimension, category] = dimensions;
-    this.keyword = keyword;
+    this.commonParams.query_string = keyword;
     if (dimension) {
       if (dimension === EDimensionKey.workload) {
         this.pageMap[category] = 1;
@@ -328,18 +315,34 @@ export abstract class K8sGroupDimension {
   /**
    * @description 添加 groupFilters
    * @param {K8sTableColumnResourceKey} groupId
+   * @param {boolean} config.single 是否单项操作（true: 单项添加，false: 将所在层级及所有父级对象加入）
    */
-  addGroupFilter(groupId: K8sTableColumnResourceKey) {
+  addGroupFilter(groupId: K8sTableColumnResourceKey, config?: { single: boolean }) {
+    if (config?.single) {
+      const groupFilters = this.dimensions.reduce((prev, curr) => {
+        if (this.groupFiltersSet.has(curr) || curr === groupId) {
+          prev.push(curr);
+        }
+        return prev;
+      }, []);
+      this.setGroupFilters(groupFilters);
+      return;
+    }
     this.setGroupFilters(this.dimensionsMap[groupId] as K8sTableColumnResourceKey[]);
   }
 
   /**
-   * @description 删除 groupFilters
+   * @description 删除 groupFilter
    * @param {K8sTableColumnResourceKey} groupId
+   * @param {boolean} config.single 是否单项操作（true: 单项删除，false: 将所在层级及所有子级对象删除）
    */
-  deleteGroupFilter(groupId: K8sTableColumnResourceKey) {
-    const indexOrMsg = this.verifyDeleteGroupFilter(groupId);
-    if (typeof indexOrMsg === 'string') return;
+  deleteGroupFilter(groupId: K8sTableColumnResourceKey, config?: { single: boolean }) {
+    if (!this.hasGroupFilter(groupId)) return;
+    if (config?.single) {
+      this.groupFiltersSet.delete(groupId);
+      this.setGroupFilters([...this.groupFiltersSet] as K8sTableColumnResourceKey[]);
+      return;
+    }
     this.deleteGroupFilterForce(groupId);
   }
 
@@ -360,11 +363,11 @@ export abstract class K8sGroupDimension {
   }
 
   /**
-   * @description 获取最后一个 groupFilter
+   * @description 获取当前维度的资源类型 (最后一个 groupFilter)
    * @returns {K8sTableColumnResourceKey}
    */
-  getLastGroupFilter() {
-    return this.groupFilters[this.groupFilters.length - 1];
+  getResourceType() {
+    return this.groupFilters.at(-1);
   }
 
   /**
@@ -392,22 +395,6 @@ export abstract class K8sGroupDimension {
   setGroupFilters(groupFilters: K8sTableColumnResourceKey[]) {
     this.groupFilters = groupFilters;
     this.groupFiltersSet = new Set(groupFilters);
-  }
-
-  /**
-   * @description 校验传入 groupId 是否可删除
-   * @param {K8sTableColumnResourceKey} groupId
-   * @returns {string | number} string 类型表示不可删除，number 类型表示删除成功
-   */
-  verifyDeleteGroupFilter(groupId: K8sTableColumnResourceKey) {
-    if (this.defaultGroupFilter.has(groupId)) {
-      return '默认值不可删除';
-    }
-    const index = this.groupFilters.findIndex(item => item === groupId);
-    if (index !== this.groupFilters.length - 1) {
-      return '请先删除子级维度';
-    }
-    return index;
   }
 }
 
