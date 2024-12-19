@@ -23,7 +23,7 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-import { Prop, Component, Emit, Watch, InjectReactive } from 'vue-property-decorator';
+import { Prop, Component, Emit, Watch, InjectReactive, Inject } from 'vue-property-decorator';
 import { Component as tsc } from 'vue-tsx-support';
 
 import { connect, disconnect } from 'echarts/core';
@@ -118,8 +118,6 @@ interface K8sTableNewProps {
   hideMetrics: string[];
 }
 interface K8sTableNewEvent {
-  onFilterChange: (id: K8sTableColumnResourceKey, dimensionId: string, isSelect: boolean) => void;
-  onGroupChange: (item: K8sTableGroupByEvent, showCancelDrill: boolean) => void;
   onClearSearch: () => void;
 }
 
@@ -147,6 +145,8 @@ const tabToTableDetailColumnDynamicKeys = [
  * @description: k8s table 数据明细 table 静态列（必有） keys
  */
 const tabToTableDetailColumnFixedKeys = [K8sTableColumnKeysEnum.CPU, K8sTableColumnKeysEnum.INTERNAL_MEMORY];
+/** 是否开启前端分页功能 */
+const enabledFrontendLimit = false;
 
 @Component
 export default class K8sTableNew extends tsc<K8sTableNewProps, K8sTableNewEvent> {
@@ -177,6 +177,16 @@ export default class K8sTableNew extends tsc<K8sTableNewProps, K8sTableNewEvent>
   @InjectReactive('refleshInterval') readonly refreshInterval!: number;
   // 是否立即刷新 - monitor-k8s-new 传入
   @InjectReactive('refleshImmediate') readonly refreshImmediate!: string;
+  @Inject({ from: 'onFilterChange', default: () => null }) readonly onFilterChange: (
+    id: string,
+    groupId: K8sTableColumnResourceKey,
+    isSelect: boolean
+  ) => void;
+
+  @Inject({ from: 'onGroupChange', default: () => null }) readonly onDrillDown: (
+    item: K8sTableGroupByEvent,
+    showCancelDrill?: boolean
+  ) => void;
 
   tableLoading = {
     /** table 骨架屏 loading */
@@ -245,8 +255,12 @@ export default class K8sTableNew extends tsc<K8sTableNewProps, K8sTableNewEvent>
 
   /** table视图数据（由于后端返回全量数据，分页功能需前端自己处理） */
   get tableViewData() {
-    const { page, pageSize } = this.pagination;
-    return this.tableData.slice(0, page * pageSize);
+    if (enabledFrontendLimit) {
+      /** 接口返回全量数据时执行方案 */
+      const { page, pageSize } = this.pagination;
+      return this.tableData.slice(0, page * pageSize);
+    }
+    return this.tableData;
   }
 
   /** 缩略图分组Id枚举 */
@@ -281,6 +295,7 @@ export default class K8sTableNew extends tsc<K8sTableNewProps, K8sTableNewEvent>
   @Watch('groupInstance.groupFilters')
   onGroupFiltersChange() {
     if (!this.isListTab) return;
+    this.tableLoading.loading = true;
     this.getK8sList({ needRefresh: true });
   }
   @Watch('filterCommonParams', { immediate: true })
@@ -301,25 +316,6 @@ export default class K8sTableNew extends tsc<K8sTableNewProps, K8sTableNewEvent>
   @Emit('clearSearch')
   clearSearch() {
     return {};
-  }
-
-  /**
-   * @description 下钻 按钮点击回调
-   * @param {K8sTableGroupByEvent} tableGroupByEvent  下转按钮事件对象
-   * @param showCancelDrill 是否展示顶部栏 取消下钻按钮
-   */
-  groupChange(tableGroupByEvent: K8sTableGroupByEvent, showCancelDrill = false) {
-    this.$emit('groupChange', tableGroupByEvent, showCancelDrill);
-  }
-
-  /**
-   * @description 添加筛选/移除筛选 按钮点击回调
-   * @param id 数据Id
-   * @param groupId 维度Id
-   * @param isSelect 是否选中
-   */
-  filterChange(id: string, groupId: K8sTableColumnResourceKey, isSelect: boolean) {
-    this.$emit('filterChange', id, groupId, isSelect);
   }
 
   created() {
@@ -420,22 +416,49 @@ export default class K8sTableNew extends tsc<K8sTableNewProps, K8sTableNewEvent>
    * @param {boolean} config.needIncrement 是否需要增量加载（table 触底加载）
    */
   @Debounce(200)
-  async getK8sList(config: { needRefresh?: boolean } = {}) {
+  async getK8sList(config: { needRefresh?: boolean; needIncrement?: boolean } = {}) {
     if (!this.filterCommonParams.bcs_cluster_id) {
       return;
     }
-    this.pagination.page = 1;
-    this.asyncDataCache.clear();
-    this.tableLoading.loading = true;
+    let loadingKey = 'scrollLoading';
+    const initPagination = () => {
+      this.pagination.page = 1;
+      loadingKey = 'loading';
+    };
+    let pageRequestParam = {};
+    if (enabledFrontendLimit) {
+      initPagination();
+    } else {
+      if (!config.needIncrement) {
+        initPagination();
+      }
+      pageRequestParam = {
+        page_size: this.pagination.pageSize,
+        page: this.pagination.page,
+      };
+    }
+    this.tableLoading[loadingKey] = true;
+    if (config.needRefresh) {
+      this.sortContainer = {
+        prop: K8sTableColumnKeysEnum.CPU,
+        order: 'descending',
+        /** 处理 table 设置了 default-sort 时导致初始化时会自动走一遍sort-change事件问题 */
+        initDone: false,
+      };
+    }
+    const order_by =
+      this.sortContainer.order === 'descending' ? `-${this.sortContainer.prop}` : this.sortContainer.prop;
     const { dimensions } = this.groupInstance;
     const resourceType = this.isListTab
       ? this.groupInstance?.getResourceType()
       : (dimensions[dimensions.length - 1] as K8sTableColumnResourceKey);
     const requestParam = {
       ...this.filterCommonParams,
+      ...pageRequestParam,
       resource_type: resourceType,
       with_history: true,
       page_type: this.pagination.pageType,
+      order_by,
     };
 
     const data: { count: number; items: K8sTableRow[] } = await listK8sResources(requestParam).catch(() => ({
@@ -446,15 +469,10 @@ export default class K8sTableNew extends tsc<K8sTableNewProps, K8sTableNewEvent>
     this.tableData = data.items;
     this.tableDataTotal = data.count;
     if (config.needRefresh) {
-      this.sortContainer = {
-        prop: K8sTableColumnKeysEnum.CPU,
-        order: 'descending',
-        /** 处理 table 设置了 default-sort 时导致初始化时会自动走一遍sort-change事件问题 */
-        initDone: false,
-      };
       this.refreshTable();
+      this.asyncDataCache.clear();
     }
-    this.tableLoading.loading = false;
+    this.tableLoading[loadingKey] = false;
     this.loadAsyncData(requestParam, resourceType, resourceParam);
   }
 
@@ -582,14 +600,19 @@ export default class K8sTableNew extends tsc<K8sTableNewProps, K8sTableNewEvent>
    */
   handleLabelClick(item: K8sTableClickEvent) {
     const { row, column } = item;
-    const detail: Partial<Record<K8sTableColumnKeysEnum, string>> = {
+    const detail: Partial<{ externalParam: { isCluster: boolean } } & Record<K8sTableColumnKeysEnum, string>> = {
       namespace: row[K8sTableColumnKeysEnum.NAMESPACE],
-      cluster: this.filterCommonParams?.bcs_cluster_id,
+      cluster: this.filterCommonParams.bcs_cluster_id,
     };
     if (column.id === K8sTableColumnKeysEnum.CONTAINER) {
       detail[K8sTableColumnKeysEnum.POD] = row[K8sTableColumnKeysEnum.POD];
     }
-    detail[column.id] = row[column.id];
+    if (column.id !== K8sTableColumnKeysEnum.CLUSTER) {
+      detail[column.id] = row[column.id];
+    } else {
+      // externalParam 接口请求传参时忽略属性，组件个性化逻辑传参处理
+      detail.externalParam = { isCluster: true };
+    }
     this.resourceDetail = detail;
     this.handleSliderChange(true);
   }
@@ -615,11 +638,17 @@ export default class K8sTableNew extends tsc<K8sTableNewProps, K8sTableNewEvent>
     if (this.tableViewData.length >= this.tableDataTotal) {
       return;
     }
-    this.tableLoading.scrollLoading = true;
-    setTimeout(() => {
-      this.pagination.page++;
-      this.tableLoading.scrollLoading = false;
-    }, 600);
+    if (enabledFrontendLimit) {
+      /** 接口返回全量数据时执行方案 */
+      this.tableLoading.scrollLoading = true;
+      setTimeout(() => {
+        this.pagination.page++;
+        this.tableLoading.scrollLoading = false;
+      }, 600);
+      return;
+    }
+    this.pagination.page++;
+    this.getK8sList({ needIncrement: true });
   }
 
   /**
@@ -631,25 +660,6 @@ export default class K8sTableNew extends tsc<K8sTableNewProps, K8sTableNewEvent>
     if (!v) {
       this.resourceDetail = {};
     }
-  }
-
-  /**
-   * @description 抽屉页 下钻 按钮点击回调
-   */
-  handleSliderGroupChange(tableGroupByEvent: K8sTableGroupByEvent) {
-    this.groupChange(tableGroupByEvent, true);
-    this.handleSliderChange(false);
-  }
-
-  /**
-   * @description 抽屉页 添加筛选/移除筛选 按钮点击回调
-   * @param id 数据Id
-   * @param groupId 维度Id
-   * @param isSelect 是否选中
-   */
-  handleSliderFilterChange(id: string, groupId: K8sTableColumnResourceKey) {
-    this.filterChange(id, groupId, true);
-    this.handleSliderChange(false);
   }
 
   /**
@@ -672,7 +682,7 @@ export default class K8sTableNew extends tsc<K8sTableNewProps, K8sTableNewEvent>
         <i
           class={['icon-monitor', ...elAttr.className]}
           v-bk-tooltips={{ content: this.$t(elAttr.text), interactive: false }}
-          onClick={() => this.filterChange(resourceValue, column.id, !hasFilter)}
+          onClick={() => this.onFilterChange(resourceValue, column.id, !hasFilter)}
         />
       );
     }
@@ -693,7 +703,7 @@ export default class K8sTableNew extends tsc<K8sTableNewProps, K8sTableNewEvent>
       <K8sDimensionDrillDown
         dimension={column.id}
         value={column.id}
-        onHandleDrillDown={v => this.groupChange({ ...(v as DrillDownEvent), filterById })}
+        onHandleDrillDown={v => this.onDrillDown({ ...(v as DrillDownEvent), filterById })}
       />
     );
   }
@@ -847,8 +857,6 @@ export default class K8sTableNew extends tsc<K8sTableNewProps, K8sTableNewEvent>
           isShow={this.sliderShow}
           metricList={this.metricList}
           resourceDetail={this.resourceDetail}
-          onFilterChange={this.handleSliderFilterChange}
-          onGroupChange={this.handleSliderGroupChange}
           onShowChange={this.handleSliderChange}
         />
       </div>

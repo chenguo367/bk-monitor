@@ -13,7 +13,6 @@ from typing import Dict, Optional
 from django.utils.functional import cached_property
 
 from apm_web.utils import get_interval_number
-from bkmonitor.data_source import get_auto_interval
 from bkmonitor.models import BCSContainer, BCSPod, BCSWorkload
 from core.drf_resource import resource
 from monitor_web.k8s.core.filters import load_resource_filter
@@ -131,7 +130,6 @@ class K8sResourceMeta(object):
         """
         数据获取来源
         """
-        step = get_auto_interval(60, start_time, end_time)
         query_params = {
             "bk_biz_id": self.bk_biz_id,
             "query_configs": [
@@ -139,7 +137,7 @@ class K8sResourceMeta(object):
                     "data_source_label": "prometheus",
                     "data_type_label": "time_series",
                     "promql": self.meta_prom_by_sort(order_by=order_by, page_size=page_size),
-                    "interval": get_interval_number(start_time, end_time, interval=step),
+                    "interval": get_interval_number(start_time, end_time, interval=60),
                     "alias": "result",
                 }
             ],
@@ -299,7 +297,7 @@ class K8sNamespaceMeta(K8sResourceMeta):
 
     @property
     def meta_prom_with_cpu(self):
-        return "sum by (namespace) (rate(container_cpu_system_seconds_total{{{self.filter.filter_string()}}}[1m]))"
+        return f"sum by (namespace) (rate(container_cpu_system_seconds_total{{{self.filter.filter_string()}}}[1m]))"
 
     @property
     def meta_prom_with_mem(self):
@@ -328,7 +326,7 @@ class K8sWorkloadMeta(K8sResourceMeta):
     @property
     def meta_prom(self):
         return (
-            f"sum by (workload_kind, workload_name, namespace) "
+            "sum by (workload_kind, workload_name, namespace) "
             f"(rate(container_cpu_system_seconds_total{{{self.filter.filter_string()}}}[1m]))"
         )
 

@@ -111,7 +111,7 @@ class CallerLineChart extends CommonSimpleChart {
   @Inject({ from: 'enableSelectionRestoreAll', default: false }) readonly enableSelectionRestoreAll: boolean;
   @Inject({ from: 'handleChartDataZoom', default: () => null }) readonly handleChartDataZoom: (value: any) => void;
   @Inject({ from: 'handleRestoreEvent', default: () => null }) readonly handleRestoreEvent: () => void;
-  @Inject({ from: 'onDrillDown', default: () => null }) readonly onDrillDown: (group: string) => void;
+  @Inject({ from: 'onDrillDown', default: () => null }) readonly onDrillDown: (group: string, name: string) => void;
   @Inject({ from: 'onShowDetail', default: () => null }) readonly onShowDetail: (
     dimensions: Record<string, string>
   ) => void;
@@ -152,7 +152,7 @@ class CallerLineChart extends CommonSimpleChart {
   }
 
   get menuList() {
-    return ['save', 'more', 'fullscreen', 'explore', 'area', 'drill-down', 'relate-alert'];
+    return ['save', 'more', 'explore', 'area', 'drill-down', 'relate-alert'];
   }
 
   @Watch('showRestoreInject')
@@ -254,12 +254,13 @@ class CallerLineChart extends CommonSimpleChart {
                   res.series &&
                     series.push(
                       ...res.series.map(set => {
-                        let name = this.handleSeriesName(item, set) || set.target;
+                        let name: string = this.handleSeriesName(item, set) || set.target;
                         if (this.timeOffset.length) {
                           name = `${this.handleTransformTimeShift(timeShift || 'current')}-${name}`;
                         } else if (['limit', 'request'].includes(newParams.query_configs?.[0]?.alias)) {
                           name = newParams.query_configs?.[0]?.alias;
                         }
+                        name = name.replace(/\|/, ':');
                         this.legendSorts.push({
                           name: name,
                           timeShift: timeShift,
@@ -271,9 +272,12 @@ class CallerLineChart extends CommonSimpleChart {
                       })
                     );
                   // 用于获取原始query_config
-                  if (res.query_config) {
-                    this.panel.setRawQueryConfigs(item, res.query_config);
-                  }
+                  this.panel.setRawQueryConfigs(
+                    item,
+                    res.query_config || {
+                      ...newParams,
+                    }
+                  );
                   this.clearErrorMsg();
                   return true;
                 })
@@ -783,14 +787,10 @@ class CallerLineChart extends CommonSimpleChart {
         break;
       case 'fullscreen': {
         // 大图检索
-        const copyPanel = this.getCopyPanel();
-        this.handleFullScreen(copyPanel as any);
+        const panel = this.panel.toDataRetrieval();
+        this.handleFullScreen(panel as any);
         break;
       }
-
-      case 'area': // 面积图
-        (this.$refs.baseChart as any)?.handleTransformArea(menuItem.checked);
-        break;
       case 'set': // 转换Y轴大小
         (this.$refs.baseChart as any)?.handleSetYAxisSetScale(!menuItem.checked);
         break;
@@ -807,7 +807,7 @@ class CallerLineChart extends CommonSimpleChart {
         break;
       }
       case 'relate-alert': {
-        // 大图检索
+        // 关联告警
         const copyPanel = this.getCopyPanel();
         handleRelateAlert(copyPanel as any, this.timeRange);
         break;
@@ -951,6 +951,8 @@ class CallerLineChart extends CommonSimpleChart {
 
   render() {
     const showLegend = this.panel.options?.legend?.displayMode !== 'hidden';
+    const groupByField = this.panel.externalData?.groupByField;
+    const canShowDetail = groupByField !== 'namespace';
     return (
       <div class='k8s-custom-graph'>
         <ChartHeader
@@ -961,7 +963,7 @@ class CallerLineChart extends CommonSimpleChart {
           isInstant={this.panel.instant}
           menuList={this.menuList as any}
           metrics={this.metrics}
-          needMoreMenu={true}
+          needMoreMenu={!this.empty}
           showMore={true}
           subtitle={this.panel.subTitle || ''}
           title={this.curTitle}
@@ -1003,19 +1005,23 @@ class CallerLineChart extends CommonSimpleChart {
                       >
                         <span
                           style={{
-                            color: item.show ? (this.isSpecialSeries(item.name) ? '#63656e' : '#3a84ff') : '#ccc',
+                            color: item.show
+                              ? this.isSpecialSeries(item.name) || !canShowDetail
+                                ? '#63656e'
+                                : '#3a84ff'
+                              : '#ccc',
                           }}
                           class='metric-name'
                           v-bk-overflow-tips={{ placement: 'top', offset: '100, 0' }}
-                          onClick={() => this.onShowDetail(item.name)}
+                          onClick={() => canShowDetail && this.onShowDetail(item.name)}
                         >
                           {item.name}
                         </span>
                         {!this.isSpecialSeries(item.name) && (
                           <K8sDimensionDrillDown
-                            dimension={'namespace'}
-                            value={'namespace'}
-                            onHandleDrillDown={({ dimension }) => this.onDrillDown(dimension)}
+                            dimension={this.panel.externalData?.groupByField}
+                            value={this.panel.externalData?.groupByField}
+                            onHandleDrillDown={({ dimension }) => this.onDrillDown(dimension, item.name)}
                           />
                         )}
                       </div>

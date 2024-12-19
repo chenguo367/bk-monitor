@@ -23,36 +23,42 @@
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-import { Component, Emit, Prop, Provide, ProvideReactive, Watch } from 'vue-property-decorator';
+import { Component, Prop, Provide, ProvideReactive, Watch } from 'vue-property-decorator';
 import { Component as tsc } from 'vue-tsx-support';
 
 import { listK8sResources } from 'monitor-api/modules/k8s';
 import { Debounce } from 'monitor-common/utils';
 import FlexDashboardPanel from 'monitor-ui/chart-plugins/components/flex-dashboard-panel';
 
+import TableSkeleton from '../../../../components/skeleton/table-skeleton';
 import { K8S_METHOD_LIST, PANEL_INTERVAL_LIST } from '../../../../constant/constant';
 import { K8SPerformanceMetricUnitMap, K8sTableColumnKeysEnum, type IK8SMetricItem } from '../../typings/k8s-new';
 import FilterVarSelectSimple from '../filter-var-select/filter-var-select-simple';
 import K8sDetailSlider from '../k8s-detail-slider/k8s-detail-slider';
 import TimeCompareSelect from '../panel-tools/time-compare-select';
 
-import type { K8sTableColumnResourceKey } from '../k8s-table-new/k8s-table-new';
+import type { K8sTableColumnResourceKey, K8sTableGroupByEvent } from '../k8s-table-new/k8s-table-new';
 import type { IViewOptions } from 'monitor-ui/chart-plugins/typings';
 import type { IPanelModel } from 'monitor-ui/chart-plugins/typings/dashboard-panel';
 
 import './k8s-charts.scss';
 @Component
-export default class K8SCharts extends tsc<{
-  metricList: IK8SMetricItem[];
-  hideMetrics: string[];
-  groupBy: K8sTableColumnResourceKey[];
-  filterCommonParams: Record<string, any>;
-  isDetailMode?: boolean;
-}> {
+export default class K8SCharts extends tsc<
+  {
+    metricList: IK8SMetricItem[];
+    hideMetrics: string[];
+    groupBy: K8sTableColumnResourceKey[];
+    filterCommonParams: Record<string, any>;
+    isDetailMode?: boolean;
+  },
+  {
+    onDrillDown: (item: K8sTableGroupByEvent, needBack: boolean) => void;
+  }
+> {
   @Prop({ type: Array, default: () => [] }) metricList: IK8SMetricItem[];
   @Prop({ type: Array, default: () => [] }) hideMetrics: string[];
   @Prop({ type: Array, default: () => [] }) groupBy: K8sTableColumnResourceKey[];
-  @Prop({ type: Object, default: () => ({}) }) filterCommonParams: Record<string, any>;
+  @Prop({ type: Object, default: () => ({}) }) filterCommonParams: Record<string, string>;
   @Prop({ type: Boolean, default: false }) isDetailMode: boolean;
   // 视图变量
   @ProvideReactive('viewOptions') viewOptions: IViewOptions = {};
@@ -67,11 +73,11 @@ export default class K8SCharts extends tsc<{
   panels: IPanelModel[] = [];
   loading = false;
   resourceMap: Map<K8sTableColumnKeysEnum, string> = new Map();
-  resourceList: Set<Record<K8sTableColumnKeysEnum, string>> = new Set();
+  resourceList: Set<Partial<Record<K8sTableColumnKeysEnum, string>>> = new Set();
   sideDetailShow = false;
   sideDetail: Partial<Record<K8sTableColumnKeysEnum, string>> = {};
   get groupByField() {
-    return this.groupBy.at(-1) || K8sTableColumnKeysEnum.NAMESPACE;
+    return this.groupBy.at(-1) || K8sTableColumnKeysEnum.CLUSTER;
   }
   @Watch('metricList')
   onMetricListChange() {
@@ -86,14 +92,18 @@ export default class K8SCharts extends tsc<{
     this.createPanelList();
   }
   @Provide('onDrillDown')
-  @Emit('drillDown')
-  handleDrillDown(group: string) {
-    return group;
+  handleDrillDown(group: string, name: string) {
+    if (this.groupByField === K8sTableColumnKeysEnum.CONTAINER) {
+      const [container] = name.split(':');
+      this.$emit('drillDown', { id: this.groupByField, dimension: group, filterById: container }, false);
+      return;
+    }
+    this.$emit('drillDown', { id: this.groupByField, dimension: group, filterById: name }, false);
   }
 
   @Provide('onShowDetail')
   handleShowDetail(dimension: string) {
-    let item: Record<K8sTableColumnKeysEnum, string>;
+    let item: Partial<Record<K8sTableColumnKeysEnum, string>>;
     if (this.groupByField === K8sTableColumnKeysEnum.CONTAINER) {
       const [container, pod] = dimension.split(':');
       item = Array.from(this.resourceList).find(
@@ -119,7 +129,6 @@ export default class K8SCharts extends tsc<{
     this.loading = true;
     await this.getResourceList();
     const displayMode = this.isDetailMode ? 'hidden' : 'table';
-    console.info(this.isDetailMode, displayMode, '==========');
     const panelList = [];
     for (const item of this.metricList) {
       panelList.push({
@@ -134,6 +143,9 @@ export default class K8SCharts extends tsc<{
             type: 'k8s_custom_graph',
             title: panel.name,
             subTitle: '',
+            externalData: {
+              groupByField: this.groupByField,
+            },
             options: {
               legend: {
                 displayMode,
@@ -182,6 +194,7 @@ export default class K8SCharts extends tsc<{
     this.loading = false;
   }
   createCommonPromqlMethod() {
+    if (this.groupByField === K8sTableColumnKeysEnum.CLUSTER) return '$method by(bcs_cluster_id)';
     if (this.groupByField === K8sTableColumnKeysEnum.CONTAINER) return '$method by(pod_name,container_name)';
     return `$method by(${this.groupByField === K8sTableColumnKeysEnum.WORKLOAD ? 'workload_kind,workload_name' : this.groupByField})`;
     // return this.resourceLength > 1
@@ -243,8 +256,8 @@ export default class K8SCharts extends tsc<{
   }
   createPerformanceDetailPanel(metric: string) {
     if (
-      this.groupByField !== K8sTableColumnKeysEnum.POD ||
       this.resourceList.size !== 1 ||
+      this.groupByField === K8sTableColumnKeysEnum.WORKLOAD ||
       !['container_cpu_usage_seconds_total', 'container_memory_rss'].includes(metric)
     )
       return [];
@@ -253,7 +266,7 @@ export default class K8SCharts extends tsc<{
         {
           data_source_label: 'prometheus',
           data_type_label: 'time_series',
-          promql: `kube_pod_container_resource_limits_cpu_cores{${this.createCommonPromqlContent()}}`,
+          promql: `${this.createCommonPromqlMethod()}(kube_pod_container_resource_limits_cpu_cores{${this.createCommonPromqlContent()}})`,
           interval: '$interval_second',
           alias: 'limit',
           filter_dict: {},
@@ -261,7 +274,7 @@ export default class K8SCharts extends tsc<{
         {
           data_source_label: 'prometheus',
           data_type_label: 'time_series',
-          promql: `kube_pod_container_resource_requests_cpu_cores{${this.createCommonPromqlContent()}}`,
+          promql: `${this.createCommonPromqlMethod()}(kube_pod_container_resource_requests_cpu_cores{${this.createCommonPromqlContent()}})`,
           interval: '$interval_second',
           alias: 'request',
           filter_dict: {},
@@ -272,7 +285,7 @@ export default class K8SCharts extends tsc<{
         {
           data_source_label: 'prometheus',
           data_type_label: 'time_series',
-          promql: `kube_pod_container_resource_limits_memory_bytes{${this.createCommonPromqlContent()}}`,
+          promql: `${this.createCommonPromqlMethod()}(kube_pod_container_resource_limits_memory_bytes{${this.createCommonPromqlContent()}})`,
           interval: '$interval_second',
           alias: 'limit',
           filter_dict: {},
@@ -280,7 +293,7 @@ export default class K8SCharts extends tsc<{
         {
           data_source_label: 'prometheus',
           data_type_label: 'time_series',
-          promql: `kube_pod_container_resource_requests_memory_bytes{${this.createCommonPromqlContent()}}`,
+          promql: `${this.createCommonPromqlMethod()}(kube_pod_container_resource_requests_memory_bytes{${this.createCommonPromqlContent()}})`,
           interval: '$interval_second',
           alias: 'request',
           filter_dict: {},
@@ -289,18 +302,6 @@ export default class K8SCharts extends tsc<{
     }
   }
   async getResourceList() {
-    const data: Array<Record<K8sTableColumnKeysEnum, string>> = await listK8sResources({
-      ...this.filterCommonParams,
-      with_history: true,
-      page_size: 10,
-      page: 1,
-      page_type: 'scrolling',
-    })
-      .then(data => {
-        if (!data?.items?.length) return [];
-        return data.items;
-      })
-      .catch(() => []);
     const resourceMap = new Map<K8sTableColumnKeysEnum, string>([
       [K8sTableColumnKeysEnum.CONTAINER, ''],
       [K8sTableColumnKeysEnum.NAMESPACE, ''],
@@ -308,28 +309,50 @@ export default class K8SCharts extends tsc<{
       [K8sTableColumnKeysEnum.WORKLOAD, ''],
       [K8sTableColumnKeysEnum.WORKLOAD_TYPE, ''],
     ]);
-    if (data.length) {
-      const container = new Set<string>();
-      const pod = new Set<string>();
-      const workload = new Set<string>();
-      const workloadKind = new Set<string>();
-      const namespace = new Set<string>();
-      const list = data.slice(0, 10);
-      for (const item of list) {
-        item.container && container.add(item.container);
-        item.pod && pod.add(item.pod);
-        if (item.workload) {
-          const [workloadType, workloadName] = item.workload.split(':');
-          workload.add(workloadName);
-          workloadKind.add(workloadType);
+    let data: Array<Partial<Record<K8sTableColumnKeysEnum, string>>> = [];
+    if (this.groupByField === K8sTableColumnKeysEnum.CLUSTER) {
+      data = [
+        {
+          [K8sTableColumnKeysEnum.CLUSTER]: this.filterCommonParams.bk_cluster_id,
+        },
+      ];
+    } else {
+      data = await listK8sResources({
+        ...this.filterCommonParams,
+        with_history: true,
+        page_size: Math.abs(this.limit),
+        page: 1,
+        page_type: 'scrolling',
+        order_by: this.limit > 0 ? '-cpu' : 'cpu',
+      })
+        .then(data => {
+          if (!data?.items?.length) return [];
+          return data.items;
+        })
+        .catch(() => []);
+      if (data.length) {
+        const container = new Set<string>();
+        const pod = new Set<string>();
+        const workload = new Set<string>();
+        const workloadKind = new Set<string>();
+        const namespace = new Set<string>();
+        const list = data.slice(0, 10);
+        for (const item of list) {
+          item.container && container.add(item.container);
+          item.pod && pod.add(item.pod);
+          if (item.workload) {
+            const [workloadType, workloadName] = item.workload.split(':');
+            workload.add(workloadName);
+            workloadKind.add(workloadType);
+          }
+          item.namespace && namespace.add(item.namespace);
         }
-        item.namespace && namespace.add(item.namespace);
+        resourceMap.set(K8sTableColumnKeysEnum.CONTAINER, Array.from(container).filter(Boolean).join('|'));
+        resourceMap.set(K8sTableColumnKeysEnum.POD, Array.from(pod).filter(Boolean).join('|'));
+        resourceMap.set(K8sTableColumnKeysEnum.WORKLOAD, Array.from(workload).filter(Boolean).join('|'));
+        resourceMap.set(K8sTableColumnKeysEnum.NAMESPACE, Array.from(namespace).filter(Boolean).join('|'));
+        resourceMap.set(K8sTableColumnKeysEnum.WORKLOAD_TYPE, Array.from(workloadKind).filter(Boolean).join('|'));
       }
-      resourceMap.set(K8sTableColumnKeysEnum.CONTAINER, Array.from(container).filter(Boolean).join('|'));
-      resourceMap.set(K8sTableColumnKeysEnum.POD, Array.from(pod).filter(Boolean).join('|'));
-      resourceMap.set(K8sTableColumnKeysEnum.WORKLOAD, Array.from(workload).filter(Boolean).join('|'));
-      resourceMap.set(K8sTableColumnKeysEnum.NAMESPACE, Array.from(namespace).filter(Boolean).join('|'));
-      resourceMap.set(K8sTableColumnKeysEnum.WORKLOAD_TYPE, Array.from(workloadKind).filter(Boolean).join('|'));
     }
     this.resourceList = new Set(data);
     this.resourceMap = resourceMap;
@@ -349,6 +372,10 @@ export default class K8SCharts extends tsc<{
   handleMethodChange(v: string) {
     this.method = v;
     this.updateViewOptions();
+  }
+  handleLimitChange(v: string) {
+    this.limit = +v;
+    this.createPanelList();
   }
   /** 时间对比值变更 */
   handleCompareTimeChange(timeList: string[]) {
@@ -381,6 +408,17 @@ export default class K8SCharts extends tsc<{
               value={this.method}
               onChange={this.handleMethodChange}
             />
+            <FilterVarSelectSimple
+              class='ml-36'
+              options={[
+                { name: 'top(10)', id: 10 },
+                { name: 'bottom(10)', id: -10 },
+              ]}
+              field={'limit'}
+              label={this.$t('Limit')}
+              value={this.limit}
+              onChange={this.handleLimitChange}
+            />
             <span class='ml-36 mr-8'>{this.$t('时间对比')}</span>
             <bk-switcher
               v-model={this.showTimeCompare}
@@ -399,11 +437,19 @@ export default class K8SCharts extends tsc<{
           </div>
         </div>
         <div class='k8s-charts-list'>
-          <FlexDashboardPanel
-            id='k8s-charts'
-            column={1}
-            panels={this.panels}
-          />
+          {this.loading || !this.panels.length ? (
+            <TableSkeleton
+              class='table-skeleton'
+              type={5}
+            />
+          ) : (
+            <FlexDashboardPanel
+              id={this.isDetailMode ? 'k8s-detail' : 'k8s-charts'}
+              column={1}
+              needCheck={false}
+              panels={this.panels}
+            />
+          )}
         </div>
         <K8sDetailSlider
           hideMetrics={this.hideMetrics}
