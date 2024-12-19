@@ -31,7 +31,13 @@ import bus from 'monitor-common/utils/event-bus';
 import { random } from 'monitor-common/utils/utils';
 import EmptyStatus from 'monitor-pc/components/empty-status/empty-status';
 
-import { type DashboardColumnType, type IPanelModel, type ObservablePanelField, PanelModel } from '../typings';
+import {
+  type DashboardColumnType,
+  type IPanelModel,
+  type ObservablePanelField,
+  PanelModel,
+  type ZrClickEvent,
+} from '../typings';
 import ChartCollect from './chart-collect/chart-collect';
 import ChartWrapper from './chart-wrapper';
 
@@ -61,6 +67,7 @@ interface IDashboardPanelEvents {
   onBackToOverview: () => void;
   onLintToDetail: ITableItem<'link'>;
   onZrClick?: (event: ZrClickEvent) => void;
+  onMenuClick?: (data) => void;
 }
 @Component
 export default class FlexDashboardPanel extends tsc<IDashboardPanelProps, IDashboardPanelEvents> {
@@ -159,6 +166,7 @@ export default class FlexDashboardPanel extends tsc<IDashboardPanelProps, IDashb
   handleInitPanelsGridpos(panels: IPanelModel[]) {
     if (!panels) return;
     const updatePanelsGridpos = (list: IPanelModel[]) => {
+      // biome-ignore lint/complexity/noForEach: <explanation>
       list.forEach(item => {
         if (item.type === 'row') {
           if (item.panels?.length) {
@@ -170,6 +178,7 @@ export default class FlexDashboardPanel extends tsc<IDashboardPanelProps, IDashb
             legend: {
               displayMode: this.column === 1 ? 'table' : 'list',
               placement: this.column === 1 ? 'right' : 'bottom',
+              ...item.options?.legend,
             },
           } as any;
         }
@@ -379,7 +388,10 @@ export default class FlexDashboardPanel extends tsc<IDashboardPanelProps, IDashb
           </div>
         ) : (
           [
-            <div class='flex-dashboard'>
+            <div
+              key={'flex-dashboard'}
+              class='flex-dashboard'
+            >
               {(this as any).localPanels.slice(0, 1000).map((panel, index) => (
                 <div
                   id={`${panel.id}__key__`}
@@ -404,6 +416,7 @@ export default class FlexDashboardPanel extends tsc<IDashboardPanelProps, IDashb
                     onChartCheck={v => this.handleChartCheck(v, panel)}
                     onCollapse={v => panel.type === 'row' && this.handleCollapse(v, panel)}
                     onCollectChart={() => this.handleCollectChart(panel)}
+                    onMenuClick={data => this.$emit('menuClick', data)}
                     onZrClick={e => this.$emit('zrClick', e)}
                   />
                 </div>
@@ -411,6 +424,7 @@ export default class FlexDashboardPanel extends tsc<IDashboardPanelProps, IDashb
             </div>,
             (this as any).localPanels.length ? (
               <ChartCollect
+                key={'collect'}
                 isCollectSingle={this.isCollectSingle}
                 localPanels={(this as any).localPanels}
                 observablePanelsField={this.observablePanelsField}

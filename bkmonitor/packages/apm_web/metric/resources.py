@@ -20,8 +20,8 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 from django.core.cache import cache
 from django.db.models import Q
+from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy as _lazy
-from django.utils.translation import ugettext as _
 from opentelemetry.semconv.resource import ResourceAttributes
 from opentelemetry.semconv.trace import SpanAttributes
 from rest_framework import serializers
@@ -1154,7 +1154,7 @@ class ServiceListAsyncResource(AsyncColumnsListResource):
         if column not in self.METRIC_MAP or not validated_data.get("service_names"):
             return res
 
-        m = self.METRIC_MAP[column]
+        m: Dict = self.METRIC_MAP[column]
         app = Application.objects.get(bk_biz_id=validated_data["bk_biz_id"], app_name=validated_data["app_name"])
         metric_params = {
             "application": app,
