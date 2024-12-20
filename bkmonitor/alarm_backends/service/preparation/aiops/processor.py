@@ -98,7 +98,7 @@ class TsDependPreparationProcess(BasePreparationProcess):
                 strategy, init_depend_api_func, start_time, end_time, processed_dimensions, update_time
             )
 
-            # 如果初始化完历史依赖后发现当前时间过长，则再添补刷新过程中的时间范围（但是如果超过12小时）
+            # 如果初始化完历史依赖后发现当前时间过长，则再添补刷新过程中的时间范围（如果超过12小时）
             latest_end_time = int(time.time())
             if latest_end_time - end_time >= 86400:
                 raise Exception(f"Init strategy({strategy.id}) depend data too long")
@@ -191,23 +191,35 @@ class TsDependPreparationProcess(BasePreparationProcess):
                 }
             )
 
-        tasks = []
-        with ThreadPoolExecutor(max_workers=settings.AIOPS_SDK_INIT_CONCURRENCY) as executor:
-            for dimensions_key, series_info in depend_data_by_dimensions.items():
-                series_info["dimensions"]["strategy_id"] = strategy.id
+        replace_data = []
+        append_data = []
+        for dimensions_key, series_info in depend_data_by_dimensions.items():
+            series_info["dimensions"]["strategy_id"] = strategy.id
 
-                # 第一次刷新某个维度的时候使用覆盖式刷新，后面时间段刷新时在进行增量刷新
-                executor.submit(
-                    init_depend_api_func,
-                    replace=dimensions_key not in processed_dimensions,
-                    dependency_data=[
-                        {
-                            "data": series_info["data"],
-                            "dimensions": series_info["dimensions"],
-                        }
-                    ],
+            if dimensions_key not in processed_dimensions:
+                replace_data.append(
+                    {
+                        "data": series_info["data"],
+                        "dimensions": series_info["dimensions"],
+                    }
+                )
+            else:
+                append_data.append(
+                    {
+                        "data": series_info["data"],
+                        "dimensions": series_info["dimensions"],
+                    }
                 )
 
-                processed_dimensions.add(dimensions_key)
+            processed_dimensions.add(dimensions_key)
+
+        tasks = []
+        with ThreadPoolExecutor(max_workers=settings.AIOPS_SDK_INIT_CONCURRENCY) as executor:
+            # 第一次刷新某个维度的时候使用覆盖式刷新，后面时间段刷新时在进行增量刷新
+            if replace_data:
+                executor.submit(init_depend_api_func, replace=True, dependency_data=replace_data)
+
+            if append_data:
+                executor.submit(init_depend_api_func, replace=False, dependency_data=append_data)
 
         as_completed(tasks)
