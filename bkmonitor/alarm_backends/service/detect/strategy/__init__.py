@@ -493,7 +493,19 @@ class SDKPreDetectMixin(object):
                 predict_inputs[dimension_md5] = {
                     "dimensions": dimensions,
                     "data": [],
-                    "extra_data": {"history_anomaly": []},
+                    "extra_data": {
+                        "history_anomaly": {
+                            "source": "backfill",
+                            "retention_period": "8d",
+                            "backfill_fields": ["anomaly_alert", "extra_info"],  # 默认会回填时间戳
+                            "backfill_conditions": [
+                                {
+                                    "field_name": "is_anomaly",
+                                    "value": 1,
+                                }
+                            ],
+                        },
+                    },
                 }
 
             predict_inputs[dimension_md5]["data"].append(

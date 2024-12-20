@@ -89,7 +89,7 @@ class TimeSeriesForecasting(BasicAlgorithmsCollection, SDKPreDetectMixin):
             "predict_args": {
                 "granularity": "T",
                 "mode": "serving",
-                **{arg_key.ltrip("$"): arg_value for arg_key, arg_value in self.validated_config["args"].items()},
+                **{arg_key.lstrip("$"): arg_value for arg_key, arg_value in self.validated_config["args"].items()},
             },
         }
 

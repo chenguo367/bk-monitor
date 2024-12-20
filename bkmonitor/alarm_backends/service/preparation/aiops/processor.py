@@ -52,7 +52,7 @@ class TsDependPreparationProcess(BasePreparationProcess):
         super(TsDependPreparationProcess, self).__init__()
         self.prepare_key = key.SERVICE_LOCK_PREPARATION
 
-    def process(self, strategy_id: int, update_time: int = None) -> None:
+    def process(self, strategy_id: int, update_time: int = None, force: bool = False) -> None:
         logger.info(f"Start to refresh depend data for strategy({strategy_id})")
 
         processed_dimensions = set()
@@ -62,7 +62,7 @@ class TsDependPreparationProcess(BasePreparationProcess):
             # 只有使用SDK进行检测的智能监控策略才进行历史依赖数据的初始化
             if query_config.get("intelligent_detect") and query_config["intelligent_detect"].get("use_sdk", False):
                 # 历史依赖准备就绪才开始检测
-                if query_config["intelligent_detect"]["status"] == SDKDetectStatus.PREPARING:
+                if force or query_config["intelligent_detect"]["status"] == SDKDetectStatus.PREPARING:
                     self.refresh_strategy_depend_data(strategy, processed_dimensions, update_time)
                     query_config = QueryConfig.from_models(QueryConfigModel.objects.filter(id=query_config["id"]))[0]
                     query_config.intelligent_detect["status"] = SDKDetectStatus.READY
