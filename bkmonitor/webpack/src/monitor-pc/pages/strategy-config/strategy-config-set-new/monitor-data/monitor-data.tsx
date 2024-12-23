@@ -73,6 +73,7 @@ interface IMonitorDataProps {
   errMsg?: string;
   hasAiOpsDetect?: boolean;
   showRealtimeStrategy?: boolean;
+  isKpiAnomalySdkEnabled?: boolean;
 }
 interface IMonitorDataEvent {
   onModeChange: dataModeType;
@@ -133,6 +134,8 @@ export default class MyComponent extends tsc<IMonitorDataProps, IMonitorDataEven
   @Prop({ default: false, type: Boolean }) hasAiOpsDetect: boolean;
   /* 是否展示实时选项 */
   @Prop({ default: false, type: Boolean }) showRealtimeStrategy: boolean;
+  /* 是否智能算法支持函数 */
+  @Prop({ default: false, type: Boolean }) isKpiAnomalySdkEnabled: boolean;
   @Ref('targetContainer') targetContainerRef: HTMLDivElement;
   @Ref('promql-editor') promqlEditorRef: any;
   modeList: { id: string; name: TranslateResult }[];
@@ -661,6 +664,7 @@ export default class MyComponent extends tsc<IMonitorDataProps, IMonitorDataEven
                 expFunctions={this.expFunctions}
                 expression={this.expression}
                 hasAIntelligentDetect={this.hasAIntelligentDetect}
+                isKpiAnomalySdkEnabled={this.isKpiAnomalySdkEnabled}
                 hasAiOpsDetect={this.hasAiOpsDetect}
                 isRealTimeModel={this.dataMode === 'realtime'}
                 metricData={this.metricData}
