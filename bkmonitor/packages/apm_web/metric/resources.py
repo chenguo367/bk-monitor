@@ -567,6 +567,7 @@ class ServiceListResource(PageListResource):
                 props={
                     "align": "center",
                 },
+                asyncable=True,
             ),
             DataStatusTableFormat(
                 id="log_data_status",
@@ -577,6 +578,7 @@ class ServiceListResource(PageListResource):
                 props={
                     "align": "center",
                 },
+                asyncable=True,
             ),
             DataStatusTableFormat(
                 id="trace_data_status",
@@ -587,6 +589,7 @@ class ServiceListResource(PageListResource):
                 props={
                     "align": "center",
                 },
+                asyncable=True,
             ),
             DataStatusTableFormat(
                 id="profiling_data_status",
@@ -597,6 +600,7 @@ class ServiceListResource(PageListResource):
                 props={
                     "align": "center",
                 },
+                asyncable=True,
             ),
             NumberTableFormat(
                 id="strategy_count",
