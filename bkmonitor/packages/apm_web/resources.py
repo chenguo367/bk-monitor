@@ -232,11 +232,20 @@ class AsyncColumnsListResource(ApiAuthResource, ABC):
 
     SyncResource = None
 
-    def get_async_column_item(self, data, column):
-        if column in data:
-            return {column: data[column]}
-
-        return {}
+    @classmethod
+    def get_async_column_item(cls, data, column, **kwargs):
+        multi_sub_columns = kwargs.get("multi_sub_columns", None)
+        default_value = kwargs.get("default_value", None)
+        items = {}
+        if column in data or default_value:
+            column_data = data.get(column, default_value)
+            if multi_sub_columns and isinstance(column_data, dict):
+                for sub_column in multi_sub_columns:
+                    if sub_column in column_data or default_value:
+                        items[sub_column] = column_data.get(sub_column, default_value)
+            else:
+                items[column] = column_data
+        return items
 
     def get_async_data(self, data, column, column_type=None):
         async_column = next((i for i in self.SyncResource.get_columns(column_type) if i.id == column), None)
