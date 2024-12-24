@@ -134,26 +134,6 @@ class CallerCalleeTableChart extends CommonSimpleChart {
       dimensionList: structuredClone(val),
     };
   }
-  @Watch('tagFilterList', { immediate: true })
-  handleTagFilterList(val) {
-    this.dimensionParam = {
-      ...this.dimensionParam,
-      group_by: val.filter(item => item.active).map(item => item.value),
-      dimensionList: structuredClone(val),
-    };
-  }
-
-  handleDrillDownList() {
-    const keys = this.tagFilterList.map(item => item.key);
-    const data = structuredClone(this.dimensionList);
-    return data.map(item => {
-      return {
-        id: item.id,
-        name: item.text,
-        disabled: keys.includes(item.id),
-      };
-    });
-  }
 
   created() {
     this.handlePanelChange();
@@ -485,7 +465,6 @@ class CallerCalleeTableChart extends CommonSimpleChart {
       };
     });
 
-    console.log(this.dimensionList, 'this.dimensionList', this.tagFilterList);
     this.tableColumn = tableColumn;
     this.handleClearData();
     !isDrill && this.getPageList();

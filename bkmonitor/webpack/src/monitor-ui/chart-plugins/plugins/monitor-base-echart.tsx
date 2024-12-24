@@ -60,6 +60,7 @@ class MonitorBaseEchart extends BaseEchart {
   @Prop({ type: Boolean, default: true }) sortTooltipsValue: boolean;
   @Prop({ type: Boolean, default: true }) needTooltips: boolean;
   @Prop({ type: Boolean, default: false }) needZrClick: boolean;
+  /** 是否需要图表的鼠标右击事件 */
   @Prop({ type: Boolean, default: false }) needMenuClick: boolean;
   /* tooltips内容最后一项格式化函数 */
   @Prop({ type: Function, default: null }) tooltipsContentLastItemFn: (v: any) => string;
@@ -145,6 +146,7 @@ class MonitorBaseEchart extends BaseEchart {
         (this as any).instance.on('dataZoom', this.handleDataZoom);
         if (this.needMenuClick) {
           (this as any).instance.on('contextmenu', params => {
+            /** 返回当前鼠标右击选择图表的数据下标 */
             this.$emit('menuClick', {
               dataIndex: params.dataIndex,
             });
@@ -331,9 +333,9 @@ class MonitorBaseEchart extends BaseEchart {
         const precision =
           !['none', ''].some(val => val === curSeries.unit) && +curSeries.precision < 1 ? 2 : +curSeries.precision;
         const valueObj = unitFormater(item.value[1] - minBase, precision);
-        return `<li class="tooltips-content-item" style="--series-color: ${curSeries.lineStyle?.color || item.color}">
-                  <span class="item-series is-${curSeries.lineStyle?.type}"
-                   style="background-color:${curSeries.lineStyle?.color || item.color};">
+        return `<li class="tooltips-content-item">
+                  <span class="item-series"
+                   style="background-color:${item.color};">
                   </span>
                   <span class="item-name" style="${markColor}">${item.seriesName}:</span>
                   <span class="item-value" style="${markColor}">

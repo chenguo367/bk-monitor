@@ -405,6 +405,8 @@ export default class StrategyConfigSet extends tsc<IStrategyConfigSetProps, IStr
   stickyObserver: IntersectionObserver | null = null;
   /** 所有列表智能模型 Map */
   intelligentDetect: Map<IntelligentModelsType, Array<Record<string, any>>> = new Map();
+  /* 是否支持智能监控 是否智能算法支持函数 */
+  isKpiAnomalySdkEnabled = false;
 
   get isEdit(): boolean {
     return !!this.$route.params.id;
@@ -1049,10 +1051,11 @@ export default class StrategyConfigSet extends tsc<IStrategyConfigSetProps, IStr
     this.actionConfigList = data;
   }
 
-  // 获取是否展示是否开启场景智能检测功能数据
+  // 获取是否展示是否开启场景智能检测功能数据  获取是否支持智能监控 是否智能算法支持函数
   async getShowMultivariateAnomalyDetection() {
     const data = await fetchAiSetting().catch(() => null);
     this.showMultivariateAnomalyDetection = !!data?.multivariate_anomaly_detection?.host?.is_enabled;
+    this.isKpiAnomalySdkEnabled = !!data?.kpi_anomaly_detection?.is_sdk_enabled;
   }
 
   // 获取告警组数据
@@ -2585,6 +2588,7 @@ export default class StrategyConfigSet extends tsc<IStrategyConfigSetProps, IStr
         expression={this.expression}
         hasAIntelligentDetect={this.hasAIntelligentDetect}
         hasAiOpsDetect={this.hasAiOpsDetect}
+        isKpiAnomalySdkEnabled={this.isKpiAnomalySdkEnabled}
         loading={this.monitorDataLoading}
         metricData={this.metricData}
         metricTipType={this.metricTipType}
@@ -2731,6 +2735,7 @@ export default class StrategyConfigSet extends tsc<IStrategyConfigSetProps, IStr
                   dataMode={this.dataMode}
                   intelligentDetect={this.intelligentDetect}
                   isEdit={this.isEdit}
+                  isKpiAnomalySdkEnabled={this.isKpiAnomalySdkEnabled}
                   metricData={this.selectMetricData}
                   needShowUnit={this.needShowUnit}
                   readonly={this.isDetailMode}
