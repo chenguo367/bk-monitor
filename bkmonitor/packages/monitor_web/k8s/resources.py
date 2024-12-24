@@ -184,10 +184,26 @@ class GetResourceDetail(Resource):
         return items
 
 
+class FilterDictSerializer(serializers.Serializer):
+    # 用于精确过滤查询
+    filter_dict = serializers.DictField(required=False, allow_null=True)
+
+    def validate_filter_dict(self, value):
+        field_map = {
+            "container": "container_name",
+            "pod": "pod_name",
+        }
+        for key in field_map:
+            if key in value:
+                value[field_map[key]] = value.pop(key)
+
+        return value
+
+
 class ListK8SResources(Resource):
     """获取K8s资源列表"""
 
-    class RequestSerializer(serializers.Serializer):
+    class RequestSerializer(FilterDictSerializer):
         bcs_cluster_id = serializers.CharField(required=True)
         bk_biz_id = serializers.IntegerField(required=True)
         resource_type = serializers.ChoiceField(
@@ -197,8 +213,6 @@ class ListK8SResources(Resource):
         )
         # 用于模糊查询
         query_string = serializers.CharField(required=False, default="", allow_blank=True, label="名字过滤")
-        # 用于精确过滤查询
-        filter_dict = serializers.DictField(required=False, allow_null=True)
         start_time = serializers.IntegerField(required=True, label="开始时间")
         end_time = serializers.IntegerField(required=True, label="结束时间")
         # 场景，后续持续补充， 目前暂时没有用的地方， 先传上
@@ -332,7 +346,7 @@ class ResourceTrendResource(Resource):
         "mem": "bytes",
     }
 
-    class RequestSerializer(serializers.Serializer):
+    class RequestSerializer(FilterDictSerializer):
         bcs_cluster_id = serializers.CharField(required=True)
         bk_biz_id = serializers.IntegerField(required=True)
         column = serializers.ChoiceField(required=True, choices=["cpu", "mem"])
@@ -358,7 +372,8 @@ class ResourceTrendResource(Resource):
         resource_meta: K8sResourceMeta = load_resource_meta(resource_type, bk_biz_id, bcs_cluster_id)
         ListK8SResources().add_filter(resource_meta, validated_request_data["filter_dict"])
         column = validated_request_data["column"]
-
+        series_map = {}
+        unit = self.unit_choice.get(column, "short")
         if resource_type == "workload":
             # workload 单独处理
             promql_list = []
@@ -367,14 +382,19 @@ class ResourceTrendResource(Resource):
                 resource_meta.filter.add(filter_obj)
                 promql_list.append(getattr(resource_meta, f"meta_prom_with_{column}"))
                 resource_meta.filter.remove(filter_obj)
+                workload_name = wl.split(":")[-1]
+                # 初始化series_map
+                series_map[workload_name] = {"datapoints": [], "unit": unit}
             promql = " or ".join(promql_list)
         else:
             resource_meta.filter.add(load_resource_filter(resource_type, resource_list))
             # 不用topk 因为有resource_list
             promql = getattr(resource_meta, f"meta_prom_with_{column}")
+            # 初始化series_map
+            for resource_id in resource_list:
+                series_map[resource_id] = {"datapoints": [], "unit": unit}
         series = self.query_data_by_promql(promql, bk_biz_id, start_time, end_time)
-        unit = self.unit_choice.get(column, "short")
-        series_map = {}
+
         for line in series:
             resource_name = line["dimensions"][resource_meta.resource_field]
             series_map[resource_name] = {"datapoints": line["datapoints"], "unit": unit}
