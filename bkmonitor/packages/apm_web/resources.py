@@ -242,7 +242,7 @@ class AsyncColumnsListResource(ApiAuthResource, ABC):
             if multi_sub_columns and isinstance(column_data, dict):
                 for sub_column in multi_sub_columns:
                     if sub_column in column_data or default_value:
-                        items[sub_column] = column_data.get(sub_column, default_value)
+                        items[f"{sub_column}_{column}"] = column_data.get(sub_column, default_value)
             else:
                 items[column] = column_data
         return items
