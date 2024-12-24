@@ -11,10 +11,10 @@ specific language governing permissions and limitations under the License.
 from enum import Enum
 from functools import lru_cache
 
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from opentelemetry.semconv.resource import ResourceAttributes
 from opentelemetry.semconv.trace import SpanAttributes
-from pyparsing import cached_property
 
 from constants.alert import EventSeverity
 from constants.apm import OtlpKey, SpanKindKey, TelemetryDataType
