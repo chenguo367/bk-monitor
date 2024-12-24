@@ -1053,6 +1053,7 @@ class ServiceListAsyncResource(AsyncColumnsListResource):
     def _get_data_status_mapping(cls, service_names, application, **kwargs):
         """获取服务的数据状态"""
         # 先获取缓存数据
+        data_status_type = kwargs.get("data_status_type")
         cache_key = ApmCacheKey.APP_SERVICE_STATUS_KEY.format(application_id=application.application_id)
         data_status_mapping = cache.get(cache_key)
         if data_status_mapping:
@@ -1069,9 +1070,16 @@ class ServiceListAsyncResource(AsyncColumnsListResource):
                 start_time,
                 end_time,
                 [{"topo_key": service_name} for service_name in service_names],
+                data_status_type=data_status_type,
             )
-            cache.set(cache_key, json.dumps(data_status_mapping), application.no_data_period * 60)
+            if data_status_type is None:
+                cache.set(cache_key, json.dumps(data_status_mapping), application.no_data_period * 60)
 
+        if data_status_type:
+            filtered_mapping = {}
+            for service_name, status_mapping in data_status_mapping.items():
+                filtered_mapping[service_name] = {data_status_type: status_mapping[data_status_type]}
+            data_status_mapping = filtered_mapping
         return data_status_mapping
 
     @classmethod
@@ -1165,16 +1173,22 @@ class ServiceListAsyncResource(AsyncColumnsListResource):
 
         multi_sub_columns = None
         default_value = None
+        service_names = validated_data["service_names"]
         if column in ["data_status"]:
-            info_mapping = self._get_data_status_mapping(validated_data["service_names"], **metric_params)
+            info_mapping = self._get_data_status_mapping(service_names, **metric_params)
             multi_sub_columns = TelemetryDataType.values()
             default_value = DataStatus.DISABLED
+        elif column in [f"{data_type}_data_status" for data_type in TelemetryDataType.values()]:
+            data_status_type = column.split("_data_status")[0]
+            info_mapping = self._get_data_status_mapping(
+                service_names, data_status_type=data_status_type, **metric_params
+            )
         elif column in ["strategy_count", "alert_status"]:
             info_mapping = self._get_service_strategy_mapping(column, **metric_params)
         else:
             info_mapping = self._get_column_metric_mapping(m, metric_params)
 
-        for service_name in validated_data["service_names"]:
+        for service_name in service_names:
             res.append(
                 {
                     "service_name": service_name,
