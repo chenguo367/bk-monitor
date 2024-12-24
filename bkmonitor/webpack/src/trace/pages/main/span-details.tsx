@@ -139,6 +139,9 @@ export default defineComponent({
     const originSpanEndTime = ref(0);
     provide('originSpanEndTime', originSpanEndTime);
 
+    const spanId = computed(() => props.spanDetails.span_id);
+    provide('spanId', spanId);
+
     // 用作 Event 栏的首行打开。
     let isInvokeOnceFlag = true;
     /* 初始化 */
@@ -939,6 +942,10 @@ export default defineComponent({
           .catch(console.log)
           .finally(() => (isTabPanelLoading.value = false));
         if (result?.overview_panels?.length) {
+          result.overview_panels[0] = {
+            ...result.overview_panels[0],
+            type: 'monitor-trace-log',
+          };
           result.overview_panels[0].options = {
             ...result.overview_panels[0].options,
             related_log_chart: {

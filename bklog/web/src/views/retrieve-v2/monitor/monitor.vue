@@ -25,7 +25,6 @@
 -->
 
 <script setup>
-window.__IS_MONITOR_APM__ = true;
 import { computed, ref, watch, defineProps, onMounted, provide } from 'vue';
 
 import * as authorityMap from '@/common/authority-map';
@@ -182,7 +181,7 @@ const setRouteParams = () => {
     datePickerValue: store.state.indexItem.datePickerValue,
   });
   Object.assign(query, resolver.resolveParamsToUrl());
-  
+
   if (!isEqual(query, route.query)) {
     router.replace({
       query,
@@ -212,6 +211,7 @@ watch(
 watch(
   () => props.timeRange,
   async val => {
+    console.log('props.timeRange', props.timeRange);
     if (!val) return;
     store.commit('updateIsSetDefaultTableColumn', false);
     const result = handleTransformToTimestamp(val);

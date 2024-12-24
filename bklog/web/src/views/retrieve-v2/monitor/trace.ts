@@ -24,9 +24,10 @@
 * IN THE SOFTWARE.
 */
 window.__IS_MONITOR_COMPONENT__ = true;
-window.__IS_MONITOR_TRACE__ = process.env.MONITOR_APP === 'trace';
+window.__IS_MONITOR_TRACE__ = true;
 window.__IS_MONITOR_APM__ = process.env.MONITOR_APP === 'apm';
-import Vue from 'vue';
+import Vue  from 'vue';
+import VueRouter from 'vue-router';
 
 import LogButton from '@/components/log-button';
 import JsonFormatWrapper from '@/global/json-format-wrapper.vue';
@@ -35,6 +36,7 @@ import i18n from '@/language/i18n';
 
 import MonitorRetrieve from './monitor.vue';
 
+import 'bk-magic-vue/dist/bk-magic-vue.min.css';
 import '../../../static/style.css';
 const logStore = useStore();
 const initMonitorState = (payload) => {
@@ -44,10 +46,13 @@ const initGlobalComponents = () => {
   Vue.component('JsonFormatWrapper', JsonFormatWrapper);
   Vue.component('LogButton', LogButton);
 }
+const Vue2 = Vue;
 export {
   MonitorRetrieve,
   logStore,
   i18n,
   initMonitorState,
-  initGlobalComponents
+  initGlobalComponents,
+  Vue2,
+  VueRouter
 }
