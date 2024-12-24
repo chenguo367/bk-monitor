@@ -8,9 +8,13 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
+from enum import Enum
+from functools import lru_cache
+
 from django.utils.translation import gettext_lazy as _
 from opentelemetry.semconv.resource import ResourceAttributes
 from opentelemetry.semconv.trace import SpanAttributes
+from pyparsing import cached_property
 
 from constants.alert import EventSeverity
 from constants.apm import OtlpKey, SpanKindKey, TelemetryDataType
@@ -954,3 +958,197 @@ METRIC_COMMON_DIMENSION = [
     "server",  # 服务
     "service_name",  # 服务名：service_name (组成逻辑app+server)
 ]
+
+
+# 枚举类状态
+class CachedEnum(Enum):
+    @classmethod
+    @lru_cache(maxsize=None)
+    def from_value(cls, value):
+        try:
+            return cls(value)
+        except ValueError:
+            return cls.get_default(value)  # 处理未找到的情况
+
+    @classmethod
+    def get_default(cls, value):
+        class _DefaultEnum:
+            @property
+            def value(self):
+                return value
+
+            def __getattr__(self, item):
+                return getattr(self, item, None)
+
+            def __setattr__(self, item, default_value):
+                setattr(self, item, default_value)
+
+        return _DefaultEnum()
+
+
+class ServiceStatusCachedEnum(CachedEnum):
+    FATAL = 1
+    WARNING = 2
+    REMIND = 3
+    NORMAL = 9999
+
+    @cached_property
+    def get_label_by_key(self):
+        return {
+            self.NORMAL: _("无告警"),
+            self.FATAL: _("致命"),
+            self.REMIND: _("提醒"),
+            self.WARNING: _("预警"),
+        }.get(self, self.value)
+
+    @cached_property
+    def get_status_by_key(self):
+        return {
+            self.NORMAL: {"type": Status.SUCCESS, "text": self.get_label_by_key},
+            self.FATAL: {"type": Status.FAILED, "text": self.get_label_by_key},
+            self.REMIND: {"type": Status.WARNING, "text": self.get_label_by_key},
+            self.WARNING: {"type": Status.WARNING, "text": self.get_label_by_key},
+        }.get(self, {"type": Status.FAILED, "text": self.get_label_by_key})
+
+    @classmethod
+    def get_default(cls, value):
+        default = super().get_default(value)
+        default.get_label_by_key = value
+        default.get_status_by_key = {"type": Status.FAILED, "text": value}
+        return default
+
+
+class ApdexCachedEnum(CachedEnum):
+    DIMENSION_KEY = "apdex_type"
+    SATISFIED = "satisfied"
+    TOLERATING = "tolerating"
+    FRUSTRATED = "frustrated"
+    ERROR = "error"
+
+    @cached_property
+    def get_label_by_key(self):
+        return {self.SATISFIED: _("满意"), self.TOLERATING: _("可容忍"), self.FRUSTRATED: _("烦躁期")}.get(self, self.value)
+
+    @cached_property
+    def get_status_by_key(self):
+        return {
+            self.SATISFIED: {"type": Status.SUCCESS, "text": self.get_label_by_key},
+            self.TOLERATING: {"type": Status.WAITING, "text": self.get_label_by_key},
+            self.FRUSTRATED: {"type": Status.FAILED, "text": self.get_label_by_key},
+        }.get(self, {"type": None, "text": "--"})
+
+    @classmethod
+    def get_default(cls, value):
+        default = super().get_default(value)
+        default.get_label_by_key = value
+        default.get_status_by_key = {"type": None, "text": "--"}
+        return default
+
+
+class CategoryCachedEnum(CachedEnum):
+    HTTP = "http"
+    RPC = "rpc"
+    DB = "db"
+    MESSAGING = "messaging"
+    ASYNC_BACKEND = "async_backend"
+    ALL = "all"
+    OTHER = "other"
+
+    # profile 为新的展示类型 只用来展示在 serviceList 无实际作用
+    PROFILING = "profiling"
+
+    @cached_property
+    def get_label_by_key(self):
+        return {
+            self.HTTP: _("网页"),
+            self.RPC: _("远程调用"),
+            self.DB: _("数据库"),
+            self.MESSAGING: _("消息队列"),
+            self.ASYNC_BACKEND: _("后台任务"),
+            self.ALL: _("全部"),
+            self.OTHER: _("其他"),
+        }.get(self, self.value)
+
+    @cached_property
+    def get_remote_service_label_by_key(self):
+        return {self.HTTP: _("网页(自定义服务)")}.get(self, self.value)
+
+    @classmethod
+    @lru_cache(maxsize=1)
+    def get_filter_fields(cls):
+        return [
+            {
+                "id": cls.ALL.value,
+                "name": _("全部"),
+                "icon": "icon-gailan",
+            },
+            {
+                "id": cls.HTTP.value,
+                "name": _("网页"),
+                "icon": "icon-wangye",
+            },
+            {
+                "id": cls.RPC.value,
+                "name": _("远程调用"),
+                "icon": "icon-yuanchengfuwu",
+            },
+            {
+                "id": cls.DB.value,
+                "name": _("数据库"),
+                "icon": "icon-shujuku",
+            },
+            {
+                "id": cls.MESSAGING.value,
+                "name": _("消息队列"),
+                "icon": "icon-xiaoxizhongjianjian",
+            },
+            {
+                "id": cls.ASYNC_BACKEND.value,
+                "name": _("后台任务"),
+                "icon": "icon-renwu",
+            },
+            {
+                "id": cls.OTHER.value,
+                "name": _("其他"),
+                "icon": "icon-mc-service-unknown",
+            },
+        ]
+
+    @classmethod
+    def classify(cls, span):
+        # TODO: 转为InferenceHandler进行推断
+        if span[OtlpKey.ATTRIBUTES].get(SpanAttributes.HTTP_METHOD):
+            return cls.HTTP.value
+        if span[OtlpKey.ATTRIBUTES].get(SpanAttributes.RPC_SERVICE):
+            return cls.RPC.value
+        if span[OtlpKey.ATTRIBUTES].get(SpanAttributes.DB_SYSTEM):
+            return cls.DB.value
+        if span[OtlpKey.ATTRIBUTES].get(SpanAttributes.MESSAGING_SYSTEM):
+            return cls.MESSAGING.value
+        return cls.OTHER.value
+
+    @classmethod
+    def list_span_keys(cls):
+        """获取所有分类字段"""
+        return [
+            SpanAttributes.DB_SYSTEM,
+            SpanAttributes.MESSAGING_SYSTEM,
+            SpanAttributes.RPC_SYSTEM,
+            SpanAttributes.HTTP_METHOD,
+            SpanAttributes.MESSAGING_DESTINATION,
+        ]
+
+    @classmethod
+    def list_component_generate_keys(cls):
+        """获取 APM 手动处理(手动生成服务节点)的字段"""
+        return [
+            SpanAttributes.DB_SYSTEM,
+            SpanAttributes.MESSAGING_SYSTEM,
+        ]
+
+    @classmethod
+    def get_default(cls, value):
+        default = super().get_default(value)
+        default.get_label_by_key = value
+        default.get_remote_service_label_by_key = value
+        return default
