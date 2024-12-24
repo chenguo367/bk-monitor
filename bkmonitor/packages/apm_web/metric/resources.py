@@ -1185,8 +1185,10 @@ class ServiceListAsyncResource(AsyncColumnsListResource):
                     ),
                 }
             )
-
-        return self.get_async_data(res, validated_data["column"], multi_sub_columns=multi_sub_columns)
+        multi_output_columns = (
+            [f"{sub_column}_{column}" for sub_column in multi_sub_columns] if multi_sub_columns else None
+        )
+        return self.get_async_data(res, validated_data["column"], multi_output_columns=multi_output_columns)
 
 
 class CollectServiceResource(Resource):
