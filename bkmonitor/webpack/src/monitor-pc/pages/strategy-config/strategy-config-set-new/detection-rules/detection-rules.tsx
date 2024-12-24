@@ -224,7 +224,7 @@ export default class DetectionRules extends tsc<IDetectionRules, IEvent> {
     return (
       this.metricData.length === 1 &&
       (['bk_data'].includes(dataSourceLabel) ||
-        (['bk_monitor'].includes(dataSourceLabel) && this.isKpiAnomalySdkEnabled))) &&
+        (['bk_monitor'].includes(dataSourceLabel) && this.isKpiAnomalySdkEnabled)) &&
       dataTypeLabel === 'time_series' &&
       !functions?.length
     );
