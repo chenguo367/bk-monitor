@@ -967,21 +967,24 @@ class CachedEnum(Enum):
     def from_value(cls, value):
         try:
             return cls(value)
-        except ValueError:
+        except Exception:  # pylint: disable=broad-except
             return cls.get_default(value)  # 处理未找到的情况
 
     @classmethod
     def get_default(cls, value):
         class _DefaultEnum:
+            def __init__(self):
+                self._value = value
+
             @property
             def value(self):
-                return value
+                return self._value
 
             def __getattr__(self, item):
                 return getattr(self, item, None)
 
             def __setattr__(self, item, default_value):
-                setattr(self, item, default_value)
+                object.__setattr__(self, item, default_value)
 
         return _DefaultEnum()
 
@@ -993,7 +996,7 @@ class ServiceStatusCachedEnum(CachedEnum):
     NORMAL = 9999
 
     @cached_property
-    def get_label_by_key(self):
+    def label(self):
         return {
             self.NORMAL: _("无告警"),
             self.FATAL: _("致命"),
@@ -1002,19 +1005,19 @@ class ServiceStatusCachedEnum(CachedEnum):
         }.get(self, self.value)
 
     @cached_property
-    def get_status_by_key(self):
+    def status(self):
         return {
-            self.NORMAL: {"type": Status.SUCCESS, "text": self.get_label_by_key},
-            self.FATAL: {"type": Status.FAILED, "text": self.get_label_by_key},
-            self.REMIND: {"type": Status.WARNING, "text": self.get_label_by_key},
-            self.WARNING: {"type": Status.WARNING, "text": self.get_label_by_key},
-        }.get(self, {"type": Status.FAILED, "text": self.get_label_by_key})
+            self.NORMAL: {"type": Status.SUCCESS, "text": self.label},
+            self.FATAL: {"type": Status.FAILED, "text": self.label},
+            self.REMIND: {"type": Status.WARNING, "text": self.label},
+            self.WARNING: {"type": Status.WARNING, "text": self.label},
+        }.get(self, {"type": Status.FAILED, "text": self.label})
 
     @classmethod
     def get_default(cls, value):
         default = super().get_default(value)
-        default.get_label_by_key = value
-        default.get_status_by_key = {"type": Status.FAILED, "text": value}
+        default.label = value
+        default.status = {"type": Status.FAILED, "text": value}
         return default
 
 
@@ -1026,22 +1029,22 @@ class ApdexCachedEnum(CachedEnum):
     ERROR = "error"
 
     @cached_property
-    def get_label_by_key(self):
+    def label(self):
         return {self.SATISFIED: _("满意"), self.TOLERATING: _("可容忍"), self.FRUSTRATED: _("烦躁期")}.get(self, self.value)
 
     @cached_property
-    def get_status_by_key(self):
+    def status(self):
         return {
-            self.SATISFIED: {"type": Status.SUCCESS, "text": self.get_label_by_key},
-            self.TOLERATING: {"type": Status.WAITING, "text": self.get_label_by_key},
-            self.FRUSTRATED: {"type": Status.FAILED, "text": self.get_label_by_key},
+            self.SATISFIED: {"type": Status.SUCCESS, "text": self.label},
+            self.TOLERATING: {"type": Status.WAITING, "text": self.label},
+            self.FRUSTRATED: {"type": Status.FAILED, "text": self.label},
         }.get(self, {"type": None, "text": "--"})
 
     @classmethod
     def get_default(cls, value):
         default = super().get_default(value)
-        default.get_label_by_key = value
-        default.get_status_by_key = {"type": None, "text": "--"}
+        default.label = value
+        default.status = {"type": None, "text": "--"}
         return default
 
 
@@ -1058,7 +1061,7 @@ class CategoryCachedEnum(CachedEnum):
     PROFILING = "profiling"
 
     @cached_property
-    def get_label_by_key(self):
+    def label(self):
         return {
             self.HTTP: _("网页"),
             self.RPC: _("远程调用"),
@@ -1070,7 +1073,7 @@ class CategoryCachedEnum(CachedEnum):
         }.get(self, self.value)
 
     @cached_property
-    def get_remote_service_label_by_key(self):
+    def remote_service_label(self):
         return {self.HTTP: _("网页(自定义服务)")}.get(self, self.value)
 
     @classmethod

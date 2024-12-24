@@ -938,7 +938,7 @@ class ServiceListResource(PageListResource):
                     "app_name": application.app_name,
                     "collect": name in collects,
                     "service_name": name,
-                    "type": CategoryCachedEnum.from_value(service["extra_data"]["category"]).get_label_by_key,
+                    "type": CategoryCachedEnum.from_value(service["extra_data"]["category"]).label,
                     "language": service["extra_data"]["service_language"] or _("其他语言"),
                     "operation": {
                         "config": _lazy("配置"),

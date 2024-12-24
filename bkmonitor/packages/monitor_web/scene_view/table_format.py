@@ -157,10 +157,10 @@ class StringLabelTableFormat(StringTableFormat):
 
     def format(self, row: dict):
         if not self.icon_getter:
-            return {"text": self.label_getter.from_value(row[self.id]).get_label_by_key, "type": row[self.id]}
+            return {"text": self.label_getter.from_value(row[self.id]).label, "type": row[self.id]}
 
         return {
-            "text": self.label_getter.from_value(row[self.id]).get_label_by_key,
+            "text": self.label_getter.from_value(row[self.id]).label,
             "type": row[self.id],
             "icon": self.icon_getter(row),
         }
@@ -171,7 +171,7 @@ class StringLabelTableFormat(StringTableFormat):
 
     def get_filter_key(self, row):
         default_key = row.get(self.id, "--")
-        return {"value": default_key, "text": self.label_getter.from_value(default_key).get_label_by_key}
+        return {"value": default_key, "text": self.label_getter.from_value(default_key).label}
 
 
 class TimestampTableFormat(TableFormat):
@@ -432,18 +432,18 @@ class StatusTableFormat(TableFormat):
         self.show_tips = show_tips
 
     def get_filter_key(self, row):
-        status = self.status_map_cls.from_vlaue(row.get(self.id, "")).get_status_by_key
+        status = self.status_map_cls.from_value(row.get(self.id, "")).status
         text = status.get("text", "")
         value = self.get_map_value(status.get("type", ""))
         return {"text": text, "value": value}
 
     def get_value(self, row):
-        status = self.status_map_cls.from_vlaue(row.get(self.id, "")).get_status_by_key
+        status = self.status_map_cls.from_value(row.get(self.id, "")).status
         type_value = status.get("type", "")
         return self.get_map_value(type_value)
 
     def format(self, row):
-        status = self.status_map_cls.from_vlaue(row[self.id]).get_status_by_key
+        status = self.status_map_cls.from_value(row[self.id]).status
         if self.tips_format and self.show_tips(row[self.id]):
             status["tips"] = self.tips_format.format(**row)
         return status
