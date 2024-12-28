@@ -282,6 +282,9 @@ const store = new Vuex.Store({
     getApiError: state => apiName => {
       return state.apiErrorInfo[apiName];
     },
+    resultTableStaticWidth: state => {
+      return (state.indexSetOperatorConfig?.bcsWebConsole?.is_active ? 84 : 58) + 50;
+    },
   },
   // 公共 mutations
   mutations: {
@@ -314,7 +317,6 @@ const store = new Vuex.Store({
           state.indexItem.chart_params[key].splice(0, state.indexItem.chart_params[key].length, ...(params[key] ?? []));
         } else {
           set(state.indexItem.chart_params, key, params[key]);
-          // state.indexItem.chart_params[key] = params[key];
         }
       });
     },
@@ -333,7 +335,9 @@ const store = new Vuex.Store({
     },
 
     updateIndexSetOperatorConfig(state, payload) {
-      Object.assign(state.indexSetOperatorConfig, payload ?? {});
+      Object.keys(payload ?? {}).forEach(key => {
+        set(state.indexSetOperatorConfig, key, payload[key]);
+      });
     },
 
     /**
@@ -355,7 +359,7 @@ const store = new Vuex.Store({
 
       state.indexItem.isUnionIndex = false;
       state.unionIndexList.splice(0, state.unionIndexList.length);
-      state.indexItem.chart_params = {};
+      state.indexItem.chart_params = deepClone(IndexItem.chart_params);
 
       if (payload?.addition?.length >= 0) {
         state.indexItem.addition.splice(
@@ -604,10 +608,12 @@ const store = new Vuex.Store({
       state.externalMenu = val;
     },
     updateVisibleFields(state, val) {
-      state.visibleFields = val;
+      state.visibleFields.splice(0, state.visibleFields.length, ...(val ?? []));
+      state.indexFieldInfo.request_counter++;
     },
-    updateVisibleFieldMinWidth(state, fields) {
-      setDefaultTableWidth(state.visibleFields, fields);
+    updateVisibleFieldMinWidth(state, tableList, fieldList) {
+      const staticWidth = state.indexSetOperatorConfig?.bcsWebConsole?.is_active ? 84 : 58 + 50;
+      setDefaultTableWidth(fieldList ?? state.visibleFields, tableList, null, staticWidth);
     },
     updateIsNotVisibleFieldsShow(state, val) {
       state.isNotVisibleFieldsShow = val;
@@ -722,11 +728,15 @@ const store = new Vuex.Store({
       // 如果浏览器记录过当前索引集表格拖动过 则不需要重新计算
       if (!state.isSetDefaultTableColumn) {
         const catchFieldsWidthObj = store.state.retrieve.catchFieldCustomConfig.fieldsWidth;
-        state.isSetDefaultTableColumn = setDefaultTableWidth(
+        const staticWidth = state.indexSetOperatorConfig?.bcsWebConsole?.is_active ? 84 : 58;
+        setDefaultTableWidth(
           state.visibleFields,
-          state.indexSetQueryResult.list,
+          payload?.list ?? state.indexSetQueryResult.list,
           catchFieldsWidthObj,
+          staticWidth + 60,
         );
+        // request_counter 用于触发查询结果表格的更新
+        state.indexFieldInfo.request_counter++;
       }
       if (typeof payload === 'boolean') state.isSetDefaultTableColumn = payload;
     },
@@ -747,6 +757,7 @@ const store = new Vuex.Store({
           .filter(Boolean) ?? [];
       store.commit('updateVisibleFields', visibleFields);
       store.commit('updateIsNotVisibleFieldsShow', !visibleFields.length);
+
       if (state.indexItem.isUnionIndex) store.dispatch('showShowUnionSource', { keepLastTime: true });
     },
     resetIndexSetOperatorConfig(state) {
@@ -1002,6 +1013,7 @@ const store = new Vuex.Store({
       commit('updataOperatorDictionary', {});
       commit('updateNotTextTypeFields', {});
       commit('updateIndexSetFieldConfig', {});
+      commit('updateVisibleFields', []);
 
       if (!ids.length) {
         return;
@@ -1034,17 +1046,13 @@ const store = new Vuex.Store({
         .then(res => {
           commit('updateIndexFieldInfo', res.data ?? {});
           commit('updataOperatorDictionary', res.data ?? {});
-          // commit('updateAddition');
           commit('updateNotTextTypeFields', res.data ?? {});
           commit('updateIndexSetFieldConfig', res.data ?? {});
           commit('retrieve/updateFiledSettingConfigID', res.data?.config_id ?? -1); // 当前字段配置configID
           commit('retrieve/updateCatchFieldCustomConfig', res.data.user_custom_config); // 更新用户个人配置
           commit('resetVisibleFields');
           commit('resetIndexSetOperatorConfig');
-
-          // 请求字段联想相关配置
-          // dispatch('requestIndexSetValueList');
-
+          commit('updateIsSetDefaultTableColumn');
           return res;
         })
         .catch(err => {
@@ -1057,7 +1065,7 @@ const store = new Vuex.Store({
     },
 
     /** 请求获取用户个人配置信息 */
-    requestIndexSetCustomConfigInfo({ commit, dispatch, state }) {
+    requestIndexSetCustomConfigInfo({ commit, state }) {
       // @ts-ignore
       const { ids = [], start_time = '', end_time = '', isUnionIndex } = state.indexItem;
       if (!ids.length) {
@@ -1089,7 +1097,7 @@ const store = new Vuex.Store({
           commit('retrieve/updateCatchFieldCustomConfig', res.data.user_custom_config); // 更新用户个人配置
           return res;
         })
-        .catch(err => {
+        .catch(() => {
           commit('retrieve/updateCatchFieldCustomConfig', {
             ...state.retrieve.catchFieldCustomConfig,
             filterSetting: {},
@@ -1149,14 +1157,6 @@ const store = new Vuex.Store({
         ? `/search/index_set/${state.indexId}/search/`
         : '/search/index_set/union_search/';
 
-      // const addition = otherPrams.addition.map(a => {
-      //   if (['is true', 'is false'].includes(a.operator)) {
-      //     a.value = [''];
-      //   }
-
-      //   return a;
-      // });
-
       const baseData = {
         bk_biz_id: state.bkBizId,
         size,
@@ -1169,7 +1169,7 @@ const store = new Vuex.Store({
       // 更新联合查询的begin
       const unionConfigs = state.unionIndexList.map(item => ({
         begin: payload.isPagination
-          ? (state.indexItem.catchUnionBeginList.find(cItem => String(cItem?.index_set_id) === item)?.begin ?? 0)
+          ? state.indexItem.catchUnionBeginList.find(cItem => String(cItem?.index_set_id) === item)?.begin ?? 0
           : 0,
         index_set_id: item,
       }));
@@ -1215,22 +1215,27 @@ const store = new Vuex.Store({
               rsolvedData.origin_log_list = payload.isPagination
                 ? indexSetQueryResult.origin_log_list.concat(originLogList)
                 : originLogList;
+
               const catchUnionBeginList = parseBigNumberList(rsolvedData?.union_configs || []);
               state.tookTime = payload.isPagination
                 ? state.tookTime + Number(data?.took || 0)
                 : Number(data?.took || 0);
+
+              if (!payload?.isPagination) {
+                commit('updateIsSetDefaultTableColumn', { list: logList });
+                dispatch('requestSearchTotal');
+              }
               // 更新页数
               commit('updateSqlQueryFieldList', logList);
               commit('updateIndexItem', { catchUnionBeginList, begin: payload.isPagination ? begin : 0 });
               commit('updateIndexSetQueryResult', rsolvedData);
-              commit('updateIsSetDefaultTableColumn');
 
-              if (!payload?.isPagination) dispatch('requestSearchTotal');
               return {
                 data,
                 message,
                 code,
                 result,
+                length: logList.length,
               };
             });
           }
@@ -1275,6 +1280,8 @@ const store = new Vuex.Store({
           commit('updateIndexSetFieldConfigList', {
             data: resp.data ?? [],
           });
+
+          return resp;
         })
         .finally(() => {
           commit('updateIndexSetFieldConfigList', {
@@ -1292,7 +1299,6 @@ const store = new Vuex.Store({
     requestIndexSetItemChanged({ commit, dispatch }, payload) {
       commit('updateIndexItem', payload);
       commit('resetIndexSetQueryResult', { search_count: 0, is_loading: true });
-      commit('updateIsSetDefaultTableColumn', false);
 
       if (!payload.isUnionIndex) {
         commit('updateIndexId', payload.ids[0]);

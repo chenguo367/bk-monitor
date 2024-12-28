@@ -114,11 +114,11 @@
     <retrieve-loader
       v-if="isPageOver || isContentLoading"
       class="bklog-skeleton-loading"
+      :is-loading="false"
       :is-page-over="isPageOver || isContentLoading"
-      :visible-fields="[]"
-      :maxLength="36"
+      :max-length="36"
       :static="true"
-      :isLoading="false"
+      :visible-fields="[]"
     >
     </retrieve-loader>
   </div>
@@ -126,18 +126,14 @@
 
 <script>
   import tableRowDeepViewMixin from '@/mixins/table-row-deep-view-mixin';
-  import { mapState } from 'vuex';
   import RetrieveLoader from '@/skeleton/retrieve-loader';
-  // #if MONITOR_APP !== 'trace'
+  import { mapState } from 'vuex';
+
+  import { bigNumberToString } from '../../../../common/util';
   import ContextLog from '../../result-comp/context-log';
   import RealTimeLog from '../../result-comp/real-time-log';
-  // #else
-  // #code const ContextLog = () => null;
-  // #code const RealTimeLog = () => null;
-  // #endif
   import OriginalList from './original-list';
   import TableList from './table-list';
-  import { bigNumberToString } from '../../../../common/util';
 
   export default {
     components: {
@@ -281,7 +277,7 @@
         this.$http
           .request('retrieve/getWebConsoleUrl', {
             params: {
-              index_set_id: window.__IS_MONITOR_COMPONENT__ ? this.$route.query.indexId : this.$route.params.indexId,
+              index_set_id: window.__IS_MONITOR_APM__ ? this.$route.query.indexId : this.$route.params.indexId,
             },
             query: queryData,
           })
@@ -351,7 +347,7 @@
     height: calc(100% - 42px);
 
     .bklog-skeleton-loading {
-      position: absolute !important;
+      position: absolute;
       top: 0;
       z-index: 10;
     }

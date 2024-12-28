@@ -102,6 +102,7 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
   activeTab = K8sNewTabEnum.LIST;
   filterBy: Record<string, string[]> = {};
   // Group By 选择器的值
+  @ProvideReactive('groupInstance')
   groupInstance: K8sGroupDimension = new K8sPerformanceGroupDimension();
 
   // 是否展示取消下钻
@@ -115,6 +116,8 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
   metricList: IK8SMetricItem[] = [];
   // 指标隐藏项
   hideMetrics: string[] = [];
+  /** 当前选中的指标 */
+  activeMetricId = '';
 
   metricLoading = true;
   /** 自动刷新定时器 */
@@ -218,16 +221,19 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
     this.showCancelDrill = false;
     if (!this.filterBy[dimensionId]) this.filterBy[dimensionId] = [];
     if (isSelect) {
+      if (!this.groupInstance.hasGroupFilter(dimensionId as K8sTableColumnResourceKey)) {
+        this.groupByChange(dimensionId, true);
+      }
       /** workload维度只能选择一项 */
       if (dimensionId === EDimensionKey.workload) {
         this.filterBy[dimensionId] = [id];
-      } else {
+      } else if (!this.filterBy[dimensionId].includes(id)) {
         this.filterBy[dimensionId].push(id);
       }
     } else {
       this.filterBy[dimensionId] = this.filterBy[dimensionId].filter(item => item !== id);
     }
-    this.filterBy = { ...this.filterBy };
+    // this.filterBy = { ...this.filterBy };
   }
 
   created() {
@@ -360,6 +366,16 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
     this.handleSetUserConfig(`${HIDE_METRICS_KEY}_${this.scene}`, JSON.stringify(hideMetrics));
   }
 
+  /** 指标列表项点击 */
+  async handleMetricItemClick(metricId: string) {
+    if (this.hideMetrics.includes(metricId) || !metricId) return;
+    this.activeTab = K8sNewTabEnum.CHART;
+    this.activeMetricId = metricId;
+    setTimeout(() => {
+      this.activeMetricId = '';
+    }, 3000);
+  }
+
   handleClusterChange(cluster: string) {
     this.cluster = cluster;
     this.initFilterBy();
@@ -453,6 +469,7 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
       case K8sNewTabEnum.CHART:
         return (
           <K8SCharts
+            activeMetricId={this.activeMetricId}
             filterCommonParams={this.filterCommonParams}
             groupBy={this.groupFilters}
             hideMetrics={this.hideMetrics}
@@ -565,9 +582,11 @@ export default class MonitorK8sNew extends Mixins(UserConfigMixin) {
                 onGroupByChange={this.groupByChange}
               />
               <K8sMetricList
+                activeMetric={this.activeMetricId}
                 hideMetrics={this.hideMetrics}
                 loading={this.metricLoading}
                 metricList={this.metricList}
+                onHandleItemClick={this.handleMetricItemClick}
                 onMetricHiddenChange={this.metricHiddenChange}
               />
             </K8sLeftPanel>

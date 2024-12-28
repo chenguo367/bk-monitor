@@ -232,7 +232,7 @@ class K8SCustomChart extends CommonSimpleChart {
                     ...this.viewOptions.filters,
                     ...this.viewOptions,
                     ...this.viewOptions.variables,
-                    time_shift: timeShift,
+                    time_shift: !timeShift ? ' ' : `offset ${timeShift}`,
                     interval,
                     interval_second: convertToSeconds(interval),
                   },
@@ -618,7 +618,7 @@ class K8SCustomChart extends CommonSimpleChart {
         z: 4,
         smooth: 0,
         unitFormatter,
-        precision: this.panel.options?.precision || 2,
+        precision: this.panel.options?.precision || precision || 4,
         lineStyle: {
           width: 2,
         },

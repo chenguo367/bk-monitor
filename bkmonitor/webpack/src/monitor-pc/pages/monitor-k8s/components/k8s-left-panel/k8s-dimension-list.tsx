@@ -60,7 +60,7 @@ export default class K8sDimensionList extends tsc<K8sDimensionListProps, K8sDime
   /** 搜索 */
   searchValue = '';
   /** 已选择filterBy列表 */
-  showDimensionList: GroupListItem[] = [];
+  showDimensionList: GroupListItem<EDimensionKey>[] = [];
   /** 下钻弹窗列表 */
   drillDownList = [];
 
@@ -83,6 +83,21 @@ export default class K8sDimensionList extends tsc<K8sDimensionListProps, K8sDime
       pre[cur.id] = cur.count;
       return pre;
     }, {});
+  }
+
+  get groupItemDefaultExpandIndexSet() {
+    const set = new Set();
+    if (this.searchValue === '') {
+      set.add(0);
+    } else {
+      for (let i = 0; i < this.showDimensionList.length; i++) {
+        if (this.showDimensionList?.[i]?.count) {
+          set.add(i);
+          return set;
+        }
+      }
+    }
+    return set;
   }
 
   @Watch('localCommonParams')
@@ -248,7 +263,7 @@ export default class K8sDimensionList extends tsc<K8sDimensionListProps, K8sDime
             : this.showDimensionList.map((group, index) => (
                 <GroupItem
                   key={group.id}
-                  defaultExpand={index === 0}
+                  defaultExpand={this.groupItemDefaultExpandIndexSet.has(index)}
                   drillDownList={this.drillDownList}
                   expandLoading={this.expandLoading}
                   isGroupBy={this.groupBy.includes(group.id)}
