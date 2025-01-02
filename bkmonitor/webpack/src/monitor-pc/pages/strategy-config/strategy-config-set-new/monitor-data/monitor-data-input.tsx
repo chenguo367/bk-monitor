@@ -346,7 +346,7 @@ class MericDataInput extends Mixins(metricTipsContentMixin) {
     let content = '';
     try {
       content = this.handleGetMetricTipsContent(item);
-    } catch (error) {
+    } catch {
       // content = `${this.$t('指标不存在')}`;
     }
     if (content) {
@@ -560,12 +560,15 @@ class MericDataInput extends Mixins(metricTipsContentMixin) {
                   />
                 )}
                 {/* =======函数====== */}
-                {!this.isRealTimeModel && item.canSetFunction && this.isKpiAnomalySdkEnabled && !item.isNullMetric && (
-                  <FunctionSelect
-                    v-model={item.functions}
-                    onValueChange={this.emitFunctionChange}
-                  />
-                )}
+                {!this.isRealTimeModel &&
+                  item.canSetFunction &&
+                  (!this.hasAiOpsDetect || this.isKpiAnomalySdkEnabled) &&
+                  !item.isNullMetric && (
+                    <FunctionSelect
+                      v-model={item.functions}
+                      onValueChange={this.emitFunctionChange}
+                    />
+                  )}
               </div>
               <div class='item-delete'>
                 <div

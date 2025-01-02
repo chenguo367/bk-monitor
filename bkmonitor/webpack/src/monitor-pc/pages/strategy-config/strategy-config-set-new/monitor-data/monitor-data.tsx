@@ -671,6 +671,7 @@ export default class MyComponent extends tsc<IMonitorDataProps, IMonitorDataEven
                 hasAIntelligentDetect={this.hasAIntelligentDetect}
                 isKpiAnomalySdkEnabled={this.isKpiAnomalySdkEnabled}
                 hasAiOpsDetect={this.hasAiOpsDetect}
+                isKpiAnomalySdkEnabled={this.isKpiAnomalySdkEnabled}
                 isRealTimeModel={this.dataMode === 'realtime'}
                 metricData={this.metricData}
                 metricNameLabel={this.metricNameLabel}

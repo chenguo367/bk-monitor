@@ -396,6 +396,9 @@ export default class StrategyConfigSet extends tsc<IStrategyConfigSetProps, IStr
   /* 是否开启场景智能检测功能 */
   showMultivariateAnomalyDetection = false;
 
+  /* 是否支持智能监控 是否智能算法支持函数 */
+  isKpiAnomalySdkEnabled = false;
+
   /* 是否展示实时查询（只有实时能力的不能隐藏 如系统事件， 如果已经配置了的不能隐藏） */
   showRealtimeStrategy = !!window?.show_realtime_strategy;
   /* 时区 */
@@ -1051,7 +1054,7 @@ export default class StrategyConfigSet extends tsc<IStrategyConfigSetProps, IStr
     this.actionConfigList = data;
   }
 
-  // 获取是否展示是否开启场景智能检测功能数据  获取是否支持智能监控 是否智能算法支持函数
+  // 获取是否展示是否开启场景智能检测功能数据 获取是否支持智能监控 是否智能算法支持函数
   async getShowMultivariateAnomalyDetection() {
     const data = await fetchAiSetting().catch(() => null);
     this.showMultivariateAnomalyDetection = !!data?.multivariate_anomaly_detection?.host?.is_enabled;
@@ -1773,6 +1776,7 @@ export default class StrategyConfigSet extends tsc<IStrategyConfigSetProps, IStr
       promiseList.push(
         this.noticeConfigRef.validator().catch(() => {
           this.noticeConfigPanelRef.handleExpandChange(true);
+          this.noticeConfigPanelRef.$el.scrollIntoView();
           return Promise.reject();
         })
       ); // 通知设置校验
