@@ -201,7 +201,7 @@ class NavTools extends DocumentLinkMixin {
     this.hidePopoverSetOrHelp();
     switch (item.id) {
       case 'DOCS':
-        window.open('https://iwiki.woa.com/p/4012525695');
+        window.open('https://iwiki.woa.com/p/4013675195');
         // this.handleGotoLink('homeLink');
         break;
       case 'FAQ':
