@@ -1,2 +1,0 @@
-# automatic generated
-web: gunicorn wsgi -w 8 -b :$PORT --max-requests 1000 --timeout 60 --access-logfile - --error-logfile - --access-logformat '[%(h)s] %({request_id}i)s %(u)s %(t)s "%(r)s" %(s)s %(D)s %(b)s "%(f)s" "%(a)s"'
