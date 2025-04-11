@@ -270,7 +270,6 @@ class CustomReportSubscription(models.Model):
                             "type": "token_bucket",
                             "qps": max_rate,
                         },
-                        "max_future_time_offset": max_future_time_offset,
                     }
                 data_id_config = (item, sub_config_name)
 
