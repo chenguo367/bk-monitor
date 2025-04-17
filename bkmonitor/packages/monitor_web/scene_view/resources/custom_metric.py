@@ -268,7 +268,7 @@ class GetCustomTsGraphConfig(Resource):
                     "metrics": [
                         {"field": metric.name, "method": metric.config.get("aggregate_method") or "AVG", "alias": "a"}
                     ],
-                    "interval": "auto",
+                    "interval": metric.config.get("interval") or "auto",
                     "table": table.table_id,
                     "data_label": table.data_label,
                     "data_source_label": DataSourceLabel.CUSTOM,
@@ -361,7 +361,7 @@ class GetCustomTsGraphConfig(Resource):
                                 "alias": "a",
                             }
                         ],
-                        "interval": "auto",
+                        "interval": metric.config.get("interval") or "auto",
                         "table": table.table_id,
                         "data_label": table.data_label,
                         "data_source_label": DataSourceLabel.CUSTOM,
@@ -616,10 +616,11 @@ class GraphDrillDownResource(Resource):
             value = self.get_value(params, item["datapoints"])
 
             # 判断是当前值还是时间对比值
-            if item.get("time_offset") and item["time_offset"] == "current":
-                dimensions_values[dimension_tuple]["value"] = value
-            else:
-                dimensions_values[dimension_tuple]["compare_values"][item["time_offset"]] = value
+            if item.get("time_offset"):
+                if item["time_offset"] == "current":
+                    dimensions_values[dimension_tuple]["value"] = value
+                else:
+                    dimensions_values[dimension_tuple]["compare_values"][item["time_offset"]] = value
             dimensions_values[dimension_tuple]["unit"] = item.get("unit") or ""
 
         # 计算占比
