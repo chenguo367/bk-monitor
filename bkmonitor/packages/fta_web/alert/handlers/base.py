@@ -9,6 +9,7 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 specific language governing permissions and limitations under the License.
 """
 import copy
+import logging
 import time
 from abc import ABC
 from typing import Callable, Dict, Iterable, List, Optional
@@ -31,6 +32,8 @@ from core.drf_resource import resource
 from core.errors.alert import QueryStringParseError
 from fta_web.alert.handlers.translator import AbstractTranslator
 from fta_web.alert.utils import process_metric_string, process_stage_string
+
+logger = logging.getLogger("bkmonitor")
 
 
 class QueryField:
@@ -152,6 +155,8 @@ class BaseQueryTransformer(BaseTreeTransformer):
             es_builder = QueryBuilder(**schema_analyzer.query_builder_options())
             dsl = es_builder(query_tree)
             return dsl
+
+        logger.info(f"transform query string: {query_tree}")
 
         # 手动修改后的语法数可能会有一些空格丢失的问题，因此需要对树的头尾进行重整
         query_tree = auto_head_tail(query_tree)
