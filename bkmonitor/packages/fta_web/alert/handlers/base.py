@@ -8,6 +8,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
+import copy
 import time
 from abc import ABC
 from typing import Callable, Dict, Iterable, List, Optional
@@ -137,7 +138,8 @@ class BaseQueryTransformer(BaseTreeTransformer):
     def transform_query_string(cls, query_string: str):
         def parse_query_string_node(_transform_obj, _query_string):
             try:
-                query_node = parser.parse(_query_string, lexer=lexer.clone())
+                current_lexer = copy.deepcopy(lexer)
+                query_node = parser.parse(_query_string, lexer=current_lexer)
                 return _transform_obj.visit(query_node)
             except ParseError as e:
                 raise QueryStringParseError({"msg": e})
