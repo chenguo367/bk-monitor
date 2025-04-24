@@ -156,6 +156,10 @@ class DashboardPermission(BasePermission):
                     role = new_role
 
         # 外部用户权限处理
+        logger.info(
+            f"DashboardPermission, external_user: {getattr(request, 'external_user', None)},"
+            f" username: {request.user.username}, org_name: {org_name}"
+        )
         if getattr(request, "external_user", None):
             external_dashboard_permissions = {}
             external_permissions = ExternalPermission.objects.filter(
