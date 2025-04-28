@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - 监控平台 (BlueKing - Monitor) available.
 Copyright (C) 2017-2021 THL A29 Limited, a Tencent company. All rights reserved.
@@ -34,7 +33,7 @@ class ChatV2Serializer(serializers.Serializer):
 
 
 class QAViewSet(viewsets.GenericViewSet):
-    @action(methods=['get'], detail=False, url_path='join')
+    @action(methods=["get"], detail=False, url_path="join")
     def apply_join(self, request, *args, **kwargs):
         username = request.user.username
         config, is_new = GlobalConfig.objects.get_or_create(key="AI_USER_LIST")
@@ -53,9 +52,9 @@ class QAViewSet(viewsets.GenericViewSet):
     def ask(self, request, *args, **kwargs):
         # 如果没有配置 AIDEV 接口地址，则直接返回错误
         if not settings.AIDEV_API_BASE_URL:
-            return Response({'error': 'AIDEV assistant is not configured'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+            return Response({"error": "AIDEV assistant is not configured"}, status=status.HTTP_501_NOT_IMPLEMENTED)
         if not settings.AIDEV_KNOWLEDGE_BASE_IDS:
-            return Response({'error': 'knowledge base is not configured'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "knowledge base is not configured"}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = ChatV2Serializer(data=request.data)
         if not serializer.is_valid():
@@ -91,16 +90,16 @@ class QAViewSet(viewsets.GenericViewSet):
         # 带场景的对话
         # 如果没有配置 AIDEV 接口地址，则直接返回错误
         if not settings.AIDEV_API_BASE_URL:
-            return Response({'error': 'AIDEV assistant is not configured'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+            return Response({"error": "AIDEV assistant is not configured"}, status=status.HTTP_501_NOT_IMPLEMENTED)
         if not settings.AIDEV_KNOWLEDGE_BASE_IDS:
-            return Response({'error': 'knowledge base is not configured'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "knowledge base is not configured"}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = ChatV2Serializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         params = serializer.validated_data
-        query = params['query']
+        query = params["query"]
 
         def event_stream():
             agent = StreamingQAAgent()
@@ -113,5 +112,11 @@ class QAViewSet(viewsets.GenericViewSet):
             yield "data: [DONE]\n\n"
 
         return StreamingHttpResponse(
-            event_stream(), content_type='text/event-stream', headers={'X-Accel-Buffering': 'no'}  # 禁用Nginx缓冲
+            event_stream(),
+            content_type="text/event-stream",
+            headers={"X-Accel-Buffering": "no"},  # 禁用Nginx缓冲
         )
+
+    def ask_v3(self, request, *args, **kwargs):
+        # 基于aidev-agent sdk 实现
+        pass
