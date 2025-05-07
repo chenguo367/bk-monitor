@@ -94,6 +94,8 @@ celerybeat-schedule
 
 # Environments
 .env
+.env.access
+.env.leave
 
 # virtualenv
 ENV/
@@ -229,3 +231,6 @@ static/external/
 
 # ai_agent link
 ai_agent
+
+# ruff
+.ruff_cache/
