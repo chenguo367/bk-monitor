@@ -282,23 +282,12 @@ class AccessCustomEventGlobalProcessV2(BaseAccessEventProcess):
         client = key.DATA_LIST_KEY.client
 
         total_events = client.llen(data_channel)
-        offset = min([total_events, max_records])
+        offset = min([total_events, MAX_RETRIEVE_NUMBER])
         if offset == 0:
             logger.info(f"[access event] data_id({self.data_id}) 暂无待检测事件")
             return []
 
-        try:
-            records = client.lrange(data_channel, -offset, -1)
-        except UnicodeDecodeError as e:
-            logger.error(
-                "ERROR: data_id(%s) topic(%s) poll alarm list(%s) from redis failed: %s",
-                self.data_id,
-                self.topic,
-                offset,
-                e,
-            )
-            client.ltrim(data_channel, 0, -offset - 1)
-            return []
+        records = client.lrange(data_channel, -offset, -1)
 
         logger.info("data_id(%s) topic(%s) poll alarm list(%s) from redis", self.data_id, self.topic, len(records))
         if records:

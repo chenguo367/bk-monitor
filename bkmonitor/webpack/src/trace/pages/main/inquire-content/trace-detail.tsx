@@ -882,7 +882,7 @@ export default defineComponent({
           <TraceDetailHeader
             appName={this.appName}
             hasFullscreen={false}
-            traceId={traceId}
+            traceId={this.traceID || traceId}
           />
         )}
 
@@ -1179,7 +1179,7 @@ export default defineComponent({
                       ref='statisticsElem'
                       appName={this.appName}
                       compareTraceID={this.compareTraceID}
-                      traceId={this.traceID}
+                      traceId={this.traceID || traceId}
                       onClearKeyword={() => this.clearSearch()}
                       onUpdate:loading={this.contentLoadingChange}
                     />
@@ -1193,7 +1193,7 @@ export default defineComponent({
                     filterKeywords={this.filterKeywords}
                     filters={this.traceViewFilters}
                     textDirection={this.ellipsisDirection}
-                    traceId={this.traceID}
+                    traceId={this.traceID || traceId}
                     onDiffTraceSuccess={this.updateCompareStatus}
                     onShowSpanDetail={this.handleShowSpanDetails}
                     onUpdate:loading={this.contentLoadingChange}
@@ -1203,7 +1203,7 @@ export default defineComponent({
                   <SequenceGraph
                     appName={this.appName}
                     filters={this.traceViewFilters}
-                    traceId={this.traceID}
+                    traceId={this.traceID || traceId}
                     onShowSpanDetail={this.handleShowSpanDetails}
                     onSpanListChange={this.handleSpanListFilter}
                     onUpdate:loading={this.contentLoadingChange}
