@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - 监控平台 (BlueKing - Monitor) available.
 Copyright (C) 2017-2021 THL A29 Limited, a Tencent company. All rights reserved.
@@ -8,6 +7,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
+
 import sys
 
 from django.apps import AppConfig
@@ -31,7 +31,6 @@ class ApmApiConfig(AppConfig):
         from apm.core.discover.base import DiscoverContainer
 
         # Trace 数据拓扑发现器 ↓
-        from apm.core.discover.endpoint import EndpointDiscover
         from apm.core.discover.host import HostDiscover
         from apm.core.discover.instance import InstanceDiscover
         from apm.core.discover.node import NodeDiscover
@@ -42,7 +41,7 @@ class ApmApiConfig(AppConfig):
         from apm.core.discover.root_endpoint import RootEndpointDiscover
         from constants.apm import TelemetryDataType
 
-        DiscoverContainer.register(TelemetryDataType.TRACE.value, EndpointDiscover)
+        # DiscoverContainer.register(TelemetryDataType.TRACE.value, EndpointDiscover)
         DiscoverContainer.register(TelemetryDataType.TRACE.value, HostDiscover)
         DiscoverContainer.register(TelemetryDataType.TRACE.value, InstanceDiscover)
         DiscoverContainer.register(TelemetryDataType.TRACE.value, NodeDiscover)
