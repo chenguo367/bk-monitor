@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@babel/helper-module-imports": "7.24.7",
-    "@babel/runtime": "7.26.0",
+    "@babel/runtime": "7.27.6",
     "@blueking/ai-blueking": "0.3.29",
     "@blueking/bkmonitor-cli": "^7.0.0-beta.4",
     "@blueking/bkui-library": "0.0.0-beta.5",
