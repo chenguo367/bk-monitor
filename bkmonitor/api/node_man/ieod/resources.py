@@ -37,7 +37,13 @@ from ..default import (
     GetProxiesByBizResource,
     PluginOperate,
     UploadCosResource,
+    RetrySubscriptionResource,
+    PluginSearch,
+    CheckTaskReady,
+    FetchSubscriptionStatistic,
+    IpchooserHostDetailResource,
 )
+
 
 CreateConfigTemplateResource.action = "backend/api/plugin/create_config_template/"
 CreateSubscriptionResource.action = "backend/api/subscription/create/"
@@ -67,3 +73,8 @@ PluginOperate.action = "api/plugin/operate/"
 UploadResource.action = UploadResource.action  # nothing to do
 RevokeSubscriptionResource.action = "backend/api/subscription/revoke/"
 UploadCosResource.action = "/backend/api/plugin/upload/"
+RetrySubscriptionResource.action = "backend/api/subscription/retry/"
+PluginSearch.action = "api/plugin/search/"
+CheckTaskReady.action = "backend/api/subscription/check_task_ready/"
+FetchSubscriptionStatistic.action = "backend/api/subscription/statistic/"
+IpchooserHostDetailResource.action = "core/api/ipchooser_host/details/"
