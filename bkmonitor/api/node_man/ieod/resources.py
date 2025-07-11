@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - 监控平台 (BlueKing - Monitor) available.
 Copyright (C) 2017-2021 THL A29 Limited, a Tencent company. All rights reserved.
@@ -8,7 +7,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
-
 
 from ..default import (
     CreateConfigTemplateResource,
@@ -38,6 +36,7 @@ from ..default import (
     GetProxiesResource,
     GetProxiesByBizResource,
     PluginOperate,
+    UploadCosResource,
 )
 
 CreateConfigTemplateResource.action = "backend/api/plugin/create_config_template/"
@@ -67,3 +66,4 @@ GetProxiesByBizResource.action = "api/host/biz_proxies/"
 PluginOperate.action = "api/plugin/operate/"
 UploadResource.action = UploadResource.action  # nothing to do
 RevokeSubscriptionResource.action = "backend/api/subscription/revoke/"
+UploadCosResource.action = "/backend/api/plugin/upload/"
