@@ -336,7 +336,6 @@ const store = new Vuex.Store({
       Object.keys(payload).forEach(key => {
         state.storage[key] = payload[key];
       });
-
       localStorage.setItem(BkLogGlobalStorageKey, JSON.stringify(state.storage));
     },
 
@@ -455,13 +454,12 @@ const store = new Vuex.Store({
         if (Array.isArray(payload[key]) && Array.isArray(state.indexSetQueryResult[key])) {
           if (Object.isFrozen(state.indexSetQueryResult[key])) {
             state.indexSetQueryResult[key] = undefined;
-            set(state.indexSetQueryResult, key, []);
+            set(state.indexSetQueryResult, key, payload[key]);
           } else {
             state.indexSetQueryResult[key].length = 0;
             state.indexSetQueryResult[key] = [];
+            state.indexSetQueryResult[key].push(...(payload[key] ?? []).filter(v => v !== null && v !== undefined));
           }
-
-          state.indexSetQueryResult[key].push(...(payload[key] ?? []).filter(v => v !== null && v !== undefined));
         } else {
           set(state.indexSetQueryResult, key, payload[key]);
         }
@@ -1331,10 +1329,12 @@ const store = new Vuex.Store({
                 const originLogList = parseBigNumberList(rsolvedData.origin_log_list);
                 const size = logList.length;
 
-                rsolvedData.list = payload.isPagination ? indexSetQueryResult.list.concat(logList) : logList;
-                rsolvedData.origin_log_list = payload.isPagination
-                  ? indexSetQueryResult.origin_log_list.concat(originLogList)
-                  : originLogList;
+                rsolvedData.list = Object.freeze(
+                  payload.isPagination ? indexSetQueryResult.list.concat(logList) : logList,
+                );
+                rsolvedData.origin_log_list = Object.freeze(
+                  payload.isPagination ? indexSetQueryResult.origin_log_list.concat(originLogList) : originLogList,
+                );
 
                 const catchUnionBeginList = parseBigNumberList(rsolvedData?.union_configs || []);
                 state.tookTime = payload.isPagination
@@ -1731,7 +1731,7 @@ const store = new Vuex.Store({
       state.searchTotal = 0;
       const start_time = Math.floor(getters.retrieveParams.start_time);
       const end_time = Math.ceil(getters.retrieveParams.end_time);
-      http
+      return http
         .request(
           'retrieve/fieldStatisticsTotal',
           {
@@ -1750,7 +1750,8 @@ const store = new Vuex.Store({
         )
         .then(res => {
           const { data, code } = res;
-          if (code === 0) state.searchTotal = data.total_count;
+          if (res.result === true) state.searchTotal = data.total_count;
+          return res;
         });
     },
     setApiError({ commit }, payload) {

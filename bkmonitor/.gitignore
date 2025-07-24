@@ -114,7 +114,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-.vscode/
 .idea
 .history
 
@@ -227,7 +226,8 @@ static/apm/
 static/external/
 
 # develop config
-.vscode
+conf/platform/ieod.py
+/.vscode/
 
 # ai_agent link
 ai_agent
