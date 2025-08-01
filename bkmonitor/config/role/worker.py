@@ -146,7 +146,7 @@ DEFAULT_CRONTAB = [
     # mail_report 配置管理和告警接收人信息缓存
     ("alarm_backends.core.cache.mail_report", "*/30 * * * *", "global"),
     # apm topo discover: 每分钟触发，每次分片处理1/10应用
-    ("apm.task.tasks.topo_discover_cron", "* * * * *", "global"),
+    # ("apm.task.tasks.topo_discover_cron", "* * * * *", "global"),
     # apm datasource discover: 每分钟触发，每次分片处理1/10应用
     ("apm.task.tasks.datasource_discover_cron", "* * * * *", "global"),
     # apm 配置下发: 每分钟触发，每次分片处理1/30应用
