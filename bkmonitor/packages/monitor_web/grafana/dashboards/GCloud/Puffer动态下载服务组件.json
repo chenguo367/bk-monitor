@@ -1,0 +1,2063 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_蓝鲸监控_- 指标数据",
+      "label": "蓝鲸监控 - 指标数据",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "bkmonitor-timeseries-datasource",
+      "pluginName": "BlueKing Monitor TimeSeries"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "datasource",
+      "id": "bkmonitor-timeseries-datasource",
+      "name": "BlueKing Monitor TimeSeries",
+      "version": "3.6.0"
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "10.4.10"
+    },
+    {
+      "type": "panel",
+      "id": "text",
+      "name": "Text",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 17,
+        "x": 0,
+        "y": 0
+      },
+      "id": 38,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<h1 style=\"text-align:center;font-size:50px\">GCloud-Puffer组件质量数据</h1>",
+        "mode": "markdown"
+      },
+      "pluginVersion": "10.4.10",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 7,
+        "x": 17,
+        "y": 0
+      },
+      "id": 39,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "### 温馨提示\n1、本仪表盘会持续迭代更新，请业务避免在仪表盘进行自定义修改，自定义修改可能因仪表盘发布而被覆盖；如有自定义修改需求请克隆仪表盘或视图后使用；  \n2、业务如需针对指标配置自定义监控策略，请点击Panel右上角按钮进行“添加策略”；  \n3、功能说明、常见异常分析指引和错误码相关定义https://doc.weixin.qq.com/doc/w3_AIAAdAacAAYCNcdNq140VSvqdkiFr?scode=AJEAIQdfAAolO3N1DTAIAAdAacAAY\n  \n如有使用疑问和建议，请随时联系Gcloud人工服务或GcloudSRE",
+        "mode": "markdown"
+      },
+      "pluginVersion": "10.4.10",
+      "type": "text"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
+      "id": 13,
+      "panels": [],
+      "title": "Puffer组件",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 6
+      },
+      "id": 16,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "min",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [
+            {
+              "active": true,
+              "alias": "puffer当日请求成功率",
+              "expression": "a/b",
+              "functions": []
+            },
+            {
+              "active": true,
+              "alias": "puffer昨日请求成功率",
+              "expression": "c/d",
+              "functions": []
+            },
+            {
+              "active": true,
+              "alias": "puffer上周请求成功率",
+              "expression": "e/f",
+              "functions": []
+            }
+          ],
+          "format": "time_series",
+          "host": [],
+          "mode": "ui",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [
+            {
+              "alias": "",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 1,
+              "interval_unit": "m",
+              "method": "SUM",
+              "metric_field": "TotalSuccNum",
+              "refId": "a",
+              "result_table_id": "100391_bkm_puffer_req_merge.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 1,
+              "interval_unit": "m",
+              "method": "SUM",
+              "metric_field": "TotalNum",
+              "refId": "b",
+              "result_table_id": "100391_bkm_puffer_req_merge.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1d"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 1,
+              "interval_unit": "m",
+              "method": "SUM",
+              "metric_field": "TotalSuccNum",
+              "refId": "c",
+              "result_table_id": "100391_bkm_puffer_req_merge.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1d"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 1,
+              "interval_unit": "m",
+              "method": "SUM",
+              "metric_field": "TotalNum",
+              "refId": "d",
+              "result_table_id": "100391_bkm_puffer_req_merge.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1w"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 1,
+              "interval_unit": "m",
+              "method": "SUM",
+              "metric_field": "TotalSuccNum",
+              "refId": "e",
+              "result_table_id": "100391_bkm_puffer_req_merge.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1w"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 1,
+              "interval_unit": "m",
+              "method": "SUM",
+              "metric_field": "TotalNum",
+              "refId": "f",
+              "result_table_id": "100391_bkm_puffer_req_merge.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "puffer客户端请求成功率-分钟",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "当日puffer服务端请求成功率"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 6
+      },
+      "id": 17,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "min",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [
+            {
+              "active": true,
+              "alias": "当日puffer服务端请求成功率",
+              "expression": "a/b",
+              "functions": []
+            },
+            {
+              "active": true,
+              "alias": "昨日puffer服务端请求成功率",
+              "expression": "d/e",
+              "functions": []
+            },
+            {
+              "active": true,
+              "alias": "上周puffer服务端请求成功率",
+              "expression": "f/g",
+              "functions": []
+            }
+          ],
+          "format": "time_series",
+          "host": [],
+          "mode": "ui",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [
+            {
+              "alias": "",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "GameID"
+              ],
+              "interval": "auto",
+              "interval_unit": "m",
+              "method": "SUM",
+              "metric_field": "request_succ_total",
+              "refId": "a",
+              "result_table_id": "100391_bkm_dmp_puffer_server_req_all.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "GameID",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "GameID"
+              ],
+              "interval": "auto",
+              "interval_unit": "m",
+              "method": "SUM",
+              "metric_field": "request_total",
+              "refId": "b",
+              "result_table_id": "100391_bkm_dmp_puffer_server_req_all.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "GameID",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1d"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "GameID"
+              ],
+              "interval": "auto",
+              "interval_unit": "m",
+              "method": "SUM",
+              "metric_field": "request_succ_total",
+              "refId": "d",
+              "result_table_id": "100391_bkm_dmp_puffer_server_req_all.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "GameID",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1d"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "GameID"
+              ],
+              "interval": "auto",
+              "interval_unit": "m",
+              "method": "SUM",
+              "metric_field": "request_total",
+              "refId": "e",
+              "result_table_id": "100391_bkm_dmp_puffer_server_req_all.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "GameID",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1w"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "GameID"
+              ],
+              "interval": "auto",
+              "interval_unit": "m",
+              "method": "SUM",
+              "metric_field": "request_succ_total",
+              "refId": "f",
+              "result_table_id": "100391_bkm_dmp_puffer_server_req_all.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "GameID",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1w"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "GameID"
+              ],
+              "interval": "auto",
+              "interval_unit": "m",
+              "method": "SUM",
+              "metric_field": "request_total",
+              "refId": "g",
+              "result_table_id": "100391_bkm_dmp_puffer_server_req_all.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "GameID",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "puffer服务端请求成功率",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "binBps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 15
+      },
+      "id": 19,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "ui",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [
+            {
+              "alias": "Puffer当日平均下载速度(大于10M)",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 10,
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "download_speed",
+              "refId": "a",
+              "result_table_id": "100391_bkm_puffer_download_speed_business_10mb.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "Puffer昨日平均下载速度(大于10M)",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1d"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 10,
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "download_speed",
+              "refId": "b",
+              "result_table_id": "100391_bkm_puffer_download_speed_business_10mb.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "Puffer上周平均下载速度(大于10M)",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1w"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 10,
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "download_speed",
+              "refId": "c",
+              "result_table_id": "100391_bkm_puffer_download_speed_business_10mb.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "Puffer下载速度(大于10M)-十分钟粒度",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 15
+      },
+      "id": 21,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "min",
+            "max",
+            "mean",
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Total",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "ui",
+          "module": [],
+          "promqlAlias": "$err_code-错误码数量趋势",
+          "query_configs": [
+            {
+              "alias": "$tag_errorcode",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "errorcode"
+              ],
+              "interval": "auto",
+              "interval_unit": "s",
+              "method": "SUM",
+              "metric_field": "errorcount",
+              "refId": "a",
+              "result_table_id": "100391_bkm_puffer_error_code_result.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "GameID",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "i_os_type",
+                  "method": "neq",
+                  "value": [
+                    ""
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum by (c_business_id) (sum_over_time(custom:100391_bkm_dolphin_business_download_error_code_5mins:__default__:err_num{c_business_id=\"${gameid}\",err_code=\"${err_code}\"}[5m]))",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "Puffer各错误码占比",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "description": "五分钟粒度",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 23
+      },
+      "id": 20,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "min",
+            "max",
+            "mean",
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "ui",
+          "module": [],
+          "promqlAlias": "$err_code-错误码数量趋势",
+          "query_configs": [
+            {
+              "alias": "$puffer_err_code-当日数量",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [],
+              "interval": 60,
+              "interval_unit": "s",
+              "method": "SUM",
+              "metric_field": "errorcount",
+              "refId": "a",
+              "result_table_id": "100391_bkm_puffer_error_code_result.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "GameID",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "errorcode",
+                  "method": "eq",
+                  "value": [
+                    "${puffer_err_code}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "i_os_type",
+                  "method": "neq",
+                  "value": [
+                    ""
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "$puffer_err_code-昨日数量",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1d"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [],
+              "interval": 60,
+              "interval_unit": "s",
+              "method": "SUM",
+              "metric_field": "errorcount",
+              "refId": "b",
+              "result_table_id": "100391_bkm_puffer_error_code_result.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "GameID",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "errorcode",
+                  "method": "eq",
+                  "value": [
+                    "${puffer_err_code}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "i_os_type",
+                  "method": "neq",
+                  "value": [
+                    ""
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "$puffer_err_code-上周数量",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1w"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [],
+              "interval": 60,
+              "interval_unit": "s",
+              "method": "SUM",
+              "metric_field": "errorcount",
+              "refId": "c",
+              "result_table_id": "100391_bkm_puffer_error_code_result.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "GameID",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "errorcode",
+                  "method": "eq",
+                  "value": [
+                    "${puffer_err_code}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "i_os_type",
+                  "method": "neq",
+                  "value": [
+                    ""
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum by (c_business_id) (sum_over_time(custom:100391_bkm_dolphin_business_download_error_code_5mins:__default__:err_num{c_business_id=\"${gameid}\",err_code=\"${err_code}\"}[5m]))",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "错误码$puffer_err_code数量趋势",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 23
+      },
+      "id": 40,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "min",
+            "max",
+            "mean",
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Total",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "ui",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [
+            {
+              "alias": "$tag_tdm_client_province",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "tdm_client_province"
+              ],
+              "interval": "auto",
+              "interval_unit": "m",
+              "method": "SUM",
+              "metric_field": "errorcount",
+              "refId": "a",
+              "result_table_id": "100391_bkm_puffer_error_code_result.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "GameID",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "errorcode",
+                  "method": "eq",
+                  "value": [
+                    "${puffer_err_code}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "i_os_type",
+                  "method": "neq",
+                  "value": [
+                    ""
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "puffer错误码${puffer_err_code}省份占比",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 31
+      },
+      "id": 35,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max",
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Total",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "ui",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [
+            {
+              "alias": "$tag_tdm_client_province",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "tdm_client_province"
+              ],
+              "interval": "auto",
+              "interval_unit": "m",
+              "method": "SUM",
+              "metric_field": "errorcount",
+              "refId": "a",
+              "result_table_id": "100391_bkm_puffer_error_code_result.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "GameID",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "errorcode",
+                  "method": "eq",
+                  "value": [
+                    "${puffer_err_code}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "i_os_type",
+                  "method": "neq",
+                  "value": [
+                    ""
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "puffer错误码${puffer_err_code}省份占比",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "1"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 31
+      },
+      "id": 36,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max",
+            "sum"
+          ],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "ui",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [
+            {
+              "alias": "$tag_i_os_type",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "i_os_type"
+              ],
+              "interval": "auto",
+              "interval_unit": "m",
+              "method": "SUM",
+              "metric_field": "errorcount",
+              "refId": "a",
+              "result_table_id": "100391_bkm_puffer_error_code_result.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "GameID",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "errorcode",
+                  "method": "eq",
+                  "value": [
+                    "${puffer_err_code}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "i_os_type",
+                  "method": "neq",
+                  "value": [
+                    ""
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "错误码${puffer_err_code}操作系统占比",
+      "type": "timeseries"
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "datasource": {
+          "type": "bkmonitor-timeseries-datasource",
+          "uid": "${DS_蓝鲸监控_- 指标数据}"
+        },
+        "definition": "- Blueking Monitor - 维度",
+        "hide": 0,
+        "includeAll": false,
+        "label": "业务名",
+        "multi": false,
+        "name": "ccid",
+        "options": [],
+        "query": {
+          "metricConfig": {
+            "data_label": "",
+            "data_source_label": "custom",
+            "data_type_label": "time_series",
+            "group_by": "bk_biz_id",
+            "metric_field": "request_total",
+            "result_table_id": "100391_bkm_dolphin_business_request_result.__default__",
+            "result_table_label": "others",
+            "where": []
+          },
+          "queryType": "dimension",
+          "variables": ""
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "bkmonitor-timeseries-datasource",
+          "uid": "${DS_蓝鲸监控_- 指标数据}"
+        },
+        "definition": "- Blueking Monitor - 维度",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "gameid",
+        "options": [],
+        "query": {
+          "metricConfig": {
+            "data_label": "",
+            "data_source_label": "custom",
+            "data_type_label": "time_series",
+            "group_by": "c_business_id",
+            "metric_field": "request_total",
+            "result_table_id": "100391_bkm_dolphin_business_request_result.__default__",
+            "result_table_label": "others",
+            "where": [
+              {
+                "key": "bk_biz_id",
+                "method": "eq",
+                "value": [
+                  "${ccid}"
+                ]
+              }
+            ]
+          },
+          "queryType": "dimension",
+          "variables": "${ccid}"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "bkmonitor-timeseries-datasource",
+          "uid": "${DS_蓝鲸监控_- 指标数据}"
+        },
+        "definition": "- Blueking Monitor - 维度",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Puffer错误码",
+        "multi": true,
+        "name": "puffer_err_code",
+        "options": [],
+        "query": {
+          "metricConfig": {
+            "data_label": "",
+            "data_source_label": "custom",
+            "data_type_label": "time_series",
+            "group_by": "errorcode",
+            "metric_field": "errorcount",
+            "result_table_id": "100391_bkm_puffer_error_code_result.__default__",
+            "result_table_label": "others",
+            "where": [
+              {
+                "key": "errorcode",
+                "method": "neq",
+                "value": [
+                  "0"
+                ]
+              }
+            ]
+          },
+          "queryType": "dimension",
+          "variables": ""
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-12h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Puffer服务组件",
+  "uid": "bexqv6j76wnb4b",
+  "version": 36,
+  "weekStart": ""
+}

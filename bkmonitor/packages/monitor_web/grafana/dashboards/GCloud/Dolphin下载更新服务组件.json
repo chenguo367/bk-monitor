@@ -1,0 +1,2373 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_蓝鲸监控_- 指标数据",
+      "label": "蓝鲸监控 - 指标数据",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "bkmonitor-timeseries-datasource",
+      "pluginName": "BlueKing Monitor TimeSeries"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "datasource",
+      "id": "bkmonitor-timeseries-datasource",
+      "name": "BlueKing Monitor TimeSeries",
+      "version": "3.6.0"
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "10.4.10"
+    },
+    {
+      "type": "panel",
+      "id": "text",
+      "name": "Text",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 17,
+        "x": 0,
+        "y": 0
+      },
+      "id": 38,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<h1 style=\"text-align:center;font-size:50px\">GCloud-Dolphin组件质量数据</h1>",
+        "mode": "markdown"
+      },
+      "pluginVersion": "10.4.10",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 7,
+        "x": 17,
+        "y": 0
+      },
+      "id": 39,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "### 温馨提示\n1、本仪表盘会持续迭代更新，请业务避免在仪表盘进行自定义修改，自定义修改可能因仪表盘发布而被覆盖；如有自定义修改需求请克隆仪表盘或视图后使用；  \n2、业务如需针对指标配置自定义监控策略，请点击Panel右上角按钮进行“添加策略”；  \n3、功能说明、常见异常分析指引和错误码相关定义https://doc.weixin.qq.com/doc/w3_AIAAdAacAAYCNcdNq140VSvqdkiFr?scode=AJEAIQdfAAolO3N1DTAIAAdAacAAY\n  \n如有使用疑问和建议，请随时联系Gcloud人工服务或GcloudSRE",
+        "mode": "markdown"
+      },
+      "pluginVersion": "10.4.10",
+      "type": "text"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
+      "id": 4,
+      "panels": [],
+      "title": "dolphin组件数据",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "当日请求成功率"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 6
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "min",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [
+            {
+              "active": true,
+              "alias": "当日请求成功率",
+              "expression": "a/b",
+              "functions": []
+            },
+            {
+              "active": true,
+              "alias": "昨日请求成功率",
+              "expression": "c/d",
+              "functions": []
+            },
+            {
+              "active": true,
+              "alias": "上周请求成功率",
+              "expression": "e/f",
+              "functions": []
+            }
+          ],
+          "format": "time_series",
+          "host": [],
+          "mode": "ui",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [
+            {
+              "alias": "",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 1,
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "request_success_total",
+              "refId": "a",
+              "result_table_id": "100391_bkm_dolphin_business_request_result.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "dimension_type",
+                  "method": "eq",
+                  "value": [
+                    "all"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 1,
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "request_total",
+              "refId": "b",
+              "result_table_id": "100391_bkm_dolphin_business_request_result.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "dimension_type",
+                  "method": "eq",
+                  "value": [
+                    "all"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "昨日",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1d"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 1,
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "request_success_total",
+              "refId": "c",
+              "result_table_id": "100391_bkm_dolphin_business_request_result.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "dimension_type",
+                  "method": "eq",
+                  "value": [
+                    "all"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "昨日",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1d"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 1,
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "request_total",
+              "refId": "d",
+              "result_table_id": "100391_bkm_dolphin_business_request_result.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "dimension_type",
+                  "method": "eq",
+                  "value": [
+                    "all"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "昨日",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1w"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 1,
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "request_success_total",
+              "refId": "e",
+              "result_table_id": "100391_bkm_dolphin_business_request_result.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "dimension_type",
+                  "method": "eq",
+                  "value": [
+                    "all"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "昨日",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1w"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 1,
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "request_total",
+              "refId": "f",
+              "result_table_id": "100391_bkm_dolphin_business_request_result.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "dimension_type",
+                  "method": "eq",
+                  "value": [
+                    "all"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "dolphin客户端请求成功率-分钟",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "当日服务端请求成功率"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 6
+      },
+      "id": 49,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "min",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "ui",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [
+            {
+              "alias": "当日服务端请求成功率",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "GameID"
+              ],
+              "interval": "auto",
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "request_succ_rate",
+              "refId": "a",
+              "result_table_id": "100391_bkm_dmp_dolphin_server_req_all.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "GameID",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "昨日服务端请求成功率",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1d"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "GameID"
+              ],
+              "interval": "auto",
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "request_succ_rate",
+              "refId": "b",
+              "result_table_id": "100391_bkm_dmp_dolphin_server_req_all.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "GameID",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "上周服务端请求成功率",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1w"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "GameID"
+              ],
+              "interval": "auto",
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "request_succ_rate",
+              "refId": "c",
+              "result_table_id": "100391_bkm_dmp_dolphin_server_req_all.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "GameID",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "dolphin服务端请求成功率-分钟",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "当日下载成功率"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 14
+      },
+      "id": 44,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "min",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [
+            {
+              "active": true,
+              "alias": "当日下载成功率",
+              "expression": "a/b",
+              "functions": []
+            },
+            {
+              "active": true,
+              "alias": "昨日下载成功率",
+              "expression": "c/d",
+              "functions": []
+            },
+            {
+              "active": true,
+              "alias": "上周下载成功率",
+              "expression": "e/f",
+              "functions": []
+            }
+          ],
+          "format": "time_series",
+          "host": [],
+          "mode": "ui",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [
+            {
+              "alias": "",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 1,
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "download_success_num",
+              "refId": "a",
+              "result_table_id": "100391_bkm_dolphin_business_download_result.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "dimension_type",
+                  "method": "eq",
+                  "value": [
+                    "all"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 1,
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "dowload_total_num",
+              "refId": "b",
+              "result_table_id": "100391_bkm_dolphin_business_download_result.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "dimension_type",
+                  "method": "eq",
+                  "value": [
+                    "all"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "昨日",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1d"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 1,
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "download_success_num",
+              "refId": "c",
+              "result_table_id": "100391_bkm_dolphin_business_download_result.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "dimension_type",
+                  "method": "eq",
+                  "value": [
+                    "all"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "昨日",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1d"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 1,
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "dowload_total_num",
+              "refId": "d",
+              "result_table_id": "100391_bkm_dolphin_business_download_result.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "dimension_type",
+                  "method": "eq",
+                  "value": [
+                    "all"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "昨日",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1w"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 1,
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "download_success_num",
+              "refId": "e",
+              "result_table_id": "100391_bkm_dolphin_business_download_result.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "dimension_type",
+                  "method": "eq",
+                  "value": [
+                    "all"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "昨日",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": false,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1w"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 1,
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "dowload_total_num",
+              "refId": "f",
+              "result_table_id": "100391_bkm_dolphin_business_download_result.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "dimension_type",
+                  "method": "eq",
+                  "value": [
+                    "all"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "dolphin下载成功率-分钟",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "KiBs"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      },
+      "id": 45,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "ui",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [
+            {
+              "alias": "当日平均下载速度",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 10,
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "dolphin_avg_speed",
+              "refId": "a",
+              "result_table_id": "100391_bkm_dolphin_business_download_speed_10m.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "昨日平均下载速度",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1d"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 10,
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "dolphin_avg_speed",
+              "refId": "b",
+              "result_table_id": "100391_bkm_dolphin_business_download_speed_10m.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "上周平均下载速度",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1w"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "c_business_id"
+              ],
+              "interval": 10,
+              "interval_unit": "m",
+              "method": "AVG",
+              "metric_field": "dolphin_avg_speed",
+              "refId": "c",
+              "result_table_id": "100391_bkm_dolphin_business_download_speed_10m.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "客户端版本下载速度-文件大于10M",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 22
+      },
+      "id": 43,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "min",
+            "max",
+            "mean",
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Mean",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "ui",
+          "module": [],
+          "promqlAlias": "$err_code-错误码数量趋势",
+          "query_configs": [
+            {
+              "alias": "$tag_err_code",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "top",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "20"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "err_code"
+              ],
+              "interval": 5,
+              "interval_unit": "m",
+              "method": "SUM",
+              "metric_field": "err_num",
+              "refId": "a",
+              "result_table_id": "100391_bkm_dolphin_business_error_code_5min.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "err_code",
+                  "method": "neq",
+                  "value": [
+                    "0"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum by (c_business_id) (sum_over_time(custom:100391_bkm_dolphin_business_download_error_code_5mins:__default__:err_num{c_business_id=\"${gameid}\",err_code=\"${err_code}\"}[5m]))",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "dolphin所有错误码趋势图",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 22
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "min",
+            "max",
+            "mean",
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "ui",
+          "module": [],
+          "promqlAlias": "$err_code-错误码数量今日",
+          "query_configs": [
+            {
+              "alias": "$err_code-错误码今日数量",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [],
+              "interval": 300,
+              "interval_unit": "s",
+              "method": "SUM",
+              "metric_field": "err_num",
+              "refId": "a",
+              "result_table_id": "100391_bkm_dolphin_business_error_code_5min.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "err_code",
+                  "method": "eq",
+                  "value": [
+                    "${err_code}"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "$err_code-错误码昨日数量",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1d"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [],
+              "interval": 300,
+              "interval_unit": "s",
+              "method": "SUM",
+              "metric_field": "err_num",
+              "refId": "b",
+              "result_table_id": "100391_bkm_dolphin_business_error_code_5min.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "err_code",
+                  "method": "eq",
+                  "value": [
+                    "${err_code}"
+                  ]
+                }
+              ]
+            },
+            {
+              "alias": "$err_code-错误码上周数量",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "time_shift",
+                  "params": [
+                    {
+                      "id": "n",
+                      "value": "1w"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [],
+              "interval": 300,
+              "interval_unit": "s",
+              "method": "SUM",
+              "metric_field": "err_num",
+              "refId": "c",
+              "result_table_id": "100391_bkm_dolphin_business_error_code_5min.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "err_code",
+                  "method": "eq",
+                  "value": [
+                    "${err_code}"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum(sum_over_time(custom:100391_bkm_dolphin_business_error_code_5min:__default__:err_num{c_business_id=\"${gameid}\",err_code=\"${err_code}\"}[5m]))",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "dolphin错误码$err_code数量趋势",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 0,
+        "y": 30
+      },
+      "id": 46,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max",
+            "mean",
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Mean",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "ui",
+          "module": [],
+          "promqlAlias": "$err_code-错误码数量今日",
+          "query_configs": [
+            {
+              "alias": "$tag_tdm_client_isp",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "tdm_client_isp"
+              ],
+              "interval": 600,
+              "interval_unit": "s",
+              "method": "SUM",
+              "metric_field": "err_num",
+              "refId": "a",
+              "result_table_id": "100391_bkm_dolphin_error_code_isp_10_min.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "err_code",
+                  "method": "eq",
+                  "value": [
+                    "${err_code}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "tdm_client_isp",
+                  "method": "neq",
+                  "value": [
+                    ""
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum(sum_over_time(custom:100391_bkm_dolphin_business_error_code_5min:__default__:err_num{c_business_id=\"${gameid}\",err_code=\"${err_code}\"}[5m]))",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "错误码$err_code各运营商占比",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 9,
+        "x": 8,
+        "y": 30
+      },
+      "id": 47,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max",
+            "mean",
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Mean",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "ui",
+          "module": [],
+          "promqlAlias": "$err_code-错误码数量今日",
+          "query_configs": [
+            {
+              "alias": "$tag_tdm_client_province",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "tdm_client_province"
+              ],
+              "interval": 600,
+              "interval_unit": "s",
+              "method": "SUM",
+              "metric_field": "err_num",
+              "refId": "a",
+              "result_table_id": "100391_bkm_dolphin_error_code_province_10_min.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "err_code",
+                  "method": "eq",
+                  "value": [
+                    "${err_code}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "tdm_client_province",
+                  "method": "neq",
+                  "value": [
+                    ""
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum(sum_over_time(custom:100391_bkm_dolphin_business_error_code_5min:__default__:err_num{c_business_id=\"${gameid}\",err_code=\"${err_code}\"}[5m]))",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "错误码$err_code各省份占比",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_- 指标数据}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 7,
+        "x": 17,
+        "y": 30
+      },
+      "id": 48,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max",
+            "mean",
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Last *",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_- 指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "ui",
+          "module": [],
+          "promqlAlias": "$err_code-错误码数量今日",
+          "query_configs": [
+            {
+              "alias": "$tag_i_os_type",
+              "data_source_label": "custom",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "i_os_type"
+              ],
+              "interval": 10,
+              "interval_unit": "m",
+              "method": "SUM",
+              "metric_field": "err_num",
+              "refId": "a",
+              "result_table_id": "100391_bkm_dolphin_error_code_os_10_min.__default__",
+              "result_table_label": "others",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "c_business_id",
+                  "method": "eq",
+                  "value": [
+                    "${gameid}"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "err_code",
+                  "method": "eq",
+                  "value": [
+                    "${err_code}"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum(sum_over_time(custom:100391_bkm_dolphin_business_error_code_5min:__default__:err_num{c_business_id=\"${gameid}\",err_code=\"${err_code}\"}[5m]))",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "dolphin错误码$err_code各系统类型占比",
+      "type": "timeseries"
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "datasource": {
+          "type": "bkmonitor-timeseries-datasource",
+          "uid": "${DS_蓝鲸监控_- 指标数据}"
+        },
+        "definition": "- Blueking Monitor - 维度",
+        "hide": 0,
+        "includeAll": false,
+        "label": "业务名",
+        "multi": false,
+        "name": "ccid",
+        "options": [],
+        "query": {
+          "metricConfig": {
+            "data_label": "",
+            "data_source_label": "custom",
+            "data_type_label": "time_series",
+            "group_by": "bk_biz_id",
+            "metric_field": "request_total",
+            "result_table_id": "100391_bkm_dolphin_business_request_result.__default__",
+            "result_table_label": "others",
+            "where": []
+          },
+          "queryType": "dimension",
+          "variables": ""
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "bkmonitor-timeseries-datasource",
+          "uid": "${DS_蓝鲸监控_- 指标数据}"
+        },
+        "definition": "- Blueking Monitor - 维度",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "gameid",
+        "options": [],
+        "query": {
+          "metricConfig": {
+            "data_label": "",
+            "data_source_label": "custom",
+            "data_type_label": "time_series",
+            "group_by": "c_business_id",
+            "metric_field": "request_total",
+            "result_table_id": "100391_bkm_dolphin_business_request_result.__default__",
+            "result_table_label": "others",
+            "where": [
+              {
+                "key": "bk_biz_id",
+                "method": "eq",
+                "value": [
+                  "${ccid}"
+                ]
+              }
+            ]
+          },
+          "queryType": "dimension",
+          "variables": "${ccid}"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "bkmonitor-timeseries-datasource",
+          "uid": "${DS_蓝鲸监控_- 指标数据}"
+        },
+        "definition": "- Blueking Monitor - prometheus",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Dolphin错误码",
+        "multi": true,
+        "name": "err_code",
+        "options": [],
+        "query": {
+          "promql": "label_values(bkmonitor:100391_bkm_dolphin_business_error_code_5min:__default__:err_num, err_code)",
+          "queryType": "prometheus"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-12h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Dolphin服务组件",
+  "uid": "aexqv5134622of",
+  "version": 79,
+  "weekStart": ""
+}
