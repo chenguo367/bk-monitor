@@ -1,0 +1,2901 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 5,
+      "panels": [],
+      "title": "节点统计",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 1
+      },
+      "hideTimeOverride": true,
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "count(sum by (hostIp, agentId) (sum_over_time(agentmetric:load:uptime{projectId=\"$projectId\", hostIp=~\"$hostIp\"}[$__range])) >= bool 0)",
+          "step": "",
+          "type": "instant"
+        }
+      ],
+      "title": "总节点",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 9,
+        "x": 6,
+        "y": 1
+      },
+      "id": 3,
+      "options": {
+        "displayLabels": [
+          "name"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "values": [
+            "percent"
+          ]
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "mode": "none",
+          "sort": "asc"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum by (dimensions__bk_46__hostOS) (count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"$projectId\", dimensions__bk_46__level=\"AGENT\", dimensions__bk_46__eventType=\"BUILD_AGENT_END\", dimensions__bk_46__hostIp != \"\"}[$__range]))",
+          "step": "1m",
+          "type": "instant"
+        }
+      ],
+      "title": "OS 分布",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "dimensions.hostOS=\"(.*)\"",
+            "renamePattern": "$1"
+          }
+        }
+      ],
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": 0,
+                "result": {
+                  "color": "blue",
+                  "index": 0
+                },
+                "to": 9999
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 9,
+        "x": 15,
+        "y": 1
+      },
+      "hideTimeOverride": true,
+      "id": 4,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "never",
+        "stacking": "normal",
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        },
+        "xField": "Value",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "count by (hostIp) (sum by (hostIp, agentId) (sum_over_time(agentmetric:load:uptime{projectId=\"$projectId\", hostIp=~\"$hostIp\"}[$__range])) >= bool 0)",
+          "step": "1m",
+          "type": "instant"
+        }
+      ],
+      "title": "Agent 个数分布",
+      "transformations": [
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "Value": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "hostIp": {
+                "aggregations": [
+                  "count"
+                ],
+                "operation": "aggregate"
+              }
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "Value"
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "Value": "Agent 个数",
+              "hostIp (count)": "相同 Agent 数的主机数量"
+            }
+          }
+        }
+      ],
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 5
+      },
+      "hideTimeOverride": true,
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "count(sum by (hostIp) (sum_over_time(agentmetric:load:uptime{projectId=\"$projectId\", hostIp=~\"$hostIp\"}[$__range])) >= bool 0)",
+          "step": "",
+          "type": "instant"
+        }
+      ],
+      "title": "总主机",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "links": [
+            {
+              "title": "",
+              "url": "/grafana/d/${panelUid}/?viewPanel=27&from={__from}&to={__to}&var-hostIp=${hostIp:allValue}&var-projectId=${projectId}"
+            }
+          ],
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "dark-red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 9
+      },
+      "hideTimeOverride": true,
+      "id": 6,
+      "links": [
+        {
+          "title": "明细",
+          "url": "/grafana/d/${panelUid}/?viewPanel=27&from={__from}&to={__to}&var-hostIp=${hostIp:allValue}&var-projectId=${projectId}"
+        }
+      ],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "count(sum by (hostIp, agentId) (sum_over_time(agentmetric:load:uptime{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"}[$__range])) >= bool 0) - count(sum by (hostIp, agentId) (sum_over_time(agentmetric:load:uptime{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"}[1m] offset 30m)) >= bool 0)",
+          "step": "1m",
+          "type": "instant"
+        }
+      ],
+      "title": "离线 Agent",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 9
+      },
+      "hideTimeOverride": true,
+      "id": 7,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "count(sum by (hostIp, agentId) (sum_over_time(bkmonitor:agentmetric:load:uptime{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"}[1m] offset 30m)) >= bool 0)",
+          "step": "1m",
+          "type": "instant"
+        }
+      ],
+      "title": "在线 Agent",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 9
+      },
+      "hideTimeOverride": true,
+      "id": 9,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum(sum by (dimensions__bk_46__hostIp, dimensions__bk_46__hostName) (sum by (dimensions__bk_46__buildId, dimensions__bk_46__jobId, dimensions__bk_46__hostIp, dimensions__bk_46__hostName)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"$projectId\", dimensions__bk_46__level=\"AGENT\", dimensions__bk_46__eventType=\"BUILD_AGENT_START\", dimensions__bk_46__hostIp != \"\", dimensions__bk_46__hostIp=~\"^($hostIp)$\"}[$__range])) unless sum by (dimensions__bk_46__buildId, dimensions__bk_46__jobId, dimensions__bk_46__hostIp, dimensions__bk_46__hostName)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"$projectId\", dimensions__bk_46__level=\"AGENT\", dimensions__bk_46__eventType=\"BUILD_AGENT_END\", dimensions__bk_46__hostIp!=\"\", dimensions__bk_46__hostIp=~\"^($hostIp)$\"}[$__range])))) or vector(0)",
+          "step": "1m",
+          "type": "instant"
+        },
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "hide": false,
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "B",
+          "showLastPoint": false,
+          "source": "count(sum by (hostIp, agentId) (sum_over_time(bkmonitor:agentmetric:load:uptime{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"}[1m] offset 30m)) >= bool 0)",
+          "step": "1m",
+          "type": "instant"
+        }
+      ],
+      "title": "空闲 Agent",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "binary": {
+              "left": "Value #B",
+              "operator": "-",
+              "right": "Value #A"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 9
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum(sum by (dimensions__bk_46__hostIp, dimensions__bk_46__hostName) (sum by (dimensions__bk_46__buildId, dimensions__bk_46__jobId, dimensions__bk_46__hostIp, dimensions__bk_46__hostName)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"$projectId\", dimensions__bk_46__level=\"AGENT\", dimensions__bk_46__eventType=\"BUILD_AGENT_START\", dimensions__bk_46__hostIp != \"\", dimensions__bk_46__hostIp=~\"^($hostIp)$\"}[$__range])) unless sum by (dimensions__bk_46__buildId, dimensions__bk_46__jobId, dimensions__bk_46__hostIp, dimensions__bk_46__hostName)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"$projectId\", dimensions__bk_46__level=\"AGENT\", dimensions__bk_46__eventType=\"BUILD_AGENT_END\", dimensions__bk_46__hostIp != \"\", dimensions__bk_46__hostIp=~\"^($hostIp)$\"}[$__range]))))",
+          "step": "1m",
+          "type": "instant"
+        }
+      ],
+      "title": "运行任务中",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 9
+      },
+      "id": 16,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "0",
+          "step": "1m",
+          "type": "instant"
+        }
+      ],
+      "title": "满并发运行中",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 9
+      },
+      "id": 17,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "0",
+          "step": "1m",
+          "type": "instant"
+        }
+      ],
+      "title": "任务负载超 80%",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "links": [
+            {
+              "title": "",
+              "url": "/grafana/d/${panelUid}/?viewPanel=25&from={__from}&to={__to}&var-hostIp=${hostIp:allValue}&var-projectId=${projectId}"
+            }
+          ],
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "dark-red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 13
+      },
+      "hideTimeOverride": true,
+      "id": 10,
+      "links": [
+        {
+          "title": "明细",
+          "url": "/grafana/d/${panelUid}/?viewPanel=25&from={__from}&to={__to}&var-hostIp=${hostIp:allValue}&var-projectId=${projectId}"
+        }
+      ],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "count((100 - min by (hostIp, hostName) (agentmetric:cpu_detail:idle{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"})) > 80)",
+          "step": "1m",
+          "type": "instant"
+        }
+      ],
+      "title": "CPU 使用率超 80%",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "links": [
+            {
+              "title": "",
+              "url": "/grafana/d/${panelUid}/?viewPanel=24&from={__from}&to={__to}&var-hostIp=${hostIp:allValue}&var-projectId=${projectId}"
+            }
+          ],
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "dark-red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 13
+      },
+      "hideTimeOverride": true,
+      "id": 11,
+      "links": [
+        {
+          "title": "明细",
+          "url": "/grafana/d/${panelUid}/?viewPanel=24&from={__from}&to={__to}&var-hostIp=${hostIp:allValue}&var-projectId=${projectId}"
+        }
+      ],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "count(max by (hostIp, hostName) (agentmetric:disk:in_use{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\", path!~\".+kubelet.+\"} offset 4m) > 80)",
+          "step": "1m",
+          "type": "instant"
+        }
+      ],
+      "title": "磁盘占用超 80%",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "links": [
+            {
+              "title": "",
+              "url": "/grafana/d/${panelUid}/?viewPanel=26&from={__from}&to={__to}&var-hostIp=${hostIp:allValue}&var-projectId=${projectId}"
+            }
+          ],
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "dark-red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 13
+      },
+      "hideTimeOverride": true,
+      "id": 12,
+      "links": [
+        {
+          "title": "明细",
+          "url": "/grafana/d/${panelUid}/?viewPanel=26&from={__from}&to={__to}&var-hostIp=${hostIp:allValue}&var-projectId=${projectId}"
+        }
+      ],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "count(max by (hostIp, hostName) (agentmetric:mem:pct_used{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"}) > 80)",
+          "step": "1m",
+          "type": "instant"
+        }
+      ],
+      "title": "内存占用超 80%",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "light-red",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 12,
+        "y": 13
+      },
+      "hideTimeOverride": true,
+      "id": 13,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "max_over_time(\n  max(\n    rate(agentmetric:io:rkb_s{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"}[1m])\n  )[1h:]\n)",
+          "step": "1m",
+          "type": "instant"
+        }
+      ],
+      "title": "IO 读取速率峰值",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "light-red",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 15,
+        "y": 13
+      },
+      "hideTimeOverride": true,
+      "id": 14,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "max_over_time(\n  max(\n    rate(agentmetric:io:wkb_s{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"}[1m])\n  )[1h:]\n)",
+          "step": "1m",
+          "type": "instant"
+        }
+      ],
+      "title": "IO 写入速率峰值",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "light-red",
+                "value": null
+              }
+            ]
+          },
+          "unit": "bits"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 18,
+        "y": 13
+      },
+      "hideTimeOverride": true,
+      "id": 15,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "max_over_time(max(sum by (hostIp) (increase(agentmetric:net:speed_recv{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"}[1m])))[1h:])",
+          "step": "1m",
+          "type": "instant"
+        }
+      ],
+      "title": "网卡入流量峰值",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "light-red",
+                "value": null
+              }
+            ]
+          },
+          "unit": "bits"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 21,
+        "y": 13
+      },
+      "hideTimeOverride": true,
+      "id": 18,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "max_over_time(max(sum by (hostIp) (increase(agentmetric:net:speed_sent{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"}[1m])))[1h:])",
+          "step": "1m",
+          "type": "instant"
+        }
+      ],
+      "title": "网卡出流量峰值",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 17
+      },
+      "id": 19,
+      "panels": [],
+      "title": "运行中的任务分布",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "mode": "gradient",
+              "type": "gauge",
+              "valueDisplayMode": "text"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "max": 1,
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "节点别名"
+            },
+            "properties": [
+              {
+                "id": "noValue",
+                "value": "--"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "auto"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "节点状态"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "red",
+                        "index": 1,
+                        "text": "离线"
+                      },
+                      "1": {
+                        "color": "green",
+                        "index": 0,
+                        "text": "在线"
+                      }
+                    },
+                    "type": "value"
+                  },
+                  {
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "color": "red",
+                        "index": 2,
+                        "text": "离线"
+                      }
+                    },
+                    "type": "special"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "gauge",
+                  "valueDisplayMode": "color"
+                }
+              },
+              {
+                "id": "max",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "节点 IP"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "auto"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "当前任务"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "auto"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "none"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 20,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "frameIndex": 0,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "当前任务"
+          }
+        ]
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum by (dimensions__bk_46__hostIp, dimensions__bk_46__hostName) (sum by (dimensions__bk_46__buildId, dimensions__bk_46__jobId, dimensions__bk_46__hostIp, dimensions__bk_46__hostName)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"$projectId\", dimensions__bk_46__level=\"AGENT\", dimensions__bk_46__eventType=\"BUILD_AGENT_START\", dimensions__bk_46__hostIp != \"\", dimensions__bk_46__hostIp=~\"^($hostIp)$\"}[$__range])) unless sum by (dimensions__bk_46__buildId, dimensions__bk_46__jobId, dimensions__bk_46__hostIp, dimensions__bk_46__hostName)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"$projectId\", dimensions__bk_46__level=\"AGENT\", dimensions__bk_46__eventType=\"BUILD_AGENT_END\", dimensions__bk_46__hostIp != \"\", dimensions__bk_46__hostIp=~\"^($hostIp)$\"}[$__range])))",
+          "step": "1m",
+          "type": "instant"
+        },
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "hide": false,
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "C",
+          "showLastPoint": false,
+          "source": "time() - timestamp(sum by (hostIp) (sum_over_time(agentmetric:load:uptime{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"}[1m] offset 30m)) >= bool 0) == bool 0",
+          "step": "1m",
+          "type": "instant"
+        },
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "hide": false,
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "D",
+          "showLastPoint": false,
+          "source": "max by (hostIp) (agentmetric:disk:in_use{projectId=\"$projectId\", path!~\".+kubelet.+\", hostIp=~\"^($hostIp)$\"} offset 5m) / 100",
+          "step": "1m",
+          "type": "instant"
+        },
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "hide": false,
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "E",
+          "showLastPoint": false,
+          "source": "max by (hostIp) (agentmetric:mem:pct_used{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"} offset 5m) / 100",
+          "step": "1m",
+          "type": "instant"
+        },
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "hide": false,
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "F",
+          "showLastPoint": false,
+          "source": "(100 - min by (hostIp) (agentmetric:cpu_detail:idle{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"} offset 5m)) / 100",
+          "step": "1m",
+          "type": "instant"
+        }
+      ],
+      "title": "运行任务中",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "dimensions.hostIp",
+            "renamePattern": "hostIp"
+          }
+        },
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "hostIp",
+            "mode": "outer"
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value #A"
+              }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time 1": true,
+              "Time 2": true,
+              "Time 3": true,
+              "Time 4": true,
+              "Time 5": true,
+              "Time 6": true,
+              "dimensions.hostName": false
+            },
+            "includeByName": {},
+            "indexByName": {
+              "Time 1": 1,
+              "Time 2": 4,
+              "Time 3": 7,
+              "Time 4": 8,
+              "Time 5": 10,
+              "Time 6": 12,
+              "Value #A": 3,
+              "Value #B": 6,
+              "Value #C": 5,
+              "Value #D": 9,
+              "Value #E": 11,
+              "Value #F": 13,
+              "dimensions.hostName": 2,
+              "hostIp": 0
+            },
+            "renameByName": {
+              "Time 3": "",
+              "Time 4": "",
+              "Value #A": "当前任务",
+              "Value #B": "最大磁盘占用率",
+              "Value #C": "节点状态",
+              "Value #D": "最大磁盘占用率",
+              "Value #E": "最大内存占用率",
+              "Value #F": "最高 CPU 使用率",
+              "dimensions.hostName": "节点别名",
+              "hostIp": "节点 IP"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 30
+      },
+      "id": 21,
+      "panels": [],
+      "title": "任务负载分布",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Trend #B"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "drawStyle": "line",
+                  "gradientMode": "hue",
+                  "hideValue": true,
+                  "showPoints": "never",
+                  "spanNulls": false,
+                  "type": "sparkline"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 31
+      },
+      "id": 22,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "frameIndex": 2,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "任务数"
+          }
+        ]
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum by (dimensions__bk_46__hostIp, dimensions__bk_46__hostName) (count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__level=\"AGENT\", dimensions__bk_46__eventType=\"BUILD_AGENT_END\", dimensions__bk_46__hostIp!=\"\", dimensions__bk_46__hostIp=~\"^($hostIp)$\"}[$__range]))",
+          "step": "1m",
+          "type": "instant"
+        },
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "hide": false,
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "B",
+          "showLastPoint": true,
+          "source": "sum by (dimensions__bk_46__hostIp, dimensions__bk_46__hostName) (count_over_time($table:dimensions__bk_46__status{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__level=\"AGENT\", dimensions__bk_46__eventType=\"BUILD_AGENT_END\", dimensions__bk_46__hostIp!=\"\", dimensions__bk_46__hostIp=~\"^($hostIp)$\"}[30m]))",
+          "step": "30m",
+          "type": "range"
+        },
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "hide": true,
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "C",
+          "showLastPoint": false,
+          "source": "avg by (dimensions__bk_46__hostIp, dimensions__bk_46__hostName) (avg_over_time($table:event__bk_46__extra__bk_46__duration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__level=\"AGENT\", dimensions__bk_46__eventType=\"BUILD_AGENT_END\", dimensions__bk_46__hostIp!=\"\", dimensions__bk_46__hostIp=~\"^($hostIp)$\"}[$__range]))",
+          "step": "1m",
+          "type": "instant"
+        }
+      ],
+      "title": "任务负载分布",
+      "transformations": [
+        {
+          "filter": {
+            "id": "byRefId",
+            "options": "B"
+          },
+          "id": "timeSeriesTable",
+          "options": {
+            "B": {
+              "stat": "lastNotNull",
+              "timeField": "Time"
+            },
+            "C": {
+              "timeField": ""
+            }
+          },
+          "topic": "series"
+        },
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "isNotNull",
+                  "options": {}
+                },
+                "fieldName": "Trend #B"
+              },
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value"
+              }
+            ],
+            "match": "all",
+            "type": "include"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "Time": "",
+              "Trend #B": "任务趋势",
+              "Value": "任务数",
+              "dimensions.hostIp": "节点 IP",
+              "dimensions.hostName": "节点别名"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 41
+      },
+      "id": 23,
+      "panels": [
+        {
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "构建机监控"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "2": {
+                            "index": 0,
+                            "text": "查看"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": true,
+                        "title": "",
+                        "url": "${BK_MONITOR_URL}grafana/dashboard?spaceUid=bkci__${__data.fields.项目}&var-server=${__data.fields.节点IP}&dashName=BKCI-构建机"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "项目"
+                },
+                "properties": [
+                  {
+                    "id": "custom.hidden",
+                    "value": true
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 0,
+            "y": 42
+          },
+          "hideTimeOverride": true,
+          "id": 24,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": true,
+                "displayName": "当前值"
+              }
+            ]
+          },
+          "pluginVersion": "10.4.10",
+          "targets": [
+            {
+              "cluster": [],
+              "datasource": {
+                "type": "bkmonitor-timeseries-datasource",
+                "uid": "${DS_蓝鲸监控_-_指标数据}"
+              },
+              "enableDownSampling": true,
+              "expressionList": [],
+              "format": "table",
+              "host": [],
+              "mode": "code",
+              "module": [],
+              "promqlAlias": "",
+              "query_configs": [],
+              "refId": "A",
+              "showLastPoint": false,
+              "source": "max by (projectId, hostIp, hostName) (agentmetric:disk:in_use{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\", path!~\".+kubelet.+\"} offset 4m) > 80",
+              "step": "1m",
+              "type": "instant"
+            }
+          ],
+          "title": "磁盘占用超 80%",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "projectId": false
+                },
+                "includeByName": {},
+                "indexByName": {
+                  "Time": 1,
+                  "Value": 4,
+                  "hostIp": 2,
+                  "hostName": 3,
+                  "projectId": 0
+                },
+                "renameByName": {
+                  "Value": "当前值",
+                  "hostIp": "节点IP",
+                  "hostName": "节点别名",
+                  "projectId": "项目"
+                }
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "构建机监控",
+                "binary": {
+                  "left": "1",
+                  "right": "1"
+                },
+                "mode": "binary",
+                "reduce": {
+                  "reducer": "sum"
+                }
+              }
+            }
+          ],
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "构建机监控"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "2": {
+                            "index": 0,
+                            "text": "查看"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": true,
+                        "title": "",
+                        "url": "${BK_MONITOR_URL}grafana/dashboard?spaceUid=bkci__${__data.fields.项目}&var-server=${__data.fields.节点IP}&dashName=BKCI-构建机"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "项目"
+                },
+                "properties": [
+                  {
+                    "id": "custom.hidden",
+                    "value": true
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 8,
+            "y": 42
+          },
+          "hideTimeOverride": true,
+          "id": 25,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": true,
+                "displayName": "当前值"
+              }
+            ]
+          },
+          "pluginVersion": "10.4.10",
+          "targets": [
+            {
+              "cluster": [],
+              "datasource": {
+                "type": "bkmonitor-timeseries-datasource",
+                "uid": "${DS_蓝鲸监控_-_指标数据}"
+              },
+              "enableDownSampling": true,
+              "expressionList": [],
+              "format": "table",
+              "host": [],
+              "mode": "code",
+              "module": [],
+              "promqlAlias": "",
+              "query_configs": [],
+              "refId": "A",
+              "showLastPoint": false,
+              "source": "(100 - min by (projectId, hostIp, hostName) (agentmetric:cpu_detail:idle{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"})) > 80",
+              "step": "1m",
+              "type": "instant"
+            }
+          ],
+          "title": "CPU 使用率超 80%",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "projectId": false
+                },
+                "includeByName": {},
+                "indexByName": {},
+                "renameByName": {
+                  "Value": "当前值",
+                  "hostIp": "节点IP",
+                  "hostName": "节点别名",
+                  "projectId": "项目"
+                }
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "构建机监控",
+                "binary": {
+                  "left": "1",
+                  "right": "1"
+                },
+                "mode": "binary",
+                "reduce": {
+                  "reducer": "sum"
+                }
+              }
+            }
+          ],
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "构建机监控"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "2": {
+                            "index": 0,
+                            "text": "查看"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": true,
+                        "title": "",
+                        "url": "${BK_MONITOR_URL}grafana/dashboard?spaceUid=bkci__${__data.fields.项目}&var-server=${__data.fields.节点IP}&dashName=BKCI-构建机"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "项目"
+                },
+                "properties": [
+                  {
+                    "id": "custom.hidden",
+                    "value": true
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 16,
+            "y": 42
+          },
+          "hideTimeOverride": true,
+          "id": 26,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": true,
+                "displayName": "当前值"
+              }
+            ]
+          },
+          "pluginVersion": "10.4.10",
+          "targets": [
+            {
+              "cluster": [],
+              "datasource": {
+                "type": "bkmonitor-timeseries-datasource",
+                "uid": "${DS_蓝鲸监控_-_指标数据}"
+              },
+              "enableDownSampling": true,
+              "expressionList": [],
+              "format": "table",
+              "host": [],
+              "mode": "code",
+              "module": [],
+              "promqlAlias": "",
+              "query_configs": [],
+              "refId": "A",
+              "showLastPoint": false,
+              "source": "max by (projectId, hostIp, hostName) (agentmetric:mem:pct_used{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"}) > 80",
+              "step": "1m",
+              "type": "instant"
+            }
+          ],
+          "title": "内存占用超 80%",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true
+                },
+                "includeByName": {},
+                "indexByName": {},
+                "renameByName": {
+                  "Time": "",
+                  "Value": "当前值",
+                  "hostIp": "节点IP",
+                  "hostName": "节点别名",
+                  "projectId": "项目"
+                }
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "构建机监控",
+                "binary": {
+                  "left": "1",
+                  "right": "1"
+                },
+                "mode": "binary",
+                "reduce": {
+                  "reducer": "sum"
+                }
+              }
+            }
+          ],
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "构建机监控"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "2": {
+                            "index": 0,
+                            "text": "查看"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": true,
+                        "title": "",
+                        "url": "${BK_MONITOR_URL}grafana/dashboard?spaceUid=bkci__${__data.fields.项目}&var-server=${__data.fields.节点IP}&dashName=BKCI-构建机"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "项目"
+                },
+                "properties": [
+                  {
+                    "id": "custom.hidden",
+                    "value": true
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 0,
+            "y": 50
+          },
+          "id": 27,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": true,
+                "displayName": "当前值"
+              }
+            ]
+          },
+          "pluginVersion": "10.4.10",
+          "targets": [
+            {
+              "cluster": [],
+              "datasource": {
+                "type": "bkmonitor-timeseries-datasource",
+                "uid": "${DS_蓝鲸监控_-_指标数据}"
+              },
+              "enableDownSampling": true,
+              "expressionList": [],
+              "format": "table",
+              "host": [],
+              "mode": "code",
+              "module": [],
+              "promqlAlias": "",
+              "query_configs": [],
+              "refId": "A",
+              "showLastPoint": false,
+              "source": "(sum by (projectId, hostIp, agentId) (sum_over_time(agentmetric:load:uptime{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"}[$__range])) >= bool 0) unless (sum by (projectId, hostIp, agentId) (sum_over_time(agentmetric:load:uptime{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"}[1m] offset 30m)) >= bool 0)",
+              "step": "1m",
+              "type": "instant"
+            }
+          ],
+          "title": "离线 Agent 汇总",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "Value": true
+                },
+                "includeByName": {},
+                "indexByName": {
+                  "Time": 0,
+                  "Value": 3,
+                  "agentId": 2,
+                  "hostIp": 1
+                },
+                "renameByName": {
+                  "Value": "",
+                  "agentId": "AgentID",
+                  "hostIp": "节点IP",
+                  "hostName": "节点别名",
+                  "projectId": "项目"
+                }
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "构建机监控",
+                "binary": {
+                  "left": "1",
+                  "right": "1"
+                },
+                "mode": "binary",
+                "reduce": {
+                  "reducer": "sum"
+                }
+              }
+            }
+          ],
+          "type": "table"
+        }
+      ],
+      "title": "当前高负载详情",
+      "type": "row"
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "datasource": {
+          "type": "bkmonitor-timeseries-datasource",
+          "uid": "${DS_蓝鲸监控_-_指标数据}"
+        },
+        "definition": "- Blueking Monitor - prometheus",
+        "hide": 0,
+        "includeAll": false,
+        "label": "项目",
+        "multi": false,
+        "name": "projectId",
+        "options": [],
+        "query": {
+          "promql": "label_values($table:dimensions__bk_46__projectId, dimensions__bk_46__projectId)",
+          "queryType": "prometheus"
+        },
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": ".+",
+        "current": {},
+        "datasource": {
+          "type": "bkmonitor-timeseries-datasource",
+          "uid": "${DS_蓝鲸监控_-_指标数据}"
+        },
+        "definition": "- Blueking Monitor - prometheus",
+        "hide": 0,
+        "includeAll": true,
+        "label": "",
+        "multi": false,
+        "name": "hostIp",
+        "options": [],
+        "query": {
+          "promql": "label_values(agentmetric:cpu_detail:idle{projectId=\"${projectId}\"}, hostIp)",
+          "queryType": "prometheus"
+        },
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "hide": 2,
+        "label": "结果表",
+        "name": "table",
+        "options": [],
+        "query": "bkapm:100147_bkapm:devops_event_doris",
+        "refresh": 1,
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "current": {},
+        "hide": 2,
+        "label": "监控平台 Url",
+        "name": "BK_MONITOR_URL",
+        "options": [],
+        "query": "https://bkmonitor.woa.com/",
+        "refresh": 1,
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "hide": 2,
+        "label": "仪表盘 ID",
+        "name": "panelUid",
+        "query": "BKCI_BUILDING_RESOURCE_TREND",
+        "skipUrlSync": false,
+        "type": "constant",
+        "current": {},
+        "refresh": 1,
+        "options": []
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "BKCI-构建资源趋势",
+  "uid": "BKCI_BUILDING_RESOURCE_TREND",
+  "version": 18,
+  "weekStart": "",
+  "__inputs": [
+    {
+      "name": "DS_蓝鲸监控_-_指标数据",
+      "label": "蓝鲸监控 - 指标数据",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "bkmonitor-timeseries-datasource",
+      "pluginName": "蓝鲸监控 - 指标数据"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "datasource",
+      "id": "bkmonitor-timeseries-datasource",
+      "name": "蓝鲸监控 - 指标数据"
+    }
+  ]
+}
