@@ -44,7 +44,7 @@ SUPERVISOR_SERVER = "unix:///var/run/bkmonitorv3/monitor-supervisor.sock"
 SUPERVISOR_USERNAME = ""
 SUPERVISOR_PASSWORD = ""
 
-INSTALLED_APPS += (  # noqa: F405
+INSTALLED_APPS += (  # noqa: F405, F821
     "django_celery_beat",
     "django_celery_results",
     "django_elasticsearch_dsl",
@@ -141,9 +141,10 @@ DEFAULT_CRONTAB = [
     ("alarm_backends.core.detect_result.tasks.clean_expired_detect_result", "0 */2 * * *", "global"),
     ("alarm_backends.core.detect_result.tasks.clean_md5_to_dimension_cache", "0 23 * * *", "global"),
     # 定期清理超时未执行任务
-    # ("alarm_backends.service.fta_action.tasks.check_timeout_actions", "* * * * *", "global"),
+    ("alarm_backends.service.fta_action.tasks.check_timeout_actions", "* * * * *", "global"),
     # 定期清理mysql内半个月前的数据
-    ("alarm_backends.service.fta_action.tasks.clear_mysql_action_data", "* * * * *", "global"),
+    # 清理任务在上云环境已经禁用,通过表分区进行清理
+    # ("alarm_backends.service.fta_action.tasks.clear_mysql_action_data", "* * * * *", "global"),
     # mail_report 配置管理和告警接收人信息缓存
     ("alarm_backends.core.cache.mail_report", "*/30 * * * *", "global"),
     # apm topo discover: 每分钟触发，每次分片处理1/10应用
@@ -173,7 +174,7 @@ DEFAULT_CRONTAB = [
     ("metadata.task.sync_space.refresh_bkcc_space_name", "*/6 * * * *", "global"),
 ]
 
-if BCS_API_GATEWAY_HOST:
+if BCS_API_GATEWAY_HOST:  # noqa: F821
     DEFAULT_CRONTAB += [
         # bcs资源同步
         ("api.bcs.tasks.sync_bcs_cluster_to_db", "*/15 * * * *", "global"),
@@ -369,7 +370,7 @@ LOGGING = {
     "disable_existing_loggers": False,
     "loggers": {
         "": {"level": LOGGER_LEVEL, "handlers": LOGGER_HANDLERS},
-        **{k: {"level": v, "handlers": LOGGER_HANDLERS} for k, v in LOG_LEVEL_MAP.items()},
+        **{k: {"level": v, "handlers": LOGGER_HANDLERS} for k, v in LOG_LEVEL_MAP.items()},  # noqa: F821
     },
     "handlers": {
         "console": {"class": "logging.StreamHandler", "level": LOGGER_LEVEL, "formatter": "standard"},
@@ -377,7 +378,7 @@ LOGGING = {
             "class": "logging.handlers.WatchedFileHandler",
             "level": LOGGER_LEVEL,
             "formatter": "standard",
-            "filename": os.path.join(LOG_PATH, f"{LOG_FILE_PREFIX}kernel.log"),
+            "filename": os.path.join(LOG_PATH, f"{LOG_FILE_PREFIX}kernel.log"),  # noqa: F821
             "encoding": "utf-8",
         },
     },
@@ -449,7 +450,8 @@ LICENSE_PORT = os.environ.get("BK_LICENSE_PORT", "8443")
 LICENSE_REQ_INTERVAL = [20, 60, 120]  # 连续请求n次，每次请求间隔(单位：秒)
 
 RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_VHOST, RABBITMQ_USER, RABBITMQ_PASS, _ = get_rabbitmq_settings(
-    app_code=APP_CODE, backend=True
+    app_code=APP_CODE,  # noqa: F821
+    backend=True,
 )
 
 # esb组件地址
