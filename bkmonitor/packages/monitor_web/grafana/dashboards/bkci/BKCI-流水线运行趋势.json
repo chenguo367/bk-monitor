@@ -2128,24 +2128,21 @@
               "id": "byName",
               "options": "平均耗时"
             },
-            "properties": [
-            ]
+            "properties": []
           },
           {
             "matcher": {
               "id": "byName",
               "options": "平均排队耗时"
             },
-            "properties": [
-            ]
+            "properties": []
           },
           {
             "matcher": {
               "id": "byName",
               "options": "平均执行耗时"
             },
-            "properties": [
-            ]
+            "properties": []
           }
         ]
       },
@@ -3090,24 +3087,21 @@
               "id": "byName",
               "options": "平均耗时"
             },
-            "properties": [
-            ]
+            "properties": []
           },
           {
             "matcher": {
               "id": "byName",
               "options": "平均排队耗时"
             },
-            "properties": [
-            ]
+            "properties": []
           },
           {
             "matcher": {
               "id": "byName",
               "options": "平均执行耗时"
             },
-            "properties": [
-            ]
+            "properties": []
           }
         ]
       },
@@ -5004,19 +4998,19 @@
         "type": "query"
       },
       {
-        "auto": false,
+        "auto": true,
         "auto_count": 30,
-        "auto_min": "10s",
+        "auto_min": "1m",
         "current": {
-          "selected": true,
-          "text": "10m",
-          "value": "10m"
+          "selected": false,
+          "text": "auto",
+          "value": "$__auto_interval_interval"
         },
         "hide": 0,
         "label": "聚合周期",
         "name": "interval",
         "options": [],
-        "query": "1m , 2m , 5m , 10m , 20m , 30m , 1h",
+        "query": "1m, 2m,  5m, 10m,30m,1h, 3h, 6h, 12h, 1d",
         "queryValue": "",
         "refresh": 2,
         "skipUrlSync": false,
@@ -5061,15 +5055,15 @@
         "type": "custom"
       },
       {
+        "current": {},
         "hide": 2,
         "label": "蓝盾 Url",
         "name": "devopsUrl",
+        "options": [],
         "query": "https://devops.woa.com",
         "refresh": 1,
         "skipUrlSync": false,
-        "type": "constant",
-        "current": {},
-        "options": []
+        "type": "constant"
       },
       {
         "allValue": ".+",
@@ -5096,15 +5090,15 @@
         "type": "query"
       },
       {
+        "current": {},
         "hide": 2,
         "label": "仪表盘 ID",
         "name": "panelUid",
+        "options": [],
         "query": "BKCI_PIPELINE_RUN_TREND",
         "refresh": 1,
         "skipUrlSync": false,
-        "type": "constant",
-        "current": {},
-        "options": []
+        "type": "constant"
       }
     ]
   },
@@ -5116,7 +5110,7 @@
   "timezone": "",
   "title": "BKCI-流水线运行趋势",
   "uid": "BKCI_PIPELINE_RUN_TREND",
-  "version": 26,
+  "version": 27,
   "weekStart": "",
   "__inputs": [
     {

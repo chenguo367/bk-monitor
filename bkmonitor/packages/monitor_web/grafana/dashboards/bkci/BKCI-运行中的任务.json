@@ -1405,7 +1405,7 @@
                 "value": [
                   {
                     "title": "查看排队明细",
-                    "url": "${panelPath}&viewPanel=21&from={__from}&to={__to}&var-projectId=${projectId}&var-pipelineName=${pipelineName:allValue}&var-interval=${interval}&var-table=${table}&var-dispatchName=${__data.fields.资源名称}"
+                    "url": "/grafana/d/${panelUid}/?viewPanel=21&from={__from}&to={__to}&var-projectId=${projectId}&var-pipelineName=${pipelineName:allValue}&var-interval=${interval}&var-table=${table}&var-dispatchName=${__data.fields.资源名称}"
                   }
                 ]
               }
@@ -1790,6 +1790,18 @@
                         "type": "value"
                       }
                     ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "流水线名称"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 258
                   }
                 ]
               }
@@ -2698,6 +2710,48 @@
                     ]
                   }
                 ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "触发方式"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "MANUAL": {
+                            "index": 1,
+                            "text": "手动"
+                          },
+                          "PIPELINE": {
+                            "index": 4,
+                            "text": "流水线"
+                          },
+                          "REMOTE": {
+                            "index": 5,
+                            "text": "远程触发"
+                          },
+                          "SERVICE": {
+                            "index": 3,
+                            "text": "第三方启动"
+                          },
+                          "TIME_TRIGGER": {
+                            "index": 0,
+                            "text": "定时"
+                          },
+                          "WEB_HOOK": {
+                            "index": 2,
+                            "text": "代码变更"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
@@ -2748,34 +2802,139 @@
               "source": "sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__jobId, dimensions__bk_46__jobName)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__dispatchName=~\"${dispatchName}\", dimensions__bk_46__status=\"QUEUE\"}[$__range])) unless on(dimensions__bk_46__buildId, dimensions__bk_46__jobName) sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__jobId, dimensions__bk_46__jobName)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__eventType!=\"BUILD_JOB_QUEUE\", dimensions__bk_46__dispatchName=~\"${dispatchName}\"}[$__range]))",
               "step": "$interval",
               "type": "instant"
+            },
+            {
+              "cluster": [],
+              "datasource": {
+                "type": "bkmonitor-timeseries-datasource",
+                "uid": "${DS_蓝鲸监控_-_指标数据}"
+              },
+              "enableDownSampling": false,
+              "expressionList": [],
+              "format": "table",
+              "hide": false,
+              "host": [],
+              "mode": "code",
+              "module": [],
+              "promqlAlias": "",
+              "query_configs": [],
+              "refId": "B",
+              "showLastPoint": false,
+              "source": "sum by (dimensions__bk_46__buildId, dimensions__bk_46__trigger, dimensions__bk_46__triggerUser, event__bk_46__extra__bk_46__startTime)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_START\"}[$__range])) unless on(dimensions__bk_46__buildId) sum by (dimensions__bk_46__buildId, dimensions__bk_46__trigger, dimensions__bk_46__triggerUser, event__bk_46__extra__bk_46__startTime)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_END\"}[$__range]))",
+              "step": "$interval",
+              "type": "instant"
             }
           ],
           "title": "Job - 排队中 / ESC 返回主看板",
           "transformations": [
+            {
+              "id": "joinByField",
+              "options": {
+                "byField": "dimensions.buildId",
+                "mode": "outerTabular"
+              }
+            },
+            {
+              "id": "filterByValue",
+              "options": {
+                "filters": [
+                  {
+                    "config": {
+                      "id": "greater",
+                      "options": {
+                        "value": 0
+                      }
+                    },
+                    "fieldName": "Value #A"
+                  },
+                  {
+                    "config": {
+                      "id": "isNotNull",
+                      "options": {}
+                    },
+                    "fieldName": "Value #A"
+                  }
+                ],
+                "match": "all",
+                "type": "include"
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "binary": {
+                  "left": "1000",
+                  "operator": "*",
+                  "right": "event.extra.startTime"
+                },
+                "mode": "binary",
+                "reduce": {
+                  "reducer": "sum"
+                }
+              }
+            },
             {
               "id": "organize",
               "options": {
                 "excludeByName": {
                   "Time": true,
                   "Value": true,
-                  "dimensions.jobId": true
+                  "Value #A": true,
+                  "Value #B": true,
+                  "dimensions.jobId": true,
+                  "dimensions.pipelineId 1": false,
+                  "dimensions.pipelineId 2": true,
+                  "dimensions.pipelineName 1": false,
+                  "dimensions.pipelineName 2": true,
+                  "dimensions.trigger": false,
+                  "dimensions.triggerUser": false,
+                  "event.extra.startTime": true
                 },
                 "includeByName": {},
                 "indexByName": {
-                  "Time": 0,
-                  "Value": 5,
-                  "dimensions.buildId": 1,
+                  "1000 * event.extra.startTime": 12,
+                  "Time 1": 5,
+                  "Time 2": 8,
+                  "Value #A": 7,
+                  "Value #B": 11,
+                  "dimensions.buildId": 2,
+                  "dimensions.jobId": 6,
+                  "dimensions.jobName": 0,
                   "dimensions.pipelineId": 4,
-                  "dimensions.pipelineName": 2,
-                  "dimensions.triggerUser": 3
+                  "dimensions.pipelineName": 1,
+                  "dimensions.trigger": 9,
+                  "dimensions.triggerUser": 3,
+                  "event.extra.startTime": 10
                 },
                 "renameByName": {
+                  "1000 * event.extra.startTime": "触发时间",
+                  "Time 1": "",
+                  "Time 2": "",
+                  "Value #A": "",
+                  "Value #B": "",
                   "dimensions.buildId": "构建ID",
+                  "dimensions.jobId": "",
                   "dimensions.jobName": "Job 名称",
                   "dimensions.pipelineId": "流水线ID",
+                  "dimensions.pipelineId 1": "流水线ID",
                   "dimensions.pipelineName": "流水线名称",
-                  "dimensions.triggerUser": "创建人"
+                  "dimensions.pipelineName 1": "流水线名称",
+                  "dimensions.trigger": "触发方式",
+                  "dimensions.triggerUser": "触发人",
+                  "event.extra.startTime": ""
                 }
+              }
+            },
+            {
+              "id": "convertFieldType",
+              "options": {
+                "conversions": [
+                  {
+                    "destinationType": "time",
+                    "targetField": "触发时间"
+                  }
+                ],
+                "fields": {}
               }
             }
           ],
@@ -2786,6 +2945,7 @@
       "type": "row"
     }
   ],
+  "refresh": "",
   "schemaVersion": 39,
   "tags": [],
   "templating": {
@@ -2828,15 +2988,19 @@
         "type": "query"
       },
       {
-        "auto": false,
+        "auto": true,
         "auto_count": 30,
-        "auto_min": "10s",
-        "current": {},
+        "auto_min": "1m",
+        "current": {
+          "selected": false,
+          "text": "auto",
+          "value": "$__auto_interval_interval"
+        },
         "hide": 0,
         "label": "聚合周期",
         "name": "interval",
         "options": [],
-        "query": "1m , 2m , 5m , 10m , 20m , 30m , 1h",
+        "query": "1m, 2m,  5m, 10m,30m,1h, 3h, 6h, 12h, 1d",
         "queryValue": "",
         "refresh": 2,
         "skipUrlSync": false,
@@ -2860,22 +3024,22 @@
           "promql": "label_values($table:dimensions__bk_46__pipelineName{dimensions__bk_46__projectId=\"${projectId}\"}, dimensions__bk_46__pipelineName)",
           "queryType": "prometheus"
         },
-        "refresh": 1,
+        "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
         "sort": 1,
         "type": "query"
       },
       {
+        "current": {},
         "hide": 2,
         "label": "蓝盾 Url",
         "name": "devopsUrl",
+        "options": [],
         "query": "https://devops.woa.com",
         "refresh": 1,
         "skipUrlSync": false,
-        "type": "constant",
-        "current": {},
-        "options": []
+        "type": "constant"
       },
       {
         "allValue": ".+",
@@ -2895,22 +3059,22 @@
           "promql": "label_values($table:dimensions__bk_46__dispatchName{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__eventType=\"BUILD_JOB_END\"}, dimensions__bk_46__dispatchName)",
           "queryType": "prometheus"
         },
-        "refresh": 1,
+        "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
         "sort": 1,
         "type": "query"
       },
       {
+        "current": {},
         "hide": 2,
         "label": "仪表盘 ID",
         "name": "panelUid",
+        "options": [],
         "query": "BKCI_RUNNING_TASKS",
         "refresh": 1,
         "skipUrlSync": false,
-        "type": "constant",
-        "current": {},
-        "options": []
+        "type": "constant"
       }
     ]
   },
@@ -2922,7 +3086,7 @@
   "timezone": "",
   "title": "BKCI-运行中的任务",
   "uid": "BKCI_RUNNING_TASKS",
-  "version": 11,
+  "version": 12,
   "weekStart": "",
   "__inputs": [
     {
