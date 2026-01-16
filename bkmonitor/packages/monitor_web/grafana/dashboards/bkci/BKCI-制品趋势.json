@@ -3085,8 +3085,7 @@
   "timepicker": {},
   "timezone": "",
   "title": "BKCI-运行中的任务",
-  "uid": "BKCI_RUNNING_TASKS",
-  "version": 12,
+  "version": 13,
   "weekStart": "",
   "__inputs": [
     {
