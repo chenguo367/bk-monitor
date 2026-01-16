@@ -28,9 +28,9 @@
         "x": 0,
         "y": 0
       },
-      "id": 22,
+      "id": 10,
       "panels": [],
-      "title": "进行中的任务",
+      "title": "总览",
       "type": "row"
     },
     {
@@ -43,295 +43,32 @@
           "color": {
             "mode": "thresholds"
           },
-          "links": [
-            {
-              "title": "明细",
-              "url": "/grafana/d/${panelUid}/?viewPanel=2&from={__from}&to={__to}&var-projectId=${projectId}&var-pipelineName=${pipelineName:allValue}&var-interval=${interval}&var-table=${table}"
-            }
-          ],
           "mappings": [],
           "noValue": "0",
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "blue",
+                "color": "text",
                 "value": null
               }
             ]
-          }
+          },
+          "unit": "bytes"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
-        "w": 4,
+        "h": 4,
+        "w": 5,
         "x": 0,
         "y": 1
       },
-      "id": 1,
-      "links": [
-        {
-          "title": "明细",
-          "url": "/grafana/d/${panelUid}/?viewPanel=2&from={__from}&to={__to}&var-projectId=${projectId}&var-pipelineName=${pipelineName:allValue}&var-interval=${interval}&var-table=${table}"
-        }
-      ],
+      "hideTimeOverride": true,
+      "id": 11,
       "options": {
         "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "10.4.10",
-      "targets": [
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "table",
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "",
-          "query_configs": [],
-          "refId": "A",
-          "source": "sum(sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineId)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_START\"}[$__range])) unless sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineId)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_END\"}[$__range])))",
-          "step": "$interval",
-          "type": "instant"
-        }
-      ],
-      "title": "流水线 - 运行中",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "bkmonitor-timeseries-datasource",
-        "uid": "${DS_蓝鲸监控_-_指标数据}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "links": [
-            {
-              "title": "明细",
-              "url": "/grafana/d/${panelUid}/?viewPanel=17&from={__from}&to={__to}&var-projectId=${projectId}&var-pipelineName=${pipelineName:allValue}&var-interval=${interval}&var-table=${table}"
-            }
-          ],
-          "mappings": [],
-          "noValue": "0",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "blue",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 4,
-        "x": 4,
-        "y": 1
-      },
-      "id": 3,
-      "links": [
-        {
-          "title": "明细",
-          "url": "/grafana/d/${panelUid}/?viewPanel=17&from={__from}&to={__to}&var-projectId=${projectId}&var-pipelineName=${pipelineName:allValue}&var-interval=${interval}&var-table=${table}"
-        }
-      ],
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "10.4.10",
-      "targets": [
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "table",
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "",
-          "query_configs": [],
-          "refId": "A",
-          "showLastPoint": false,
-          "source": "sum(sum by (dimensions__bk_46__buildId, dimensions__bk_46__stageId)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STAGE\", dimensions__bk_46__status=\"REVIEWING\"}[$__range])) unless sum by (dimensions__bk_46__buildId, dimensions__bk_46__stageId)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STAGE\", dimensions__bk_46__status=~\"REVIEW_ABORT|REVIEW_PROCESSED\"}[$__range])))",
-          "step": "$interval",
-          "type": "instant"
-        }
-      ],
-      "title": "Stage - 审核中",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "bkmonitor-timeseries-datasource",
-        "uid": "${DS_蓝鲸监控_-_指标数据}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "links": [
-            {
-              "title": "明细",
-              "url": "/grafana/d/${panelUid}/?viewPanel=18&from={__from}&to={__to}&var-projectId=${projectId}&var-pipelineName=${pipelineName:allValue}&var-interval=${interval}&var-table=${table}"
-            }
-          ],
-          "mappings": [],
-          "noValue": "0",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "blue",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 4,
-        "x": 8,
-        "y": 1
-      },
-      "id": 4,
-      "links": [
-        {
-          "title": "明细",
-          "url": "/grafana/d/${panelUid}/?viewPanel=18&from={__from}&to={__to}&var-projectId=${projectId}&var-pipelineName=${pipelineName:allValue}&var-interval=${interval}&var-table=${table}"
-        }
-      ],
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "10.4.10",
-      "targets": [
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "table",
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "",
-          "query_configs": [],
-          "refId": "A",
-          "source": "sum((sum by (dimensions__bk_46__buildId, dimensions__bk_46__stepName)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STEP\", dimensions__bk_46__status=\"REVIEWING\"}[$__range])) unless sum by (dimensions__bk_46__buildId, dimensions__bk_46__stepName)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STEP\", dimensions__bk_46__status=~\"REVIEW_ABORT|REVIEW_PROCESSED\"}[$__range]))))",
-          "step": "$interval",
-          "type": "instant"
-        }
-      ],
-      "title": "Step - 审核中",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "bkmonitor-timeseries-datasource",
-        "uid": "${DS_蓝鲸监控_-_指标数据}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "links": [
-            {
-              "title": "明细",
-              "url": "/grafana/d/${panelUid}/?viewPanel=19&from={__from}&to={__to}&var-projectId=${projectId}&var-pipelineName=${pipelineName:allValue}&var-interval=${interval}&var-table=${table}"
-            }
-          ],
-          "mappings": [],
-          "noValue": "0",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "blue",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 4,
-        "x": 12,
-        "y": 1
-      },
-      "id": 14,
-      "links": [
-        {
-          "title": "明细",
-          "url": "/grafana/d/${panelUid}/?viewPanel=19&from={__from}&to={__to}&var-projectId=${projectId}&var-pipelineName=${pipelineName:allValue}&var-interval=${interval}&var-table=${table}"
-        }
-      ],
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
@@ -363,543 +100,13 @@
           "query_configs": [],
           "refId": "A",
           "showLastPoint": false,
-          "source": "sum(sum by (dimensions__bk_46__buildId, dimensions__bk_46__stepId)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STEP\", dimensions__bk_46__status=\"REVIEWING\", dimensions__bk_46__eventType=\"BUILD_QUALITY\"}[$__range])) unless sum by (dimensions__bk_46__buildId, dimensions__bk_46__stepId)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STEP\", dimensions__bk_46__status=~\"REVIEW_PROCESSED|REVIEW_ABORT\"}[$__range])))",
-          "step": "$interval",
+          "source": "sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[$__range]))",
+          "step": "",
           "type": "instant"
         }
       ],
-      "title": "质量红线 - 审核中",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "bkmonitor-timeseries-datasource",
-        "uid": "${DS_蓝鲸监控_-_指标数据}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "links": [
-            {
-              "title": "明细",
-              "url": "/grafana/d/${panelUid}/?viewPanel=20&from={__from}&to={__to}&var-projectId=${projectId}&var-pipelineName=${pipelineName:allValue}&var-interval=${interval}&var-table=${table}"
-            }
-          ],
-          "mappings": [],
-          "noValue": "0",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "blue",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 4,
-        "x": 0,
-        "y": 6
-      },
-      "id": 5,
-      "links": [
-        {
-          "title": "明细",
-          "url": "/grafana/d/${panelUid}/?viewPanel=20&from={__from}&to={__to}&var-projectId=${projectId}&var-pipelineName=${pipelineName:allValue}&var-interval=${interval}&var-table=${table}"
-        }
-      ],
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "10.4.10",
-      "targets": [
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "table",
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "",
-          "query_configs": [],
-          "refId": "A",
-          "source": "sum(sum by (dimensions__bk_46__buildId)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__status=\"QUEUE\"}[$__range])) unless sum by (dimensions__bk_46__buildId)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType!=\"BUILD_QUEUE\"}[$__range])))",
-          "step": "$interval",
-          "type": "instant"
-        }
-      ],
-      "title": "流水线 - 排队中",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "bkmonitor-timeseries-datasource",
-        "uid": "${DS_蓝鲸监控_-_指标数据}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "fillOpacity": 80,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineWidth": 1,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "links": [
-            {
-              "title": "明细",
-              "url": "/grafana/d/${panelUid}/?viewPanel=20&&from={__from}&to={__to}&var-projectId=${projectId}&var-pipelineName=${__data.fields.流水线名称}"
-            }
-          ],
-          "mappings": [],
-          "noValue": "没有正在排队的任务",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 6,
-        "x": 4,
-        "y": 6
-      },
-      "id": 10,
-      "options": {
-        "barRadius": 0,
-        "barWidth": 0.97,
-        "fullHighlight": false,
-        "groupWidth": 0.7,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "orientation": "horizontal",
-        "showValue": "auto",
-        "stacking": "normal",
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        },
-        "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 0
-      },
-      "targets": [
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "table",
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "",
-          "query_configs": [],
-          "refId": "A",
-          "source": "sum by (dimensions__bk_46__pipelineName) (sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineName)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__status=\"QUEUE\"}[$__range])) unless sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineName)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType!=\"BUILD_QUEUE\"}[$__range])))",
-          "step": "$interval",
-          "type": "instant"
-        }
-      ],
-      "title": "流水线 - 排队中",
-      "transformations": [
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": {},
-            "sort": [
-              {
-                "desc": true,
-                "field": "Value"
-              }
-            ]
-          }
-        },
-        {
-          "id": "limit",
-          "options": {
-            "limitField": 5
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {},
-            "includeByName": {},
-            "indexByName": {},
-            "renameByName": {
-              "dimensions.pipelineName": "流水线名称"
-            }
-          }
-        }
-      ],
-      "type": "barchart"
-    },
-    {
-      "datasource": {
-        "type": "bkmonitor-timeseries-datasource",
-        "uid": "${DS_蓝鲸监控_-_指标数据}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [
-            {
-              "options": {
-                "from": 0,
-                "result": {
-                  "color": "green",
-                  "index": 0
-                },
-                "to": 60000
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 60000,
-                "result": {
-                  "color": "yellow",
-                  "index": 1
-                },
-                "to": 300000
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 300000,
-                "result": {
-                  "color": "red",
-                  "index": 2
-                }
-              },
-              "type": "range"
-            }
-          ],
-          "noValue": "0 ms",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 4,
-        "x": 10,
-        "y": 6
-      },
-      "id": 7,
-      "options": {
-        "colorMode": "background",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "10.4.10",
-      "targets": [
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": false,
-          "expressionList": [],
-          "format": "time_series",
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "A",
-          "query_configs": [],
-          "refId": "A",
-          "source": "avg(avg_over_time($table:event__bk_46__extra__bk_46__queueDuration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__status!~\"RUNNING|QUEUE\"}[$__range]))",
-          "step": "$__range",
-          "type": "instant"
-        }
-      ],
-      "title": "流水线 - 平均排队耗时",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "bkmonitor-timeseries-datasource",
-        "uid": "${DS_蓝鲸监控_-_指标数据}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "blue",
-            "mode": "fixed"
-          },
-          "custom": {
-            "fillOpacity": 80,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineWidth": 1
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "blue",
-                "value": null
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "xMin"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "ms"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "xMax"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "ms"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 10,
-        "x": 14,
-        "y": 6
-      },
-      "id": 12,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        }
-      },
-      "targets": [
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": false,
-          "expressionList": [],
-          "format": "table",
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "",
-          "query_configs": [],
-          "refId": "A",
-          "source": "avg by (dimensions__bk_46__buildId) (avg_over_time($table:event__bk_46__extra__bk_46__queueDuration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__status=\"SUCCEED\"}[$__range])) > 0",
-          "step": "$__range",
-          "type": "instant"
-        }
-      ],
-      "title": "流水线 - 排队耗时分布",
-      "transformations": [
-        {
-          "id": "histogram",
-          "options": {
-            "bucketCount": 20,
-            "fields": {}
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {},
-            "includeByName": {},
-            "indexByName": {},
-            "renameByName": {
-              "Value": ""
-            }
-          }
-        }
-      ],
-      "type": "histogram"
-    },
-    {
-      "datasource": {
-        "type": "bkmonitor-timeseries-datasource",
-        "uid": "${DS_蓝鲸监控_-_指标数据}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "links": [
-            {
-              "title": "明细",
-              "url": "/grafana/d/${panelUid}/?viewPanel=21&from={__from}&to={__to}&var-projectId=${projectId}&var-pipelineName=${pipelineName:allValue}&var-interval=${interval}&var-table=${table}"
-            }
-          ],
-          "mappings": [],
-          "noValue": "0",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "blue",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 4,
-        "x": 0,
-        "y": 11
-      },
-      "id": 6,
-      "links": [
-        {
-          "title": "明细",
-          "url": "/grafana/d/${panelUid}/?viewPanel=21&from={__from}&to={__to}&var-projectId=${projectId}&var-pipelineName=${pipelineName:allValue}&var-interval=${interval}&var-table=${table}"
-        }
-      ],
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "10.4.10",
-      "targets": [
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "table",
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "",
-          "query_configs": [],
-          "refId": "A",
-          "source": "sum(sum by (dimensions__bk_46__buildId, dimensions__bk_46__jobId)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__status=\"QUEUE\"}[$__range])) unless sum by (dimensions__bk_46__buildId, dimensions__bk_46__jobId)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__eventType!=\"BUILD_JOB_QUEUE\"}[$__range])))",
-          "step": "$interval",
-          "type": "instant"
-        }
-      ],
-      "title": "Job - 排队中",
+      "timeFrom": "1h",
+      "title": "存储总量",
       "type": "stat"
     },
     {
@@ -919,36 +126,29 @@
               "viz": false
             }
           },
-          "mappings": [
-            {
-              "options": {
-                "dimensions.dispatchType=\"PUBLIC_DEVCLOUD\"": {
-                  "index": 0,
-                  "text": "11"
-                }
-              },
-              "type": "value"
-            }
-          ],
-          "noValue": "没有正在排队的任务"
+          "mappings": [],
+          "unit": "none"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
-        "w": 6,
-        "x": 4,
-        "y": 11
+        "h": 6,
+        "w": 7,
+        "x": 5,
+        "y": 1
       },
-      "id": 15,
+      "id": 38,
       "options": {
         "displayLabels": [
           "name"
         ],
         "legend": {
           "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "percent"
+          ]
         },
         "pieType": "donut",
         "reduceOptions": {
@@ -956,7 +156,7 @@
             "lastNotNull"
           ],
           "fields": "",
-          "values": false
+          "values": true
         },
         "tooltip": {
           "mode": "multi",
@@ -972,77 +172,20 @@
           },
           "enableDownSampling": true,
           "expressionList": [],
-          "format": "time_series",
-          "hide": false,
+          "format": "table",
           "host": [],
           "mode": "code",
           "module": [],
           "promqlAlias": "",
           "query_configs": [],
-          "refId": "C",
-          "source": "sum by (dimensions__bk_46__dispatchType) (sum by (dimensions__bk_46__buildId, dimensions__bk_46__jobId, dimensions__bk_46__dispatchType)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__status=\"QUEUE\", dimensions__bk_46__dispatchType!=\"\"}[$__range])) unless sum by (dimensions__bk_46__buildId, dimensions__bk_46__jobId, dimensions__bk_46__dispatchType)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__eventType!=\"BUILD_JOB_QUEUE\", dimensions__bk_46__dispatchType!=\"\"}[$__range])))",
-          "step": "$interval",
-          "type": "instant"
-        },
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "time_series",
-          "hide": false,
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "",
-          "query_configs": [],
-          "refId": "D",
-          "source": "sum by (dimensions__bk_46__dispatchType) (sum by (dimensions__bk_46__buildId, dimensions__bk_46__jobId, dimensions__bk_46__dispatchType)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__status=\"QUEUE\", dimensions__bk_46__dispatchType=\"\"}[$__range])) unless sum by (dimensions__bk_46__buildId, dimensions__bk_46__jobId, dimensions__bk_46__dispatchType)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__eventType!=\"BUILD_JOB_QUEUE\", dimensions__bk_46__dispatchType=\"\"}[$__range])))",
-          "step": "$interval",
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum by (repoType) (last_over_time($table:bkrepo_artifact_count{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[$__range]))",
+          "step": "",
           "type": "instant"
         }
       ],
-      "title": "Job - 排队中 - 按构建环境分布",
-      "transformations": [
-        {
-          "id": "renameByRegex",
-          "options": {
-            "regex": "dimensions.dispatchType=\"PUBLIC_DEVCLOUD\"",
-            "renamePattern": "公共：Docker on DevCloud"
-          }
-        },
-        {
-          "id": "renameByRegex",
-          "options": {
-            "regex": "dimensions.dispatchType=\"THIRD_PARTY_AGENT_ID\"",
-            "renamePattern": "私有：构建机"
-          }
-        },
-        {
-          "id": "renameByRegex",
-          "options": {
-            "regex": "dimensions.dispatchType=\"MACOS\"",
-            "renamePattern": "云托管：MacOS on DevCloud"
-          }
-        },
-        {
-          "id": "renameByRegex",
-          "options": {
-            "regex": "dimensions.dispatchType=\"WINDOWS\"",
-            "renamePattern": "云托管：Windows on DevCloud"
-          }
-        },
-        {
-          "id": "renameByRegex",
-          "options": {
-            "regex": "dimensions.dispatchType=\"THIRD_PARTY_AGENT_ENV\"",
-            "renamePattern": "第三方环境"
-          }
-        }
-      ],
+      "title": "存储个数-按制品类型分布",
       "type": "piechart"
     },
     {
@@ -1055,41 +198,312 @@
           "color": {
             "mode": "thresholds"
           },
-          "mappings": [
-            {
-              "options": {
-                "from": 0,
-                "result": {
-                  "color": "green",
-                  "index": 0
-                },
-                "to": 60000
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 60000,
-                "result": {
-                  "color": "yellow",
-                  "index": 1
-                },
-                "to": 300000
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 300000,
-                "result": {
-                  "color": "red",
-                  "index": 2
-                }
-              },
-              "type": "range"
-            }
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 1
+      },
+      "hideTimeOverride": true,
+      "id": 20,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
           ],
-          "noValue": "0 ms",
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": false,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum(sum_over_time($table:artifact_transfer_size_bytes_sum{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RECEIVE\"}[$__range]))",
+          "step": "",
+          "type": "instant"
+        }
+      ],
+      "timeFrom": "1d",
+      "title": "近 1 天新增",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 1
+      },
+      "hideTimeOverride": true,
+      "id": 21,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": false,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum(sum_over_time($table:artifact_transfer_size_bytes_sum{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RECEIVE\"}[$__range]))",
+          "step": "",
+          "type": "instant"
+        }
+      ],
+      "timeFrom": "7d",
+      "title": "近 7 天新增",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "hideTimeOverride": true,
+      "id": 22,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": false,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum(sum_over_time($table:artifact_transfer_size_bytes_sum{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RECEIVE\"}[$__range]))",
+          "step": "",
+          "type": "instant"
+        }
+      ],
+      "timeFrom": "1M",
+      "title": "近 1 月新增",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 0,
+        "y": 5
+      },
+      "hideTimeOverride": true,
+      "id": 13,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": false,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum(last_over_time($table:bkrepo_artifact_count{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[$__range]))",
+          "step": "",
+          "type": "instant"
+        }
+      ],
+      "timeFrom": "1h",
+      "title": "制品个数",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1099,17 +513,399 @@
               }
             ]
           },
-          "unit": "ms"
+          "unit": "none"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
+        "h": 4,
         "w": 4,
-        "x": 10,
-        "y": 11
+        "x": 12,
+        "y": 5
       },
-      "id": 8,
+      "hideTimeOverride": true,
+      "id": 26,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": false,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum(count_over_time($table:artifact_transfer_rate{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RESPONSE\"}[$__range])) or vector(0)",
+          "step": "",
+          "type": "instant"
+        }
+      ],
+      "timeFrom": "1d",
+      "title": "近 1 天下载",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 5
+      },
+      "hideTimeOverride": true,
+      "id": 27,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": false,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum(count_over_time($table:artifact_transfer_rate{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RESPONSE\"}[$__range])) or vector(0)",
+          "step": "",
+          "type": "instant"
+        }
+      ],
+      "timeFrom": "7d",
+      "title": "近 7 天下载",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 5
+      },
+      "hideTimeOverride": true,
+      "id": 28,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": false,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum(count_over_time($table:artifact_transfer_rate{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RESPONSE\"}[$__range])) or vector(0)",
+          "step": "",
+          "type": "instant"
+        }
+      ],
+      "timeFrom": "1M",
+      "title": "近 1 月下载",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [],
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 7,
+        "x": 5,
+        "y": 7
+      },
+      "id": 15,
+      "options": {
+        "displayLabels": [
+          "name"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "percent"
+          ]
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum by (repoType) (last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[$__range]))",
+          "step": "",
+          "type": "instant"
+        }
+      ],
+      "title": "存储量-按制品类型分布",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 0,
+        "y": 9
+      },
+      "hideTimeOverride": true,
+      "id": 14,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": false,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "count(\n  sum by (repoName) (\n    last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\"}[$__range])\n  )\n) or vector(0)",
+          "step": "",
+          "type": "instant"
+        }
+      ],
+      "timeFrom": "1h",
+      "title": "仓库个数",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "super-light-red",
+                "value": null
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 9
+      },
+      "hideTimeOverride": true,
+      "id": 23,
       "options": {
         "colorMode": "background",
         "graphMode": "area",
@@ -1136,139 +932,23 @@
           },
           "enableDownSampling": true,
           "expressionList": [],
-          "format": "time_series",
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "A",
-          "query_configs": [],
-          "refId": "A",
-          "source": "avg(avg_over_time($table:event__bk_46__extra__bk_46__queueDuration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__status!~\"RUNNING|QUEUE\"}[$__range]))",
-          "step": "$__range",
-          "type": "instant"
-        }
-      ],
-      "title": "Job - 平均排队耗时",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "bkmonitor-timeseries-datasource",
-        "uid": "${DS_蓝鲸监控_-_指标数据}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "blue",
-            "mode": "fixed"
-          },
-          "custom": {
-            "fillOpacity": 80,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineWidth": 1
-          },
-          "links": [],
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "blue",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "xMin"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "ms"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "xMax"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "ms"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 10,
-        "x": 14,
-        "y": 11
-      },
-      "id": 13,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        }
-      },
-      "targets": [
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": false,
-          "expressionList": [],
           "format": "table",
+          "hide": false,
           "host": [],
           "mode": "code",
           "module": [],
           "promqlAlias": "",
           "query_configs": [],
           "refId": "A",
-          "source": "avg by (dimensions__bk_46__buildId) (avg_over_time($table:event__bk_46__extra__bk_46__queueDuration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__status=\"SUCCEED\"}[$__range])) > 0",
-          "step": "$__range",
+          "showLastPoint": false,
+          "source": "sum(sum_over_time($table:artifact_transfer_size_bytes_sum{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RECEIVE\"}[$__range])) - (sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[10m])) - sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[10m] offset $__range)))",
+          "step": "",
           "type": "instant"
         }
       ],
-      "title": "Job - 排队耗时分布",
-      "transformations": [
-        {
-          "id": "histogram",
-          "options": {
-            "bucketCount": 10,
-            "fields": {}
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {},
-            "includeByName": {},
-            "indexByName": {},
-            "renameByName": {
-              "Value": ""
-            }
-          }
-        }
-      ],
-      "type": "histogram"
+      "timeFrom": "1d",
+      "title": "近 1 天删除",
+      "type": "stat"
     },
     {
       "datasource": {
@@ -1280,231 +960,44 @@
           "color": {
             "mode": "thresholds"
           },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "color-background"
-            },
-            "inspect": false
-          },
-          "mappings": [
-            {
-              "options": {
-                "from": 0,
-                "result": {
-                  "color": "green",
-                  "index": 0
-                },
-                "to": 60000
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 60000,
-                "result": {
-                  "color": "yellow",
-                  "index": 1
-                },
-                "to": 300000
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 300000,
-                "result": {
-                  "color": "red",
-                  "index": 2
-                }
-              },
-              "type": "range"
-            }
-          ],
-          "noValue": "--",
+          "mappings": [],
+          "noValue": "0",
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "super-light-red",
                 "value": null
               }
             ]
           },
-          "unit": "ms"
+          "unit": "bytes"
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "排队的任务"
-            },
-            "properties": [
-              {
-                "id": "noValue",
-                "value": "0"
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "mode": "lcd",
-                  "type": "gauge",
-                  "valueDisplayMode": "text"
-                }
-              },
-              {
-                "id": "color"
-              },
-              {
-                "id": "unit",
-                "value": "none"
-              },
-              {
-                "id": "max",
-                "value": 100
-              },
-              {
-                "id": "mappings",
-                "value": [
-                  {
-                    "options": {
-                      "from": 0,
-                      "result": {
-                        "color": "green",
-                        "index": 0
-                      },
-                      "to": 60
-                    },
-                    "type": "range"
-                  },
-                  {
-                    "options": {
-                      "from": 60,
-                      "result": {
-                        "color": "yellow",
-                        "index": 1
-                      },
-                      "to": 90
-                    },
-                    "type": "range"
-                  },
-                  {
-                    "options": {
-                      "from": 90,
-                      "result": {
-                        "color": "red",
-                        "index": 2
-                      }
-                    },
-                    "type": "range"
-                  }
-                ]
-              },
-              {
-                "id": "links",
-                "value": [
-                  {
-                    "title": "查看排队明细",
-                    "url": "/grafana/d/${panelUid}/?viewPanel=21&from={__from}&to={__to}&var-projectId=${projectId}&var-pipelineName=${pipelineName:allValue}&var-interval=${interval}&var-table=${table}&var-dispatchName=${__data.fields.资源名称}"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "资源类型"
-            },
-            "properties": [
-              {
-                "id": "mappings",
-                "value": [
-                  {
-                    "options": {
-                      "MACOS": {
-                        "index": 3,
-                        "text": "云托管：MacOS on DevCloud"
-                      },
-                      "PUBLIC_DEVCLOUD": {
-                        "index": 2,
-                        "text": "公共：Docker on DevCloud"
-                      },
-                      "THIRD_PARTY_AGENT_ENV": {
-                        "index": 1,
-                        "text": "第三方环境"
-                      },
-                      "THIRD_PARTY_AGENT_ID": {
-                        "index": 0,
-                        "text": "第三方构建机"
-                      },
-                      "WINDOWS": {
-                        "index": 4,
-                        "text": "云托管：Windows on DevCloud"
-                      }
-                    },
-                    "type": "value"
-                  }
-                ]
-              },
-              {
-                "id": "noValue",
-                "value": "无编译环境"
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "auto"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "资源名称"
-            },
-            "properties": [
-              {
-                "id": "noValue",
-                "value": "--"
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "auto"
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 24,
-        "x": 0,
-        "y": 16
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 9
       },
-      "id": 16,
+      "hideTimeOverride": true,
+      "id": 24,
       "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "enablePagination": false,
-          "fields": "",
-          "reducer": [
-            "sum"
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
           ],
-          "show": false
+          "fields": "",
+          "values": false
         },
-        "frameIndex": 0,
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "排队的任务"
-          }
-        ]
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
       "pluginVersion": "10.4.10",
       "targets": [
@@ -1525,8 +1018,342 @@
           "query_configs": [],
           "refId": "A",
           "showLastPoint": false,
-          "source": "sum by (dimensions__bk_46__dispatchType, dimensions__bk_46__dispatchName) (count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__eventType=\"BUILD_JOB_END\", dimensions__bk_46__dispatchType=~\".+\"}[$__range]))",
+          "source": "sum(sum_over_time($table:artifact_transfer_size_bytes_sum{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RECEIVE\"}[$__range])) - (sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[10m])) - sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[10m] offset $__range)))",
+          "step": "",
+          "type": "instant"
+        }
+      ],
+      "timeFrom": "7d",
+      "title": "近 7 天删除",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "super-light-red",
+                "value": null
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 9
+      },
+      "hideTimeOverride": true,
+      "id": 25,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "hide": false,
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum(sum_over_time($table:artifact_transfer_size_bytes_sum{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RECEIVE\"}[$__range])) - (sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[10m])) - sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[10m] offset $__range)))",
+          "step": "",
+          "type": "instant"
+        }
+      ],
+      "timeFrom": "1M",
+      "title": "近 1 月删除",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "id": 30,
+      "panels": [],
+      "title": "制品趋势",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": true,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 64,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 14
+      },
+      "id": 29,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.86,
+        "colorByField": "存储总量",
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "never",
+        "stacking": "normal",
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        },
+        "xField": "Time",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 200
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "存储总量",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[$interval]))",
           "step": "$interval",
+          "type": "range"
+        }
+      ],
+      "title": "存储总量趋势",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "存储量"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "bytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "存储占用比例"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "gradient",
+                  "type": "gauge",
+                  "valueDisplayMode": "text"
+                }
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "max",
+                "value": 100
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      },
+      "id": 31,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "frameIndex": 1,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "存储占用比例"
+          }
+        ]
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum by (repoName) (last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[$__range]))",
+          "step": "",
           "type": "instant"
         },
         {
@@ -1546,96 +1373,12 @@
           "query_configs": [],
           "refId": "B",
           "showLastPoint": false,
-          "source": "sum by (dimensions__bk_46__dispatchType, dimensions__bk_46__dispatchName) (sum by (dimensions__bk_46__buildId, dimensions__bk_46__jobId, dimensions__bk_46__dispatchType, dimensions__bk_46__dispatchName)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__status=\"QUEUE\", dimensions__bk_46__dispatchType=~\".+\"}[$__range])) unless on(dimensions__bk_46__buildId, dimensions__bk_46__jobId) sum by (dimensions__bk_46__buildId, dimensions__bk_46__jobId, dimensions__bk_46__dispatchType, dimensions__bk_46__dispatchName)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__eventType!=\"BUILD_JOB_QUEUE\", dimensions__bk_46__dispatchType=~\".+\"}[$__range])))",
-          "step": "$interval",
-          "type": "instant"
-        },
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "table",
-          "hide": false,
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "",
-          "query_configs": [],
-          "refId": "C",
-          "showLastPoint": false,
-          "source": "avg by (dimensions__bk_46__dispatchType, dimensions__bk_46__dispatchName) (avg_over_time($table:event__bk_46__extra__bk_46__queueDuration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__eventType=\"BUILD_JOB_END\", dimensions__bk_46__dispatchType=~\".+\"}[$__range]))",
-          "step": "$interval",
-          "type": "instant"
-        },
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "table",
-          "hide": false,
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "",
-          "query_configs": [],
-          "refId": "D",
-          "showLastPoint": false,
-          "source": "quantile_over_time(0.95, (sum(sum_over_time($table:event__bk_46__extra__bk_46__queueDuration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__eventType=\"BUILD_JOB_END\", dimensions__bk_46__dispatchType=~\".+\"}[1m])) by (dimensions__bk_46__dispatchType, dimensions__bk_46__dispatchName))[$__range:1m])",
-          "step": "$interval",
-          "type": "instant"
-        },
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "table",
-          "hide": false,
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "",
-          "query_configs": [],
-          "refId": "E",
-          "showLastPoint": false,
-          "source": "quantile_over_time(0.80, (sum(sum_over_time($table:event__bk_46__extra__bk_46__queueDuration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__eventType=\"BUILD_JOB_END\", dimensions__bk_46__dispatchType=~\".+\"}[1m])) by (dimensions__bk_46__dispatchType, dimensions__bk_46__dispatchName))[$__range:1m])",
-          "step": "$interval",
-          "type": "instant"
-        },
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "table",
-          "hide": false,
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "",
-          "query_configs": [],
-          "refId": "F",
-          "showLastPoint": false,
-          "source": "avg by (dimensions__bk_46__dispatchType, dimensions__bk_46__dispatchName) (${__to} - timestamp(sum by (dimensions__bk_46__buildId, dimensions__bk_46__jobId, dimensions__bk_46__dispatchType, dimensions__bk_46__dispatchName)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__status=\"QUEUE\", dimensions__bk_46__dispatchType=~\".+\"}[$__range])) unless on(dimensions__bk_46__buildId, dimensions__bk_46__jobId) sum by (dimensions__bk_46__buildId, dimensions__bk_46__jobId, dimensions__bk_46__dispatchType, dimensions__bk_46__dispatchName)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__eventType!=\"BUILD_JOB_QUEUE\", dimensions__bk_46__dispatchType=~\".+\"}[$__range]))) * 1000)",
-          "step": "$interval",
+          "source": "(sum by (repoName) (last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[$__range])) / sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[$__range]))) * 100",
+          "step": "",
           "type": "instant"
         }
       ],
-      "title": "Job - 排队中 - 按资源分布",
+      "title": "存储量 - 按仓库分布",
       "transformations": [
         {
           "id": "merge",
@@ -1645,38 +1388,356 @@
           "id": "organize",
           "options": {
             "excludeByName": {
+              "Time": true
+            },
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "Value #A": "存储量",
+              "Value #B": "存储占用比例",
+              "repoName": "仓库"
+            }
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "存储量"
+              }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "下载次数"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "下载流量"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "bytes"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 25
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "下载次数"
+            },
+            "properties": [
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 22
+      },
+      "id": 32,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "下载流量",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum(sum_over_time($table:artifact_bandwidth_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RESPONSE\"}[$interval]))",
+          "step": "$interval",
+          "type": "range"
+        },
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "hide": false,
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "下载次数",
+          "query_configs": [],
+          "refId": "B",
+          "showLastPoint": false,
+          "source": "sum(count_over_time($table:artifact_transfer_rate{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RESPONSE\"}[$interval]))",
+          "step": "$interval",
+          "type": "range"
+        }
+      ],
+      "title": "下载趋势",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "大小"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "bytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "所属流水线"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "targetBlank": true,
+                    "title": "点击查看流水线执行历史",
+                    "url": "${devopsUrl}/console/pipeline/${projectId}/${__data.fields.流水线ID}/history/history/"
+                  }
+                ]
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "Unknown": {
+                        "index": 0,
+                        "text": "--"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 22
+      },
+      "id": 35,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "下载次数"
+          }
+        ]
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "topk(20, sum by (fullPath, pipelineName, pipelineId, bytes, pipelineName) (count_over_time($table:artifact_transfer_rate{projectId=\"$projectId\",repoName=~\"^($repoName)$\",type=\"RESPONSE\"}[$__range])))\n\n\n",
+          "step": "",
+          "type": "instant"
+        }
+      ],
+      "title": "下载次数 Top 5",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
               "Time": true,
-              "Value #A": true,
-              "Value #A (sum)": true
+              "Value": false
             },
             "includeByName": {},
             "indexByName": {
-              "Time": 2,
-              "Value #A": 3,
-              "Value #B": 4,
-              "Value #C": 6,
-              "Value #D": 7,
-              "Value #E": 8,
-              "Value #F": 5,
-              "dimensions.dispatchName": 1,
-              "dimensions.dispatchType": 0
+              "Time": 0,
+              "Value": 4,
+              "bytes": 3,
+              "fullPath": 1,
+              "pipelineId": 2
             },
             "renameByName": {
               "Time": "",
-              "Value #A": "",
-              "Value #A (sum)": "",
-              "Value #B": "排队的任务",
-              "Value #B (sum)": "排队的任务",
-              "Value #C": "平均排队时长",
-              "Value #C (mean)": "平均排队时长",
-              "Value #D": "P95 排队时长",
-              "Value #D (max)": "P95 排队时长",
-              "Value #E": "P80 排队时长",
-              "Value #E (max)": "P80 排队时长",
-              "Value #F": "正在排队已等待平均时长",
-              "Value #F (mean)": "正在排队已等待平均时长",
-              "dimensions.dispatchName": "资源名称",
-              "dimensions.dispatchType": "资源类型"
+              "Value": "下载次数",
+              "bytes": "大小",
+              "fullPath": "制品",
+              "pipelineId": "所属流水线",
+              "repoName": ""
             }
           }
         }
@@ -1684,14 +1745,601 @@
       "type": "table"
     },
     {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "上传流量"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "bytes"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 25
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "上传次数"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 30
+      },
+      "id": 33,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "上传流量",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "max(max_over_time($table:artifact_bandwidth_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RECEIVE\"}[$interval]))",
+          "step": "$interval",
+          "type": "range"
+        },
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "hide": false,
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "上传次数",
+          "query_configs": [],
+          "refId": "B",
+          "showLastPoint": false,
+          "source": "sum(count_over_time($table:artifact_transfer_rate{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RECEIVE\"}[$interval]))",
+          "step": "$interval",
+          "type": "range"
+        }
+      ],
+      "title": "上传趋势",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "大小"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "bytes"
+              },
+              {
+                "id": "custom.width",
+                "value": 79
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "制品"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 280
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "所属流水线"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "targetBlank": true,
+                    "title": "点击查看流水线执行历史",
+                    "url": "${devopsUrl}/console/pipeline/${projectId}/${__data.fields.流水线ID}/history/history/"
+                  }
+                ]
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "Unknown": {
+                        "index": 0,
+                        "text": "--"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 30
+      },
+      "id": 36,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "下载次数"
+          }
+        ]
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "topk(20, sum by (fullPath, pipelineName, pipelineId, bytes, pipelineName) (count_over_time($table:artifact_transfer_rate{projectId=\"$projectId\",repoName=~\"^($repoName)$\",type=\"RECEIVE\"}[$__range])))\n\n\n",
+          "step": "",
+          "type": "instant"
+        }
+      ],
+      "title": "上传次数 Top 5",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value": false
+            },
+            "includeByName": {},
+            "indexByName": {
+              "Time": 0,
+              "Value": 4,
+              "bytes": 3,
+              "fullPath": 1,
+              "pipelineId": 2
+            },
+            "renameByName": {
+              "Time": "",
+              "Value": "下载次数",
+              "bytes": "大小",
+              "fullPath": "制品",
+              "pipelineId": "所属流水线",
+              "repoName": ""
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "下载速度"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 38
+      },
+      "id": 34,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max",
+            "min"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "上传速度",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "sum(sum_over_time($table:artifact_transfer_size_bytes_sum{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RECEIVE\"}[$interval]))",
+          "step": "$interval",
+          "type": "range"
+        },
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "hide": false,
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "下载速度",
+          "query_configs": [],
+          "refId": "B",
+          "showLastPoint": false,
+          "source": "sum(sum_over_time($table:artifact_transfer_size_bytes_sum{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RESPONSE\"}[$interval]))",
+          "step": "$interval",
+          "type": "range"
+        }
+      ],
+      "title": "上传下载速度趋势",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 38
+      },
+      "id": 37,
+      "options": {
+        "combine": false,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "table",
+          "hide": false,
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "下载-P99",
+          "query_configs": [],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "topk(10000, sum by (fullPath, bytes) (count_over_time($table:artifact_transfer_rate{projectId=\"$projectId\",repoName=~\"^($repoName)$\"}[$__range])))",
+          "step": "",
+          "type": "instant"
+        }
+      ],
+      "title": "制品大小分布",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Value": true,
+              "bytes": false,
+              "fullPath": true
+            },
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "bytes": ""
+            }
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "bytes"
+              }
+            ],
+            "fields": {}
+          }
+        },
+        {
+          "disabled": true,
+          "id": "histogram",
+          "options": {}
+        }
+      ],
+      "type": "histogram"
+    },
+    {
       "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 23
+        "y": 46
       },
-      "id": 23,
+      "id": 9,
       "panels": [
         {
           "datasource": {
@@ -1703,135 +2351,117 @@
               "color": {
                 "mode": "thresholds"
               },
-              "custom": {
-                "align": "auto",
-                "cellOptions": {
-                  "type": "auto"
-                },
-                "inspect": false
+              "mappings": [],
+              "noValue": "0",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "text",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "bytes"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 8,
+            "x": 0,
+            "y": 1
+          },
+          "id": 5,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.10",
+          "targets": [
+            {
+              "cluster": [],
+              "datasource": {
+                "type": "bkmonitor-timeseries-datasource",
+                "uid": "${DS_蓝鲸监控_-_指标数据}"
+              },
+              "enableDownSampling": false,
+              "expressionList": [],
+              "format": "table",
+              "host": [],
+              "mode": "code",
+              "module": [],
+              "promqlAlias": "",
+              "query_configs": [],
+              "refId": "A",
+              "showLastPoint": false,
+              "source": "sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\"}[$__range]))",
+              "step": "",
+              "type": "instant"
+            }
+          ],
+          "timeFrom": "1h",
+          "title": "当前制品总量",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
               },
               "mappings": [],
               "thresholds": {
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "blue"
+                    "color": "green",
+                    "value": null
                   }
                 ]
-              }
+              },
+              "unit": "bytes"
             },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "流水线ID"
-                },
-                "properties": [
-                  {
-                    "id": "custom.hidden",
-                    "value": true
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "构建ID"
-                },
-                "properties": [
-                  {
-                    "id": "links",
-                    "value": [
-                      {
-                        "targetBlank": true,
-                        "title": "点击查看流水线执行详情",
-                        "url": "${devopsUrl}﻿/console/pipeline/﻿${projectId}﻿/﻿${__data.fields.流水线ID}﻿/detail/﻿${__data.fields.构建ID}﻿/executeDetail"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "触发方式"
-                },
-                "properties": [
-                  {
-                    "id": "mappings",
-                    "value": [
-                      {
-                        "options": {
-                          "MANUAL": {
-                            "index": 1,
-                            "text": "手动"
-                          },
-                          "PIPELINE": {
-                            "index": 4,
-                            "text": "流水线"
-                          },
-                          "REMOTE": {
-                            "index": 5,
-                            "text": "远程触发"
-                          },
-                          "SERVICE": {
-                            "index": 3,
-                            "text": "第三方启动"
-                          },
-                          "TIME_TRIGGER": {
-                            "index": 0,
-                            "text": "定时"
-                          },
-                          "WEB_HOOK": {
-                            "index": 2,
-                            "text": "代码变更"
-                          }
-                        },
-                        "type": "value"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "流水线名称"
-                },
-                "properties": [
-                  {
-                    "id": "custom.width",
-                    "value": 258
-                  }
-                ]
-              }
-            ]
+            "overrides": []
           },
           "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 0,
-            "y": 24
+            "h": 5,
+            "w": 4,
+            "x": 8,
+            "y": 1
           },
           "id": 2,
           "options": {
-            "cellHeight": "sm",
-            "footer": {
-              "countRows": false,
-              "fields": "",
-              "reducer": [
-                "sum"
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
               ],
-              "show": false
+              "fields": "",
+              "values": false
             },
-            "frameIndex": 3,
-            "showHeader": true,
-            "sortBy": [
-              {
-                "desc": false,
-                "displayName": "触发时间"
-              }
-            ]
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
           },
           "pluginVersion": "10.4.10",
           "targets": [
@@ -1850,70 +2480,14 @@
               "promqlAlias": "",
               "query_configs": [],
               "refId": "A",
-              "source": "sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__trigger, dimensions__bk_46__triggerUser, event__bk_46__extra__bk_46__startTime)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_START\"}[$__range])) unless on(dimensions__bk_46__buildId) sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__trigger, dimensions__bk_46__triggerUser, event__bk_46__extra__bk_46__startTime)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_END\"}[$__range]))",
-              "step": "$interval",
+              "showLastPoint": false,
+              "source": "avg(avg_over_time($table:artifact_transfer_rate{projectId=\"$projectId\", type=\"RESPONSE\"}[$__range])) or vector(0)",
+              "step": "",
               "type": "instant"
             }
           ],
-          "title": "流水线 - 运行中 / ESC 返回主看板",
-          "transformations": [
-            {
-              "id": "calculateField",
-              "options": {
-                "binary": {
-                  "left": "1000",
-                  "operator": "*",
-                  "right": "event.extra.startTime"
-                },
-                "mode": "binary",
-                "reduce": {
-                  "reducer": "sum"
-                }
-              }
-            },
-            {
-              "id": "organize",
-              "options": {
-                "excludeByName": {
-                  "Time": true,
-                  "Value": true,
-                  "dimensions.pipelineId": false,
-                  "event.extra.startTime": true
-                },
-                "includeByName": {},
-                "indexByName": {
-                  "Time": 0,
-                  "Value": 5,
-                  "dimensions.buildId": 1,
-                  "dimensions.pipelineId": 4,
-                  "dimensions.pipelineName": 2,
-                  "dimensions.triggerUser": 3
-                },
-                "renameByName": {
-                  "1000 * event.extra.startTime": "触发时间",
-                  "dimensions.buildId": "构建ID",
-                  "dimensions.pipelineId": "流水线ID",
-                  "dimensions.pipelineName": "流水线名称",
-                  "dimensions.trigger": "触发方式",
-                  "dimensions.triggerUser": "触发人",
-                  "event.extra.startTime": ""
-                }
-              }
-            },
-            {
-              "id": "convertFieldType",
-              "options": {
-                "conversions": [
-                  {
-                    "destinationType": "time",
-                    "targetField": "触发时间"
-                  }
-                ],
-                "fields": {}
-              }
-            }
-          ],
-          "type": "table"
+          "title": "平均下载速度",
+          "type": "stat"
         },
         {
           "datasource": {
@@ -1925,123 +2499,42 @@
               "color": {
                 "mode": "thresholds"
               },
-              "custom": {
-                "align": "auto",
-                "cellOptions": {
-                  "type": "auto"
-                },
-                "inspect": false
-              },
               "mappings": [],
               "thresholds": {
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "blue"
+                    "color": "green",
+                    "value": null
                   }
                 ]
-              }
+              },
+              "unit": "none"
             },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "流水线ID"
-                },
-                "properties": [
-                  {
-                    "id": "custom.hidden",
-                    "value": true
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "构建ID"
-                },
-                "properties": [
-                  {
-                    "id": "links",
-                    "value": [
-                      {
-                        "targetBlank": true,
-                        "title": "点击查看流水线执行详情",
-                        "url": "${devopsUrl}﻿/console/pipeline/﻿${projectId}﻿/﻿${__data.fields.流水线ID}﻿/detail/﻿${__data.fields.构建ID}﻿/executeDetail"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "触发方式"
-                },
-                "properties": [
-                  {
-                    "id": "mappings",
-                    "value": [
-                      {
-                        "options": {
-                          "MANUAL": {
-                            "index": 1,
-                            "text": "手动"
-                          },
-                          "PIPELINE": {
-                            "index": 4,
-                            "text": "流水线"
-                          },
-                          "REMOTE": {
-                            "index": 5,
-                            "text": "远程触发"
-                          },
-                          "SERVICE": {
-                            "index": 3,
-                            "text": "第三方启动"
-                          },
-                          "TIME_TRIGGER": {
-                            "index": 0,
-                            "text": "定时"
-                          },
-                          "WEB_HOOK": {
-                            "index": 2,
-                            "text": "代码变更"
-                          }
-                        },
-                        "type": "value"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
+            "overrides": []
           },
           "gridPos": {
-            "h": 8,
-            "w": 12,
+            "h": 5,
+            "w": 4,
             "x": 12,
-            "y": 24
+            "y": 1
           },
-          "id": 20,
+          "id": 4,
           "options": {
-            "cellHeight": "sm",
-            "footer": {
-              "countRows": false,
-              "fields": "",
-              "reducer": [
-                "sum"
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
               ],
-              "show": false
+              "fields": "",
+              "values": false
             },
-            "frameIndex": 3,
-            "showHeader": true,
-            "sortBy": [
-              {
-                "desc": false,
-                "displayName": "触发时间"
-              }
-            ]
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
           },
           "pluginVersion": "10.4.10",
           "targets": [
@@ -2060,71 +2553,14 @@
               "promqlAlias": "",
               "query_configs": [],
               "refId": "A",
-              "source": "sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__triggerUser, dimensions__bk_46__trigger, event__bk_46__extra__bk_46__startTime)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__status=\"QUEUE\"}[$__range])) unless on(dimensions__bk_46__buildId) sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__triggerUser, dimensions__bk_46__trigger, event__bk_46__extra__bk_46__startTime)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType!=\"BUILD_QUEUE\"}[$__range]))",
-              "step": "$interval",
+              "showLastPoint": false,
+              "source": "count(count_over_time($table:artifact_transfer_rate{projectId=\"$projectId\", type=\"RESPONSE\"}[$__range])) or vector(0)",
+              "step": "",
               "type": "instant"
             }
           ],
-          "title": "流水线 - 排队中 / ESC 返回主看板",
-          "transformations": [
-            {
-              "id": "calculateField",
-              "options": {
-                "binary": {
-                  "left": "1000",
-                  "operator": "*",
-                  "right": "event.extra.startTime"
-                },
-                "mode": "binary",
-                "reduce": {
-                  "reducer": "sum"
-                }
-              }
-            },
-            {
-              "id": "organize",
-              "options": {
-                "excludeByName": {
-                  "Time": true,
-                  "Value": true,
-                  "event.extra.startTime": true
-                },
-                "includeByName": {},
-                "indexByName": {
-                  "Time": 0,
-                  "Value": 5,
-                  "dimensions.buildId": 1,
-                  "dimensions.pipelineId": 4,
-                  "dimensions.pipelineName": 2,
-                  "dimensions.triggerUser": 3
-                },
-                "renameByName": {
-                  "1000 * event.extra.startTime": "触发时间",
-                  "dimensions.buildId": "构建ID",
-                  "dimensions.pipelineId": "流水线ID",
-                  "dimensions.pipelineName": "流水线名称",
-                  "dimensions.trigger": "触发方式",
-                  "dimensions.triggerUser": "触发人"
-                }
-              }
-            },
-            {
-              "id": "convertFieldType",
-              "options": {
-                "conversions": [
-                  {
-                    "destinationType": "time",
-                    "enumConfig": {
-                      "text": []
-                    },
-                    "targetField": "触发时间"
-                  }
-                ],
-                "fields": {}
-              }
-            }
-          ],
-          "type": "table"
+          "title": "下载制品/制品包",
+          "type": "stat"
         },
         {
           "datasource": {
@@ -2136,81 +2572,189 @@
               "color": {
                 "mode": "thresholds"
               },
-              "custom": {
-                "align": "auto",
-                "cellOptions": {
-                  "type": "auto"
-                },
-                "inspect": false
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "bytes"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 4,
+            "x": 16,
+            "y": 1
+          },
+          "id": 1,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.10",
+          "targets": [
+            {
+              "cluster": [],
+              "datasource": {
+                "type": "bkmonitor-timeseries-datasource",
+                "uid": "${DS_蓝鲸监控_-_指标数据}"
+              },
+              "enableDownSampling": false,
+              "expressionList": [],
+              "format": "table",
+              "host": [],
+              "mode": "code",
+              "module": [],
+              "promqlAlias": "",
+              "query_configs": [],
+              "refId": "A",
+              "showLastPoint": false,
+              "source": "avg(avg_over_time($table:artifact_transfer_rate{projectId=\"$projectId\", type=\"RECEIVE\"}[$__range])) or vector(0)",
+              "step": "",
+              "type": "instant"
+            }
+          ],
+          "title": "平均上传速度",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
               },
               "mappings": [],
               "thresholds": {
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "blue"
-                  }
-                ]
-              }
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "流水线ID"
-                },
-                "properties": [
-                  {
-                    "id": "custom.hidden",
-                    "value": true
+                    "color": "blue",
+                    "value": null
                   }
                 ]
               },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "构建ID"
-                },
-                "properties": [
-                  {
-                    "id": "links",
-                    "value": [
-                      {
-                        "targetBlank": true,
-                        "title": "点击查看流水线执行详情",
-                        "url": "${devopsUrl}﻿/console/pipeline/﻿${projectId}﻿/﻿${__data.fields.流水线ID}﻿/detail/﻿${__data.fields.构建ID}﻿/executeDetail"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
+              "unit": "none"
+            },
+            "overrides": []
           },
           "gridPos": {
-            "h": 8,
-            "w": 12,
+            "h": 5,
+            "w": 4,
+            "x": 20,
+            "y": 1
+          },
+          "id": 3,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.10",
+          "targets": [
+            {
+              "cluster": [],
+              "datasource": {
+                "type": "bkmonitor-timeseries-datasource",
+                "uid": "${DS_蓝鲸监控_-_指标数据}"
+              },
+              "enableDownSampling": false,
+              "expressionList": [],
+              "format": "table",
+              "host": [],
+              "mode": "code",
+              "module": [],
+              "promqlAlias": "",
+              "query_configs": [],
+              "refId": "A",
+              "showLastPoint": false,
+              "source": "count(count_over_time($table:artifact_transfer_rate{projectId=\"$projectId\", type=\"RECEIVE\"}[$__range])) or vector(0)",
+              "step": "",
+              "type": "instant"
+            }
+          ],
+          "title": "上传制品/制品包",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "noValue": "0",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "bytes"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 8,
             "x": 0,
-            "y": 32
+            "y": 6
           },
-          "id": 18,
+          "id": 6,
           "options": {
-            "cellHeight": "sm",
-            "footer": {
-              "countRows": false,
-              "fields": "",
-              "reducer": [
-                "sum"
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
               ],
-              "show": false
+              "fields": "",
+              "values": false
             },
-            "frameIndex": 3,
-            "showHeader": true,
-            "sortBy": [
-              {
-                "desc": false,
-                "displayName": "触发时间"
-              }
-            ]
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
           },
           "pluginVersion": "10.4.10",
           "targets": [
@@ -2223,79 +2767,20 @@
               "enableDownSampling": false,
               "expressionList": [],
               "format": "table",
-              "hide": false,
               "host": [],
               "mode": "code",
               "module": [],
               "promqlAlias": "",
               "query_configs": [],
               "refId": "A",
-              "source": "sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__stepName, dimensions__bk_46__stepId, event__bk_46__extra__bk_46__startTime)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STEP\", dimensions__bk_46__status=\"REVIEWING\"}[$__range])) unless on(dimensions__bk_46__buildId, dimensions__bk_46__stepId) sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__stepName, dimensions__bk_46__stepId, event__bk_46__extra__bk_46__startTime)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STEP\", dimensions__bk_46__status=~\"REVIEW_ABORT|REVIEW_PROCESSED\"}[$__range]))",
-              "step": "$interval",
+              "showLastPoint": false,
+              "source": "sum(sum_over_time($table:artifact_transfer_size_bytes_sum{projectId=\"$projectId\", type=\"RECEIVE\"}[$__range]))",
+              "step": "",
               "type": "instant"
             }
           ],
-          "title": "Step - 审核中 / ESC 返回主看板",
-          "transformations": [
-            {
-              "id": "calculateField",
-              "options": {
-                "binary": {
-                  "left": "1000",
-                  "operator": "*",
-                  "right": "event.extra.startTime"
-                },
-                "mode": "binary",
-                "reduce": {
-                  "reducer": "sum"
-                }
-              }
-            },
-            {
-              "id": "organize",
-              "options": {
-                "excludeByName": {
-                  "Time": true,
-                  "Value": true,
-                  "dimensions.stepId": true,
-                  "event.extra.startTime": true
-                },
-                "includeByName": {},
-                "indexByName": {
-                  "Time": 0,
-                  "Value": 5,
-                  "dimensions.buildId": 1,
-                  "dimensions.pipelineId": 4,
-                  "dimensions.pipelineName": 2,
-                  "dimensions.triggerUser": 3
-                },
-                "renameByName": {
-                  "1000 * event.extra.startTime": "触发时间",
-                  "Time": "",
-                  "Value": "",
-                  "dimensions.buildId": "构建ID",
-                  "dimensions.pipelineId": "流水线ID",
-                  "dimensions.pipelineName": "流水线名称",
-                  "dimensions.stageName": "Stage 名称",
-                  "dimensions.stepName": "Step 名称",
-                  "dimensions.triggerUser": "创建人"
-                }
-              }
-            },
-            {
-              "id": "convertFieldType",
-              "options": {
-                "conversions": [
-                  {
-                    "destinationType": "time",
-                    "targetField": "触发时间"
-                  }
-                ],
-                "fields": {}
-              }
-            }
-          ],
-          "type": "table"
+          "title": "新增制品量",
+          "type": "stat"
         },
         {
           "datasource": {
@@ -2307,81 +2792,43 @@
               "color": {
                 "mode": "thresholds"
               },
-              "custom": {
-                "align": "auto",
-                "cellOptions": {
-                  "type": "auto"
-                },
-                "inspect": false
-              },
               "mappings": [],
+              "noValue": "0",
               "thresholds": {
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "blue"
-                  }
-                ]
-              }
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "流水线ID"
-                },
-                "properties": [
-                  {
-                    "id": "custom.hidden",
-                    "value": true
+                    "color": "blue",
+                    "value": null
                   }
                 ]
               },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "构建ID"
-                },
-                "properties": [
-                  {
-                    "id": "links",
-                    "value": [
-                      {
-                        "targetBlank": true,
-                        "title": "点击查看流水线执行详情",
-                        "url": "${devopsUrl}﻿/console/pipeline/﻿${projectId}﻿/﻿${__data.fields.流水线ID}﻿/detail/﻿${__data.fields.构建ID}﻿/executeDetail"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
+              "unit": "bytes"
+            },
+            "overrides": []
           },
           "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 12,
-            "y": 32
+            "h": 5,
+            "w": 8,
+            "x": 8,
+            "y": 6
           },
-          "id": 19,
+          "id": 8,
           "options": {
-            "cellHeight": "sm",
-            "footer": {
-              "countRows": false,
-              "fields": "",
-              "reducer": [
-                "sum"
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
               ],
-              "show": false
+              "fields": "",
+              "values": false
             },
-            "frameIndex": 3,
-            "showHeader": true,
-            "sortBy": [
-              {
-                "desc": false,
-                "displayName": "触发时间"
-              }
-            ]
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
           },
           "pluginVersion": "10.4.10",
           "targets": [
@@ -2391,7 +2838,7 @@
                 "type": "bkmonitor-timeseries-datasource",
                 "uid": "${DS_蓝鲸监控_-_指标数据}"
               },
-              "enableDownSampling": false,
+              "enableDownSampling": true,
               "expressionList": [],
               "format": "table",
               "hide": false,
@@ -2402,567 +2849,33 @@
               "query_configs": [],
               "refId": "A",
               "showLastPoint": false,
-              "source": "sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__stepName, event__bk_46__extra__bk_46__startTime, dimensions__bk_46__stepId)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STEP\", dimensions__bk_46__status=\"REVIEWING\", dimensions__bk_46__eventType=\"BUILD_QUALITY\"}[$__range])) unless on(dimensions__bk_46__buildId, dimensions__bk_46__stepId) sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__stepName, event__bk_46__extra__bk_46__startTime, dimensions__bk_46__stepId)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STEP\", dimensions__bk_46__status=~\"REVIEW_PROCESSED|REVIEW_ABORT\"}[$__range]))",
-              "step": "$interval",
+              "source": "sum(sum_over_time($table:artifact_transfer_size_bytes_sum{projectId=\"$projectId\", type=\"RECEIVE\"}[$__range])) - (sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\"}[10m])) - sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\"}[10m] offset $__range)))",
+              "step": "",
               "type": "instant"
             }
           ],
-          "title": "质量红线 - 审核中 / ESC 返回主看板",
-          "transformations": [
-            {
-              "id": "calculateField",
-              "options": {
-                "binary": {
-                  "left": "1000",
-                  "operator": "*",
-                  "right": "event.extra.startTime"
-                },
-                "mode": "binary",
-                "reduce": {
-                  "reducer": "sum"
-                }
-              }
-            },
-            {
-              "id": "organize",
-              "options": {
-                "excludeByName": {
-                  "Time": true,
-                  "Value": true,
-                  "event.extra.startTime": true
-                },
-                "includeByName": {},
-                "indexByName": {
-                  "Time": 0,
-                  "Value": 5,
-                  "dimensions.buildId": 1,
-                  "dimensions.pipelineId": 4,
-                  "dimensions.pipelineName": 2,
-                  "dimensions.triggerUser": 3
-                },
-                "renameByName": {
-                  "1000 * event.extra.startTime": "触发时间",
-                  "Time": "",
-                  "Value": "",
-                  "dimensions.buildId": "构建ID",
-                  "dimensions.pipelineId": "流水线ID",
-                  "dimensions.pipelineName": "流水线名称",
-                  "dimensions.stageName": "Stage 名称",
-                  "dimensions.stepName": "Step 名称",
-                  "dimensions.triggerUser": "创建人",
-                  "event.extra.startTime": ""
-                }
-              }
-            },
-            {
-              "id": "convertFieldType",
-              "options": {
-                "conversions": [
-                  {
-                    "destinationType": "time",
-                    "targetField": "触发时间"
-                  }
-                ],
-                "fields": {}
-              }
-            }
-          ],
-          "type": "table"
-        },
-        {
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "custom": {
-                "align": "auto",
-                "cellOptions": {
-                  "type": "auto"
-                },
-                "inspect": false
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "blue"
-                  }
-                ]
-              }
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "流水线ID"
-                },
-                "properties": [
-                  {
-                    "id": "custom.hidden",
-                    "value": true
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "构建ID"
-                },
-                "properties": [
-                  {
-                    "id": "links",
-                    "value": [
-                      {
-                        "targetBlank": true,
-                        "title": "点击查看流水线执行详情",
-                        "url": "${devopsUrl}﻿﻿﻿/console/pipeline/﻿﻿﻿${projectId}﻿﻿﻿/﻿﻿﻿${__data.fields.流水线ID}﻿﻿﻿/detail/﻿﻿﻿${__data.fields.构建ID}﻿﻿﻿/executeDetail?reviewStageSeq=${__data.fields.StageID}"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "StageID"
-                },
-                "properties": [
-                  {
-                    "id": "custom.hidden",
-                    "value": true
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 0,
-            "y": 40
-          },
-          "id": 17,
-          "options": {
-            "cellHeight": "sm",
-            "footer": {
-              "countRows": false,
-              "fields": "",
-              "reducer": [
-                "sum"
-              ],
-              "show": false
-            },
-            "frameIndex": 3,
-            "showHeader": true,
-            "sortBy": [
-              {
-                "desc": false,
-                "displayName": "触发时间"
-              }
-            ]
-          },
-          "pluginVersion": "10.4.10",
-          "targets": [
-            {
-              "cluster": [],
-              "datasource": {
-                "type": "bkmonitor-timeseries-datasource",
-                "uid": "${DS_蓝鲸监控_-_指标数据}"
-              },
-              "enableDownSampling": false,
-              "expressionList": [],
-              "format": "table",
-              "host": [],
-              "mode": "code",
-              "module": [],
-              "promqlAlias": "",
-              "query_configs": [],
-              "refId": "A",
-              "showLastPoint": false,
-              "source": "sum by (dimensions__bk_46__buildId, dimensions__bk_46__stageName, dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__stageId, event__bk_46__extra__bk_46__startTime)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STAGE\", dimensions__bk_46__status=\"REVIEWING\"}[$__range])) unless on (dimensions__bk_46__buildId, dimensions__bk_46__stageId) sum by (dimensions__bk_46__buildId, dimensions__bk_46__stageName, dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__stageId, event__bk_46__extra__bk_46__startTime)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STAGE\", dimensions__bk_46__status=~\"REVIEW_ABORT|REVIEW_PROCESSED\"}[$__range]))",
-              "step": "$interval",
-              "type": "instant"
-            }
-          ],
-          "title": "Stage - 审核中 / ESC 返回主看板",
-          "transformations": [
-            {
-              "id": "calculateField",
-              "options": {
-                "binary": {
-                  "left": "1000",
-                  "operator": "*",
-                  "right": "event.extra.startTime"
-                },
-                "mode": "binary",
-                "reduce": {
-                  "reducer": "sum"
-                }
-              }
-            },
-            {
-              "id": "organize",
-              "options": {
-                "excludeByName": {
-                  "Time": true,
-                  "Value": true,
-                  "dimensions.stageId": false,
-                  "event.extra.startTime": true
-                },
-                "includeByName": {},
-                "indexByName": {
-                  "Time": 0,
-                  "Value": 5,
-                  "dimensions.buildId": 1,
-                  "dimensions.pipelineId": 4,
-                  "dimensions.pipelineName": 2,
-                  "dimensions.triggerUser": 3
-                },
-                "renameByName": {
-                  "1000 * event.extra.startTime": "触发时间",
-                  "Time": "",
-                  "Value": "",
-                  "dimensions.buildId": "构建ID",
-                  "dimensions.pipelineId": "流水线ID",
-                  "dimensions.pipelineName": "流水线名称",
-                  "dimensions.stageId": "StageID",
-                  "dimensions.stageName": "Stage 名称",
-                  "dimensions.triggerUser": "创建人",
-                  "event.extra.startTime": ""
-                }
-              }
-            },
-            {
-              "id": "convertFieldType",
-              "options": {
-                "conversions": [
-                  {
-                    "destinationType": "time",
-                    "targetField": "触发时间"
-                  }
-                ],
-                "fields": {}
-              }
-            }
-          ],
-          "type": "table"
-        },
-        {
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "custom": {
-                "align": "auto",
-                "cellOptions": {
-                  "type": "auto"
-                },
-                "inspect": false
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "blue"
-                  }
-                ]
-              }
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "流水线ID"
-                },
-                "properties": [
-                  {
-                    "id": "custom.hidden",
-                    "value": true
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "构建ID"
-                },
-                "properties": [
-                  {
-                    "id": "links",
-                    "value": [
-                      {
-                        "targetBlank": true,
-                        "title": "点击查看流水线执行详情",
-                        "url": "${devopsUrl}﻿/console/pipeline/﻿${projectId}﻿/﻿${__data.fields.流水线ID}﻿/detail/﻿${__data.fields.构建ID}﻿/executeDetail"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "触发方式"
-                },
-                "properties": [
-                  {
-                    "id": "mappings",
-                    "value": [
-                      {
-                        "options": {
-                          "MANUAL": {
-                            "index": 1,
-                            "text": "手动"
-                          },
-                          "PIPELINE": {
-                            "index": 4,
-                            "text": "流水线"
-                          },
-                          "REMOTE": {
-                            "index": 5,
-                            "text": "远程触发"
-                          },
-                          "SERVICE": {
-                            "index": 3,
-                            "text": "第三方启动"
-                          },
-                          "TIME_TRIGGER": {
-                            "index": 0,
-                            "text": "定时"
-                          },
-                          "WEB_HOOK": {
-                            "index": 2,
-                            "text": "代码变更"
-                          }
-                        },
-                        "type": "value"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 12,
-            "y": 40
-          },
-          "id": 21,
-          "options": {
-            "cellHeight": "sm",
-            "footer": {
-              "countRows": false,
-              "fields": "",
-              "reducer": [
-                "sum"
-              ],
-              "show": false
-            },
-            "frameIndex": 0,
-            "showHeader": true,
-            "sortBy": [
-              {
-                "desc": true,
-                "displayName": "流水线名称"
-              }
-            ]
-          },
-          "pluginVersion": "10.4.10",
-          "targets": [
-            {
-              "cluster": [],
-              "datasource": {
-                "type": "bkmonitor-timeseries-datasource",
-                "uid": "${DS_蓝鲸监控_-_指标数据}"
-              },
-              "enableDownSampling": false,
-              "expressionList": [],
-              "format": "table",
-              "host": [],
-              "mode": "code",
-              "module": [],
-              "promqlAlias": "",
-              "query_configs": [],
-              "refId": "A",
-              "showLastPoint": false,
-              "source": "sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__jobId, dimensions__bk_46__jobName)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__dispatchName=~\"${dispatchName}\", dimensions__bk_46__status=\"QUEUE\"}[$__range])) unless on(dimensions__bk_46__buildId, dimensions__bk_46__jobName) sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__jobId, dimensions__bk_46__jobName)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__eventType!=\"BUILD_JOB_QUEUE\", dimensions__bk_46__dispatchName=~\"${dispatchName}\"}[$__range]))",
-              "step": "$interval",
-              "type": "instant"
-            },
-            {
-              "cluster": [],
-              "datasource": {
-                "type": "bkmonitor-timeseries-datasource",
-                "uid": "${DS_蓝鲸监控_-_指标数据}"
-              },
-              "enableDownSampling": false,
-              "expressionList": [],
-              "format": "table",
-              "hide": false,
-              "host": [],
-              "mode": "code",
-              "module": [],
-              "promqlAlias": "",
-              "query_configs": [],
-              "refId": "B",
-              "showLastPoint": false,
-              "source": "sum by (dimensions__bk_46__buildId, dimensions__bk_46__trigger, dimensions__bk_46__triggerUser, event__bk_46__extra__bk_46__startTime)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_START\"}[$__range])) unless on(dimensions__bk_46__buildId) sum by (dimensions__bk_46__buildId, dimensions__bk_46__trigger, dimensions__bk_46__triggerUser, event__bk_46__extra__bk_46__startTime)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_END\"}[$__range]))",
-              "step": "$interval",
-              "type": "instant"
-            }
-          ],
-          "title": "Job - 排队中 / ESC 返回主看板",
-          "transformations": [
-            {
-              "id": "joinByField",
-              "options": {
-                "byField": "dimensions.buildId",
-                "mode": "outerTabular"
-              }
-            },
-            {
-              "id": "filterByValue",
-              "options": {
-                "filters": [
-                  {
-                    "config": {
-                      "id": "greater",
-                      "options": {
-                        "value": 0
-                      }
-                    },
-                    "fieldName": "Value #A"
-                  },
-                  {
-                    "config": {
-                      "id": "isNotNull",
-                      "options": {}
-                    },
-                    "fieldName": "Value #A"
-                  }
-                ],
-                "match": "all",
-                "type": "include"
-              }
-            },
-            {
-              "id": "calculateField",
-              "options": {
-                "binary": {
-                  "left": "1000",
-                  "operator": "*",
-                  "right": "event.extra.startTime"
-                },
-                "mode": "binary",
-                "reduce": {
-                  "reducer": "sum"
-                }
-              }
-            },
-            {
-              "id": "organize",
-              "options": {
-                "excludeByName": {
-                  "Time": true,
-                  "Value": true,
-                  "Value #A": true,
-                  "Value #B": true,
-                  "dimensions.jobId": true,
-                  "dimensions.pipelineId 1": false,
-                  "dimensions.pipelineId 2": true,
-                  "dimensions.pipelineName 1": false,
-                  "dimensions.pipelineName 2": true,
-                  "dimensions.trigger": false,
-                  "dimensions.triggerUser": false,
-                  "event.extra.startTime": true
-                },
-                "includeByName": {},
-                "indexByName": {
-                  "1000 * event.extra.startTime": 12,
-                  "Time 1": 5,
-                  "Time 2": 8,
-                  "Value #A": 7,
-                  "Value #B": 11,
-                  "dimensions.buildId": 2,
-                  "dimensions.jobId": 6,
-                  "dimensions.jobName": 0,
-                  "dimensions.pipelineId": 4,
-                  "dimensions.pipelineName": 1,
-                  "dimensions.trigger": 9,
-                  "dimensions.triggerUser": 3,
-                  "event.extra.startTime": 10
-                },
-                "renameByName": {
-                  "1000 * event.extra.startTime": "触发时间",
-                  "Time 1": "",
-                  "Time 2": "",
-                  "Value #A": "",
-                  "Value #B": "",
-                  "dimensions.buildId": "构建ID",
-                  "dimensions.jobId": "",
-                  "dimensions.jobName": "Job 名称",
-                  "dimensions.pipelineId": "流水线ID",
-                  "dimensions.pipelineId 1": "流水线ID",
-                  "dimensions.pipelineName": "流水线名称",
-                  "dimensions.pipelineName 1": "流水线名称",
-                  "dimensions.trigger": "触发方式",
-                  "dimensions.triggerUser": "触发人",
-                  "event.extra.startTime": ""
-                }
-              }
-            },
-            {
-              "id": "convertFieldType",
-              "options": {
-                "conversions": [
-                  {
-                    "destinationType": "time",
-                    "targetField": "触发时间"
-                  }
-                ],
-                "fields": {}
-              }
-            }
-          ],
-          "type": "table"
+          "title": "删除制品量",
+          "type": "stat"
         }
       ],
-      "title": "运行中 - 流水线明细",
+      "title": "制品统计",
       "type": "row"
     }
   ],
-  "refresh": "",
   "schemaVersion": 39,
   "tags": [],
   "templating": {
     "list": [
       {
         "current": {},
-        "hide": 0,
-        "includeAll": false,
-        "label": "存储",
-        "multi": false,
+        "hide": 2,
+        "label": "结果表",
         "name": "table",
         "options": [],
-        "query": "Doris : bkapm:100147_bkapm:devops_event_doris",
-        "queryValue": "",
+        "query": "custom:devops_repo_metrics",
         "refresh": 1,
         "skipUrlSync": false,
-        "type": "custom"
+        "type": "constant"
       },
       {
         "current": {},
@@ -2978,13 +2891,37 @@
         "name": "projectId",
         "options": [],
         "query": {
-          "promql": "label_values($table:dimensions__bk_46__projectId{}, dimensions__bk_46__projectId)",
+          "promql": "label_values($table:bkrepo_repository_size_bytes, projectId)\n",
           "queryType": "prometheus"
         },
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
         "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": ".+",
+        "current": {},
+        "datasource": {
+          "type": "bkmonitor-timeseries-datasource",
+          "uid": "${DS_蓝鲸监控_-_指标数据}"
+        },
+        "definition": "- Blueking Monitor - prometheus",
+        "hide": 0,
+        "includeAll": true,
+        "label": "仓库",
+        "multi": false,
+        "name": "repoName",
+        "options": [],
+        "query": {
+          "promql": "label_values($table:bkrepo_repository_size_bytes{projectId=\"${projectId}\"}, repoName)\n",
+          "queryType": "prometheus"
+        },
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
         "type": "query"
       },
       {
@@ -3007,30 +2944,6 @@
         "type": "interval"
       },
       {
-        "allValue": ".+",
-        "current": {},
-        "datasource": {
-          "type": "bkmonitor-timeseries-datasource",
-          "uid": "${DS_蓝鲸监控_-_指标数据}"
-        },
-        "definition": "- Blueking Monitor - prometheus",
-        "hide": 0,
-        "includeAll": true,
-        "label": "流水线",
-        "multi": false,
-        "name": "pipelineName",
-        "options": [],
-        "query": {
-          "promql": "label_values($table:dimensions__bk_46__pipelineName{dimensions__bk_46__projectId=\"${projectId}\"}, dimensions__bk_46__pipelineName)",
-          "queryType": "prometheus"
-        },
-        "refresh": 2,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 1,
-        "type": "query"
-      },
-      {
         "current": {},
         "hide": 2,
         "label": "蓝盾 Url",
@@ -3040,52 +2953,18 @@
         "refresh": 1,
         "skipUrlSync": false,
         "type": "constant"
-      },
-      {
-        "allValue": ".+",
-        "current": {},
-        "datasource": {
-          "type": "bkmonitor-timeseries-datasource",
-          "uid": "${DS_蓝鲸监控_-_指标数据}"
-        },
-        "definition": "- Blueking Monitor - prometheus",
-        "hide": 0,
-        "includeAll": true,
-        "label": "资源名称",
-        "multi": false,
-        "name": "dispatchName",
-        "options": [],
-        "query": {
-          "promql": "label_values($table:dimensions__bk_46__dispatchName{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__eventType=\"BUILD_JOB_END\"}, dimensions__bk_46__dispatchName)",
-          "queryType": "prometheus"
-        },
-        "refresh": 2,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 1,
-        "type": "query"
-      },
-      {
-        "current": {},
-        "hide": 2,
-        "label": "仪表盘 ID",
-        "name": "panelUid",
-        "options": [],
-        "query": "BKCI_RUNNING_TASKS",
-        "refresh": 1,
-        "skipUrlSync": false,
-        "type": "constant"
       }
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-1d",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "BKCI-运行中的任务",
-  "version": 13,
+  "title": "BKCI-制品趋势",
+  "uid": "BKCI_REPO_TREND",
+  "version": 4,
   "weekStart": "",
   "__inputs": [
     {
