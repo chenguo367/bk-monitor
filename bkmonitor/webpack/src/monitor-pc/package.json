@@ -42,7 +42,7 @@
     "sortablejs": "^1.15.6",
     "tdesign-vue": "1.11.2-naruto",
     "throttle-debounce": "^5.0.2",
-    "vue": "v2-latest",
+    "vue": "v3-latest",
     "vue-class-component": "^7.2.6",
     "vue-i18n": "^8.28.2",
     "vue-json-pretty": "1.9.5",
