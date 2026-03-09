@@ -2122,27 +2122,6 @@
                 "value": true
               }
             ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "平均耗时"
-            },
-            "properties": []
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "平均排队耗时"
-            },
-            "properties": []
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "平均执行耗时"
-            },
-            "properties": []
           }
         ]
       },
@@ -3081,27 +3060,6 @@
                 "value": true
               }
             ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "平均耗时"
-            },
-            "properties": []
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "平均排队耗时"
-            },
-            "properties": []
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "平均执行耗时"
-            },
-            "properties": []
           }
         ]
       },
@@ -3908,7 +3866,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -4054,13 +4013,6 @@
                 "value": "--"
               }
             ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "平均耗时"
-            },
-            "properties": []
           }
         ]
       },
@@ -4289,7 +4241,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -4391,7 +4344,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -4491,7 +4445,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -4608,7 +4563,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -4647,6 +4603,94 @@
                     "value": true
                   }
                 ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "触发方式"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "MANUAL": {
+                            "index": 1,
+                            "text": "手动"
+                          },
+                          "PIPELINE": {
+                            "index": 4,
+                            "text": "流水线"
+                          },
+                          "REMOTE": {
+                            "index": 5,
+                            "text": "远程触发"
+                          },
+                          "SERVICE": {
+                            "index": 3,
+                            "text": "第三方启动"
+                          },
+                          "TIME_TRIGGER": {
+                            "index": 0,
+                            "text": "定时"
+                          },
+                          "WEB_HOOK": {
+                            "index": 2,
+                            "text": "代码变更"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "耗时"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "ms"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "状态"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "CANCELED": {
+                            "index": 2,
+                            "text": "取消"
+                          },
+                          "FAILED": {
+                            "index": 1,
+                            "text": "失败"
+                          },
+                          "STAGE_SUCCESS": {
+                            "index": 3,
+                            "text": "阶段成功"
+                          },
+                          "SUCCEED": {
+                            "index": 0,
+                            "text": "成功"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
@@ -4667,7 +4711,13 @@
               ],
               "show": false
             },
-            "showHeader": true
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": true,
+                "displayName": "触发时间"
+              }
+            ]
           },
           "pluginVersion": "10.4.10",
           "targets": [
@@ -4686,7 +4736,8 @@
               "promqlAlias": "",
               "query_configs": [],
               "refId": "A",
-              "source": "sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__triggerUser)(count_over_time($table:dimensions__bk_46__pipelineName{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__status=\"$status\", dimensions__bk_46__eventType=\"BUILD_END\"}[$__range]))",
+              "showLastPoint": false,
+              "source": "sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__status, dimensions__bk_46__trigger, dimensions__bk_46__triggerUser, event__bk_46__extra__bk_46__startTime, event__bk_46__extra__bk_46__duration)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__status=\"$status\", dimensions__bk_46__eventType=\"BUILD_END\"}[$__range]))",
               "step": "$interval",
               "type": "instant"
             }
@@ -4712,20 +4763,88 @@
               }
             },
             {
+              "id": "convertFieldType",
+              "options": {
+                "conversions": [
+                  {
+                    "destinationType": "number",
+                    "targetField": "event.extra.duration"
+                  },
+                  {
+                    "destinationType": "number",
+                    "targetField": "event.extra.startTime"
+                  }
+                ],
+                "fields": {}
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "endTime",
+                "binary": {
+                  "left": "event.extra.startTime",
+                  "right": "event.extra.duration"
+                },
+                "mode": "binary",
+                "reduce": {
+                  "reducer": "sum"
+                }
+              }
+            },
+            {
               "id": "organize",
               "options": {
                 "excludeByName": {
                   "Time": true,
-                  "Value": true
+                  "Value": true,
+                  "event.extra.startTime": false
                 },
                 "includeByName": {},
-                "indexByName": {},
+                "indexByName": {
+                  "Time": 1,
+                  "Value": 9,
+                  "dimensions.buildId": 2,
+                  "dimensions.pipelineId": 5,
+                  "dimensions.pipelineName": 0,
+                  "dimensions.status": 3,
+                  "dimensions.trigger": 6,
+                  "dimensions.triggerUser": 7,
+                  "endTime": 10,
+                  "event.extra.duration": 4,
+                  "event.extra.startTime": 8
+                },
                 "renameByName": {
+                  "1000 * endTime": "结束时间",
+                  "1000 * event.extra.startTime": "",
+                  "Value": "",
                   "dimensions.buildId": "构建ID",
                   "dimensions.pipelineId": "流水线ID",
                   "dimensions.pipelineName": "流水线名称",
-                  "dimensions.triggerUser": "创建人"
+                  "dimensions.status": "状态",
+                  "dimensions.trigger": "触发方式",
+                  "dimensions.triggerUser": "触发人",
+                  "endTime": "结束时间",
+                  "event.extra.duration": "耗时",
+                  "event.extra.startTime": "触发时间",
+                  "event.extra.startTime  event.extra.duration": ""
                 }
+              }
+            },
+            {
+              "id": "convertFieldType",
+              "options": {
+                "conversions": [
+                  {
+                    "destinationType": "time",
+                    "targetField": "event.extra.startTime"
+                  },
+                  {
+                    "destinationType": "time",
+                    "targetField": "endTime"
+                  }
+                ],
+                "fields": {}
               }
             }
           ],
@@ -4753,7 +4872,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -5109,8 +5229,7 @@
   "timepicker": {},
   "timezone": "",
   "title": "BKCI-流水线运行趋势",
-  "uid": "BKCI_PIPELINE_RUN_TREND",
-  "version": 27,
+  "version": 11,
   "weekStart": "",
   "__inputs": [
     {
@@ -5128,5 +5247,6 @@
       "id": "bkmonitor-timeseries-datasource",
       "name": "蓝鲸监控 - 指标数据"
     }
-  ]
+  ],
+  "uid": "BKCI_PIPELINE_RUN_TREND"
 }
