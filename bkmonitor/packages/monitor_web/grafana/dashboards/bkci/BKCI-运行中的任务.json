@@ -1715,7 +1715,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "blue"
+                    "color": "blue",
+                    "value": null
                   }
                 ]
               }
@@ -1828,7 +1829,7 @@
             "showHeader": true,
             "sortBy": [
               {
-                "desc": false,
+                "desc": true,
                 "displayName": "触发时间"
               }
             ]
@@ -1878,16 +1879,20 @@
                   "Time": true,
                   "Value": true,
                   "dimensions.pipelineId": false,
+                  "dimensions.pipelineName": false,
                   "event.extra.startTime": true
                 },
                 "includeByName": {},
                 "indexByName": {
+                  "1000 * event.extra.startTime": 8,
                   "Time": 0,
-                  "Value": 5,
-                  "dimensions.buildId": 1,
-                  "dimensions.pipelineId": 4,
-                  "dimensions.pipelineName": 2,
-                  "dimensions.triggerUser": 3
+                  "Value": 4,
+                  "dimensions.buildId": 2,
+                  "dimensions.pipelineId": 3,
+                  "dimensions.pipelineName": 1,
+                  "dimensions.trigger": 5,
+                  "dimensions.triggerUser": 6,
+                  "event.extra.startTime": 7
                 },
                 "renameByName": {
                   "1000 * event.extra.startTime": "触发时间",
@@ -1937,7 +1942,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "blue"
+                    "color": "blue",
+                    "value": null
                   }
                 ]
               }
@@ -2038,7 +2044,7 @@
             "showHeader": true,
             "sortBy": [
               {
-                "desc": false,
+                "desc": true,
                 "displayName": "触发时间"
               }
             ]
@@ -2091,12 +2097,15 @@
                 },
                 "includeByName": {},
                 "indexByName": {
+                  "1000 * event.extra.startTime": 8,
                   "Time": 0,
-                  "Value": 5,
-                  "dimensions.buildId": 1,
-                  "dimensions.pipelineId": 4,
-                  "dimensions.pipelineName": 2,
-                  "dimensions.triggerUser": 3
+                  "Value": 4,
+                  "dimensions.buildId": 2,
+                  "dimensions.pipelineId": 3,
+                  "dimensions.pipelineName": 1,
+                  "dimensions.trigger": 5,
+                  "dimensions.triggerUser": 6,
+                  "event.extra.startTime": 7
                 },
                 "renameByName": {
                   "1000 * event.extra.startTime": "触发时间",
@@ -2148,7 +2157,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "blue"
+                    "color": "blue",
+                    "value": null
                   }
                 ]
               }
@@ -2207,7 +2217,7 @@
             "showHeader": true,
             "sortBy": [
               {
-                "desc": false,
+                "desc": true,
                 "displayName": "触发时间"
               }
             ]
@@ -2319,7 +2329,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "blue"
+                    "color": "blue",
+                    "value": null
                   }
                 ]
               }
@@ -2491,7 +2502,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "blue"
+                    "color": "blue",
+                    "value": null
                   }
                 ]
               }
@@ -2675,7 +2687,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "blue"
+                    "color": "blue",
+                    "value": null
                   }
                 ]
               }
@@ -2777,7 +2790,7 @@
             "sortBy": [
               {
                 "desc": true,
-                "displayName": "流水线名称"
+                "displayName": "触发时间"
               }
             ]
           },
@@ -3085,8 +3098,7 @@
   "timepicker": {},
   "timezone": "",
   "title": "BKCI-运行中的任务",
-  "uid": "BKCI_RUNNING_TASKS",
-  "version": 12,
+  "version": 15,
   "weekStart": "",
   "__inputs": [
     {
@@ -3104,5 +3116,6 @@
       "id": "bkmonitor-timeseries-datasource",
       "name": "蓝鲸监控 - 指标数据"
     }
-  ]
+  ],
+  "uid": "BKCI_RUNNING_TASKS"
 }

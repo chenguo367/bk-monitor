@@ -941,7 +941,7 @@
           "query_configs": [],
           "refId": "A",
           "showLastPoint": false,
-          "source": "sum(sum_over_time($table:artifact_transfer_size_bytes_sum{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RECEIVE\"}[$__range])) - (sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[10m])) - sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[10m] offset $__range)))",
+          "source": "(sum(sum_over_time($table:artifact_transfer_size_bytes_sum{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RECEIVE\"}[$__range])) or vector(0)) - ((sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[10m])) - sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[10m] offset $__range))) or vector(0))",
           "step": "",
           "type": "instant"
         }
@@ -1018,7 +1018,7 @@
           "query_configs": [],
           "refId": "A",
           "showLastPoint": false,
-          "source": "sum(sum_over_time($table:artifact_transfer_size_bytes_sum{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RECEIVE\"}[$__range])) - (sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[10m])) - sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[10m] offset $__range)))",
+          "source": "(sum(sum_over_time($table:artifact_transfer_size_bytes_sum{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RECEIVE\"}[$__range])) or vector(0)) - ((sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[10m])) - sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[10m] offset $__range))) or vector(0))",
           "step": "",
           "type": "instant"
         }
@@ -1095,7 +1095,7 @@
           "query_configs": [],
           "refId": "A",
           "showLastPoint": false,
-          "source": "sum(sum_over_time($table:artifact_transfer_size_bytes_sum{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RECEIVE\"}[$__range])) - (sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[10m])) - sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[10m] offset $__range)))",
+          "source": "(sum(sum_over_time($table:artifact_transfer_size_bytes_sum{projectId=\"$projectId\", repoName=~\"^($repoName)$\", type=\"RECEIVE\"}[$__range])) or vector(0)) - ((sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[10m])) - sum(last_over_time($table:bkrepo_repository_size_bytes{projectId=\"$projectId\", repoName=~\"^($repoName)$\"}[10m] offset $__range))) or vector(0))",
           "step": "",
           "type": "instant"
         }
@@ -1623,7 +1623,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "大小"
+              "options": "制品大小"
             },
             "properties": [
               {
@@ -1663,6 +1663,18 @@
                 ]
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "下载耗时"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ns"
+              }
+            ]
           }
         ]
       },
@@ -1684,12 +1696,7 @@
           "show": false
         },
         "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "下载次数"
-          }
-        ]
+        "sortBy": []
       },
       "pluginVersion": "10.4.10",
       "targets": [
@@ -1709,7 +1716,7 @@
           "query_configs": [],
           "refId": "A",
           "showLastPoint": false,
-          "source": "topk(20, sum by (fullPath, pipelineName, pipelineId, bytes, pipelineName) (count_over_time($table:artifact_transfer_rate{projectId=\"$projectId\",repoName=~\"^($repoName)$\",type=\"RESPONSE\"}[$__range])))\n\n\n",
+          "source": "topk(200, avg by (fullPath, pipelineName, pipelineId, bytes, pipelineName, elapsed) (avg_over_time($table:artifact_transfer_rate{projectId=\"$projectId\",repoName=~\"^($repoName)$\",type=\"RESPONSE\"}[$__range])))\n\n\n",
           "step": "",
           "type": "instant"
         }
@@ -1720,22 +1727,24 @@
           "id": "organize",
           "options": {
             "excludeByName": {
-              "Time": true,
-              "Value": false
+              "Time": false,
+              "Value": true
             },
             "includeByName": {},
             "indexByName": {
-              "Time": 0,
+              "Time": 3,
               "Value": 4,
-              "bytes": 3,
-              "fullPath": 1,
-              "pipelineId": 2
+              "bytes": 1,
+              "elapsed": 2,
+              "fullPath": 0,
+              "pipelineId": 5
             },
             "renameByName": {
-              "Time": "",
-              "Value": "下载次数",
-              "bytes": "大小",
-              "fullPath": "制品",
+              "Time": "下载时间",
+              "Value": "",
+              "bytes": "制品大小",
+              "elapsed": "下载耗时",
+              "fullPath": "制品名称",
               "pipelineId": "所属流水线",
               "repoName": ""
             }
@@ -1939,28 +1948,12 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "大小"
+              "options": "制品大小"
             },
             "properties": [
               {
                 "id": "unit",
                 "value": "bytes"
-              },
-              {
-                "id": "custom.width",
-                "value": 79
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "制品"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 280
               }
             ]
           },
@@ -1976,7 +1969,7 @@
                   {
                     "targetBlank": true,
                     "title": "点击查看流水线执行历史",
-                    "url": "${devopsUrl}/console/pipeline/${projectId}/${__data.fields.流水线ID}/history/history/"
+                    "url": "${devopsUrl}/console/pipeline/${projectId}/${__data.fields.所属流水线}/history/history/"
                   }
                 ]
               },
@@ -1993,6 +1986,18 @@
                     "type": "value"
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "上传耗时"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ns"
               }
             ]
           }
@@ -2041,7 +2046,7 @@
           "query_configs": [],
           "refId": "A",
           "showLastPoint": false,
-          "source": "topk(20, sum by (fullPath, pipelineName, pipelineId, bytes, pipelineName) (count_over_time($table:artifact_transfer_rate{projectId=\"$projectId\",repoName=~\"^($repoName)$\",type=\"RECEIVE\"}[$__range])))\n\n\n",
+          "source": "topk(200, avg by (fullPath, pipelineName, pipelineId, bytes, pipelineName, elapsed) (avg_over_time($table:artifact_transfer_rate{projectId=\"$projectId\",repoName=~\"^($repoName)$\",type=\"RECEIVE\"}[$__range])))\n\n\n",
           "step": "",
           "type": "instant"
         }
@@ -2052,22 +2057,24 @@
           "id": "organize",
           "options": {
             "excludeByName": {
-              "Time": true,
-              "Value": false
+              "Time": false,
+              "Value": true
             },
             "includeByName": {},
             "indexByName": {
-              "Time": 0,
-              "Value": 4,
-              "bytes": 3,
-              "fullPath": 1,
-              "pipelineId": 2
+              "Time": 3,
+              "Value": 5,
+              "bytes": 1,
+              "elapsed": 2,
+              "fullPath": 0,
+              "pipelineId": 4
             },
             "renameByName": {
-              "Time": "",
-              "Value": "下载次数",
-              "bytes": "大小",
-              "fullPath": "制品",
+              "Time": "上传时间",
+              "Value": "",
+              "bytes": "制品大小",
+              "elapsed": "上传耗时",
+              "fullPath": "制品名称",
               "pipelineId": "所属流水线",
               "repoName": ""
             }
@@ -2357,8 +2364,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "text",
-                    "value": null
+                    "color": "text"
                   }
                 ]
               },
@@ -2431,8 +2437,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -2504,8 +2509,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
@@ -2577,8 +2581,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "blue",
-                    "value": null
+                    "color": "blue"
                   }
                 ]
               },
@@ -2650,8 +2653,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "blue",
-                    "value": null
+                    "color": "blue"
                   }
                 ]
               },
@@ -2724,8 +2726,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "blue",
-                    "value": null
+                    "color": "blue"
                   }
                 ]
               },
@@ -2798,8 +2799,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "blue",
-                    "value": null
+                    "color": "blue"
                   }
                 ]
               },
@@ -2963,7 +2963,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "BKCI-制品趋势",
-  "uid": "BKCI_REPO_TREND",
   "version": 4,
   "weekStart": "",
   "__inputs": [
@@ -2982,5 +2981,6 @@
       "id": "bkmonitor-timeseries-datasource",
       "name": "蓝鲸监控 - 指标数据"
     }
-  ]
+  ],
+  "uid": "BKCI_REPO_TREND"
 }

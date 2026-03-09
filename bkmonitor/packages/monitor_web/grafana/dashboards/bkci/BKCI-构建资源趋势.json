@@ -790,6 +790,12 @@
             "mode": "thresholds"
           },
           "decimals": 0,
+          "links": [
+            {
+              "title": "明细",
+              "url": "/grafana/d/${panelUid}/?viewPanel=32&from={__from}&to={__to}&var-hostIp=${hostIp:allValue}&var-projectId=${projectId}"
+            }
+          ],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -811,6 +817,12 @@
         "y": 9
       },
       "id": 16,
+      "links": [
+        {
+          "title": "明细",
+          "url": "/grafana/d/${panelUid}/?viewPanel=26&from={__from}&to={__to}&var-hostIp=${hostIp:allValue}&var-projectId=${projectId}"
+        }
+      ],
       "options": {
         "colorMode": "background",
         "graphMode": "area",
@@ -845,7 +857,7 @@
           "query_configs": [],
           "refId": "A",
           "showLastPoint": false,
-          "source": "0",
+          "source": "count((max by (agentIp, nodeId) (agentmetric:heartbeat:busyTaskSize{projectId=\"$projectId\", agentIp=~\"^($hostIp)$\"} offset 4m) / max by (agentIp, nodeId) (agentmetric:heartbeat:parallelTaskCount{projectId=\"$projectId\", agentIp=~\"^($hostIp)$\"} offset 4m)) >= 1) or vector(0)",
           "step": "1m",
           "type": "instant"
         }
@@ -919,7 +931,7 @@
           "query_configs": [],
           "refId": "A",
           "showLastPoint": false,
-          "source": "0",
+          "source": "count((max by (agentIp, nodeId) (agentmetric:heartbeat:busyTaskSize{projectId=\"$projectId\", agentIp=~\"^($hostIp)$\"} offset 4m) / max by (agentIp, nodeId) (agentmetric:heartbeat:parallelTaskCount{projectId=\"$projectId\", agentIp=~\"^($hostIp)$\"} offset 4m)) >= 0.8) or vector(0)",
           "step": "1m",
           "type": "instant"
         }
@@ -1891,7 +1903,7 @@
       "type": "table"
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1899,222 +1911,223 @@
         "y": 30
       },
       "id": 21,
-      "panels": [],
-      "title": "任务负载分布",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "bkmonitor-timeseries-datasource",
-        "uid": "${DS_蓝鲸监控_-_指标数据}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
+      "panels": [
+        {
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
           },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
               },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
               {
-                "color": "red",
-                "value": 80
+                "matcher": {
+                  "id": "byName",
+                  "options": "Trend #B"
+                },
+                "properties": [
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "drawStyle": "line",
+                      "gradientMode": "hue",
+                      "hideValue": true,
+                      "showPoints": "never",
+                      "spanNulls": false,
+                      "type": "sparkline"
+                    }
+                  }
+                ]
               }
             ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Trend #B"
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 24,
+            "x": 0,
+            "y": 31
+          },
+          "id": 22,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
             },
-            "properties": [
+            "frameIndex": 2,
+            "showHeader": true,
+            "sortBy": [
               {
-                "id": "custom.cellOptions",
-                "value": {
-                  "drawStyle": "line",
-                  "gradientMode": "hue",
-                  "hideValue": true,
-                  "showPoints": "never",
-                  "spanNulls": false,
-                  "type": "sparkline"
+                "desc": true,
+                "displayName": "任务数"
+              }
+            ]
+          },
+          "pluginVersion": "10.4.10",
+          "targets": [
+            {
+              "cluster": [],
+              "datasource": {
+                "type": "bkmonitor-timeseries-datasource",
+                "uid": "${DS_蓝鲸监控_-_指标数据}"
+              },
+              "enableDownSampling": true,
+              "expressionList": [],
+              "format": "table",
+              "host": [],
+              "mode": "code",
+              "module": [],
+              "promqlAlias": "",
+              "query_configs": [],
+              "refId": "A",
+              "showLastPoint": false,
+              "source": "sum by (dimensions__bk_46__hostIp, dimensions__bk_46__hostName) (count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__level=\"AGENT\", dimensions__bk_46__eventType=\"BUILD_AGENT_END\", dimensions__bk_46__hostIp!=\"\", dimensions__bk_46__hostIp=~\"^($hostIp)$\"}[$__range]))",
+              "step": "1m",
+              "type": "instant"
+            },
+            {
+              "cluster": [],
+              "datasource": {
+                "type": "bkmonitor-timeseries-datasource",
+                "uid": "${DS_蓝鲸监控_-_指标数据}"
+              },
+              "enableDownSampling": true,
+              "expressionList": [],
+              "format": "time_series",
+              "hide": false,
+              "host": [],
+              "mode": "code",
+              "module": [],
+              "promqlAlias": "",
+              "query_configs": [],
+              "refId": "B",
+              "showLastPoint": true,
+              "source": "sum by (dimensions__bk_46__hostIp, dimensions__bk_46__hostName) (count_over_time($table:dimensions__bk_46__status{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__level=\"AGENT\", dimensions__bk_46__eventType=\"BUILD_AGENT_END\", dimensions__bk_46__hostIp!=\"\", dimensions__bk_46__hostIp=~\"^($hostIp)$\"}[30m]))",
+              "step": "30m",
+              "type": "range"
+            },
+            {
+              "cluster": [],
+              "datasource": {
+                "type": "bkmonitor-timeseries-datasource",
+                "uid": "${DS_蓝鲸监控_-_指标数据}"
+              },
+              "enableDownSampling": true,
+              "expressionList": [],
+              "format": "table",
+              "hide": true,
+              "host": [],
+              "mode": "code",
+              "module": [],
+              "promqlAlias": "",
+              "query_configs": [],
+              "refId": "C",
+              "showLastPoint": false,
+              "source": "avg by (dimensions__bk_46__hostIp, dimensions__bk_46__hostName) (avg_over_time($table:event__bk_46__extra__bk_46__duration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__level=\"AGENT\", dimensions__bk_46__eventType=\"BUILD_AGENT_END\", dimensions__bk_46__hostIp!=\"\", dimensions__bk_46__hostIp=~\"^($hostIp)$\"}[$__range]))",
+              "step": "1m",
+              "type": "instant"
+            }
+          ],
+          "title": "任务负载分布",
+          "transformations": [
+            {
+              "filter": {
+                "id": "byRefId",
+                "options": "B"
+              },
+              "id": "timeSeriesTable",
+              "options": {
+                "B": {
+                  "stat": "lastNotNull",
+                  "timeField": "Time"
+                },
+                "C": {
+                  "timeField": ""
+                }
+              },
+              "topic": "series"
+            },
+            {
+              "id": "merge",
+              "options": {}
+            },
+            {
+              "id": "filterByValue",
+              "options": {
+                "filters": [
+                  {
+                    "config": {
+                      "id": "isNotNull",
+                      "options": {}
+                    },
+                    "fieldName": "Trend #B"
+                  },
+                  {
+                    "config": {
+                      "id": "greater",
+                      "options": {
+                        "value": 0
+                      }
+                    },
+                    "fieldName": "Value"
+                  }
+                ],
+                "match": "all",
+                "type": "include"
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true
+                },
+                "includeByName": {},
+                "indexByName": {},
+                "renameByName": {
+                  "Time": "",
+                  "Trend #B": "任务趋势",
+                  "Value": "任务数",
+                  "dimensions.hostIp": "节点 IP",
+                  "dimensions.hostName": "节点别名"
                 }
               }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 24,
-        "x": 0,
-        "y": 31
-      },
-      "id": 22,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
+            }
           ],
-          "show": false
-        },
-        "frameIndex": 2,
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "任务数"
-          }
-        ]
-      },
-      "pluginVersion": "10.4.10",
-      "targets": [
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "table",
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "",
-          "query_configs": [],
-          "refId": "A",
-          "showLastPoint": false,
-          "source": "sum by (dimensions__bk_46__hostIp, dimensions__bk_46__hostName) (count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__level=\"AGENT\", dimensions__bk_46__eventType=\"BUILD_AGENT_END\", dimensions__bk_46__hostIp!=\"\", dimensions__bk_46__hostIp=~\"^($hostIp)$\"}[$__range]))",
-          "step": "1m",
-          "type": "instant"
-        },
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "time_series",
-          "hide": false,
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "",
-          "query_configs": [],
-          "refId": "B",
-          "showLastPoint": true,
-          "source": "sum by (dimensions__bk_46__hostIp, dimensions__bk_46__hostName) (count_over_time($table:dimensions__bk_46__status{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__level=\"AGENT\", dimensions__bk_46__eventType=\"BUILD_AGENT_END\", dimensions__bk_46__hostIp!=\"\", dimensions__bk_46__hostIp=~\"^($hostIp)$\"}[30m]))",
-          "step": "30m",
-          "type": "range"
-        },
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "table",
-          "hide": true,
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "",
-          "query_configs": [],
-          "refId": "C",
-          "showLastPoint": false,
-          "source": "avg by (dimensions__bk_46__hostIp, dimensions__bk_46__hostName) (avg_over_time($table:event__bk_46__extra__bk_46__duration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__level=\"AGENT\", dimensions__bk_46__eventType=\"BUILD_AGENT_END\", dimensions__bk_46__hostIp!=\"\", dimensions__bk_46__hostIp=~\"^($hostIp)$\"}[$__range]))",
-          "step": "1m",
-          "type": "instant"
+          "type": "table"
         }
       ],
       "title": "任务负载分布",
-      "transformations": [
-        {
-          "filter": {
-            "id": "byRefId",
-            "options": "B"
-          },
-          "id": "timeSeriesTable",
-          "options": {
-            "B": {
-              "stat": "lastNotNull",
-              "timeField": "Time"
-            },
-            "C": {
-              "timeField": ""
-            }
-          },
-          "topic": "series"
-        },
-        {
-          "id": "merge",
-          "options": {}
-        },
-        {
-          "id": "filterByValue",
-          "options": {
-            "filters": [
-              {
-                "config": {
-                  "id": "isNotNull",
-                  "options": {}
-                },
-                "fieldName": "Trend #B"
-              },
-              {
-                "config": {
-                  "id": "greater",
-                  "options": {
-                    "value": 0
-                  }
-                },
-                "fieldName": "Value"
-              }
-            ],
-            "match": "all",
-            "type": "include"
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true
-            },
-            "includeByName": {},
-            "indexByName": {},
-            "renameByName": {
-              "Time": "",
-              "Trend #B": "任务趋势",
-              "Value": "任务数",
-              "dimensions.hostIp": "节点 IP",
-              "dimensions.hostName": "节点别名"
-            }
-          }
-        }
-      ],
-      "type": "table"
+      "type": "row"
     },
     {
       "collapsed": true,
@@ -2122,7 +2135,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 41
+        "y": 31
       },
       "id": 23,
       "panels": [
@@ -2148,7 +2161,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -2202,6 +2216,67 @@
                     "value": true
                   }
                 ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "节点别名"
+                },
+                "properties": [
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": true,
+                        "title": "",
+                        "url": "https://devops.woa.com/console/environment/${__data.fields.项目}/node/nodeDetail/${__data.fields.nodeId}"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "nodeId"
+                },
+                "properties": [
+                  {
+                    "id": "custom.hidden",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "查看任务"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "2": {
+                            "index": 0,
+                            "text": "查看"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "title": "",
+                        "url": "/grafana/d/${panelUid}/?viewPanel=29&from={__from}&to={__to}&var-hostIp=${__data.fields.节点IP}&var-projectId=${projectId}"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
@@ -2209,7 +2284,7 @@
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 42
+            "y": 32
           },
           "hideTimeOverride": true,
           "id": 24,
@@ -2249,7 +2324,7 @@
               "query_configs": [],
               "refId": "A",
               "showLastPoint": false,
-              "source": "max by (projectId, hostIp, hostName) (agentmetric:disk:in_use{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\", path!~\".+kubelet.+\"} offset 4m) > 80",
+              "source": "max by (projectId, hostIp, hostName, agentId, nodeId) (agentmetric:disk:in_use{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\", path!~\".+kubelet.+\"} offset 4m) > 80",
               "step": "1m",
               "type": "instant"
             }
@@ -2265,14 +2340,18 @@
                 },
                 "includeByName": {},
                 "indexByName": {
-                  "Time": 1,
-                  "Value": 4,
-                  "hostIp": 2,
-                  "hostName": 3,
+                  "Time": 3,
+                  "Value": 5,
+                  "agentId": 1,
+                  "displayName": 6,
+                  "hostIp": 4,
+                  "hostName": 2,
                   "projectId": 0
                 },
                 "renameByName": {
+                  "Time": "",
                   "Value": "当前值",
+                  "agentId": "Agent ID",
                   "hostIp": "节点IP",
                   "hostName": "节点别名",
                   "projectId": "项目"
@@ -2283,6 +2362,20 @@
               "id": "calculateField",
               "options": {
                 "alias": "构建机监控",
+                "binary": {
+                  "left": "1",
+                  "right": "1"
+                },
+                "mode": "binary",
+                "reduce": {
+                  "reducer": "sum"
+                }
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "查看任务",
                 "binary": {
                   "left": "1",
                   "right": "1"
@@ -2318,7 +2411,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -2372,6 +2466,68 @@
                     "value": true
                   }
                 ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "nodeId"
+                },
+                "properties": [
+                  {
+                    "id": "custom.hidden",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "节点别名"
+                },
+                "properties": [
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": true,
+                        "title": "",
+                        "url": "https://devops.woa.com/console/environment/${__data.fields.项目}/node/nodeDetail/${__data.fields.nodeId}"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "查看任务"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "2": {
+                            "index": 0,
+                            "text": "查看"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": false,
+                        "title": "",
+                        "url": "/grafana/d/${panelUid}/?viewPanel=29&from={__from}&to={__to}&var-hostIp=${__data.fields.节点IP}&var-projectId=${projectId}"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
@@ -2379,7 +2535,7 @@
             "h": 8,
             "w": 8,
             "x": 8,
-            "y": 42
+            "y": 32
           },
           "hideTimeOverride": true,
           "id": 25,
@@ -2419,7 +2575,7 @@
               "query_configs": [],
               "refId": "A",
               "showLastPoint": false,
-              "source": "(100 - min by (projectId, hostIp, hostName) (agentmetric:cpu_detail:idle{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"})) > 80",
+              "source": "(100 - min by (projectId, hostIp, hostName, nodeId, agentId) (agentmetric:cpu_detail:idle{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"})) > 80",
               "step": "1m",
               "type": "instant"
             }
@@ -2434,11 +2590,22 @@
                   "projectId": false
                 },
                 "includeByName": {},
-                "indexByName": {},
+                "indexByName": {
+                  "Time": 3,
+                  "Value": 6,
+                  "agentId": 1,
+                  "hostIp": 4,
+                  "hostName": 2,
+                  "nodeId": 5,
+                  "projectId": 0
+                },
                 "renameByName": {
+                  "Time": "",
                   "Value": "当前值",
+                  "agentId": "Agent ID",
                   "hostIp": "节点IP",
                   "hostName": "节点别名",
+                  "nodeId": "",
                   "projectId": "项目"
                 }
               }
@@ -2447,6 +2614,20 @@
               "id": "calculateField",
               "options": {
                 "alias": "构建机监控",
+                "binary": {
+                  "left": "1",
+                  "right": "1"
+                },
+                "mode": "binary",
+                "reduce": {
+                  "reducer": "sum"
+                }
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "查看任务",
                 "binary": {
                   "left": "1",
                   "right": "1"
@@ -2482,7 +2663,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -2536,6 +2718,67 @@
                     "value": true
                   }
                 ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "nodeId"
+                },
+                "properties": [
+                  {
+                    "id": "custom.hidden",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "节点别名"
+                },
+                "properties": [
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": true,
+                        "title": "",
+                        "url": "https://devops.woa.com/console/environment/${__data.fields.项目}/node/nodeDetail/${__data.fields.nodeId}"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "查看任务"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "2": {
+                            "index": 0,
+                            "text": "查看"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "title": "",
+                        "url": "/grafana/d/${panelUid}/?viewPanel=29&from={__from}&to={__to}&var-hostIp=${__data.fields.节点IP}&var-projectId=${projectId}"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
@@ -2543,7 +2786,7 @@
             "h": 8,
             "w": 8,
             "x": 16,
-            "y": 42
+            "y": 32
           },
           "hideTimeOverride": true,
           "id": 26,
@@ -2583,7 +2826,7 @@
               "query_configs": [],
               "refId": "A",
               "showLastPoint": false,
-              "source": "max by (projectId, hostIp, hostName) (agentmetric:mem:pct_used{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"}) > 80",
+              "source": "max by (projectId, hostIp, hostName, agentId, nodeId) (agentmetric:mem:pct_used{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"}) > 80",
               "step": "1m",
               "type": "instant"
             }
@@ -2597,10 +2840,19 @@
                   "Time": true
                 },
                 "includeByName": {},
-                "indexByName": {},
+                "indexByName": {
+                  "Time": 0,
+                  "Value": 6,
+                  "agentId": 1,
+                  "hostIp": 3,
+                  "hostName": 2,
+                  "nodeId": 4,
+                  "projectId": 5
+                },
                 "renameByName": {
                   "Time": "",
                   "Value": "当前值",
+                  "agentId": "Agent ID",
                   "hostIp": "节点IP",
                   "hostName": "节点别名",
                   "projectId": "项目"
@@ -2611,6 +2863,20 @@
               "id": "calculateField",
               "options": {
                 "alias": "构建机监控",
+                "binary": {
+                  "left": "1",
+                  "right": "1"
+                },
+                "mode": "binary",
+                "reduce": {
+                  "reducer": "sum"
+                }
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "查看任务",
                 "binary": {
                   "left": "1",
                   "right": "1"
@@ -2646,7 +2912,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -2700,6 +2967,67 @@
                     "value": true
                   }
                 ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "nodeId"
+                },
+                "properties": [
+                  {
+                    "id": "custom.hidden",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "节点别名"
+                },
+                "properties": [
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": true,
+                        "title": "",
+                        "url": "https://devops.woa.com/console/environment/${__data.fields.项目}/node/nodeDetail/${__data.fields.nodeId}"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "查看任务"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "2": {
+                            "index": 0,
+                            "text": "查看"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "title": "",
+                        "url": "/grafana/d/${panelUid}/?viewPanel=29&from={__from}&to={__to}&var-hostIp=${__data.fields.节点IP}&var-projectId=${projectId}"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
@@ -2707,7 +3035,7 @@
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 50
+            "y": 40
           },
           "id": 27,
           "options": {
@@ -2746,7 +3074,7 @@
               "query_configs": [],
               "refId": "A",
               "showLastPoint": false,
-              "source": "(sum by (projectId, hostIp, agentId) (sum_over_time(agentmetric:load:uptime{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"}[$__range])) >= bool 0) unless (sum by (projectId, hostIp, agentId) (sum_over_time(agentmetric:load:uptime{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"}[1m] offset 30m)) >= bool 0)",
+              "source": "(sum by (projectId, hostIp, agentId, nodeId, hostName) (sum_over_time(agentmetric:load:uptime{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"}[$__range])) >= bool 0) unless (sum by (projectId, hostIp, agentId) (sum_over_time(agentmetric:load:uptime{projectId=\"$projectId\", hostIp=~\"^($hostIp)$\"}[1m] offset 30m)) >= bool 0)",
               "step": "1m",
               "type": "instant"
             }
@@ -2763,15 +3091,19 @@
                 "includeByName": {},
                 "indexByName": {
                   "Time": 0,
-                  "Value": 3,
-                  "agentId": 2,
-                  "hostIp": 1
+                  "Value": 4,
+                  "agentId": 1,
+                  "hostIp": 3,
+                  "hostName": 2,
+                  "nodeId": 5,
+                  "projectId": 6
                 },
                 "renameByName": {
                   "Value": "",
-                  "agentId": "AgentID",
+                  "agentId": "Agent ID",
                   "hostIp": "节点IP",
                   "hostName": "节点别名",
+                  "nodeId": "",
                   "projectId": "项目"
                 }
               }
@@ -2780,6 +3112,785 @@
               "id": "calculateField",
               "options": {
                 "alias": "构建机监控",
+                "binary": {
+                  "left": "1",
+                  "right": "1"
+                },
+                "mode": "binary",
+                "reduce": {
+                  "reducer": "sum"
+                }
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "查看任务",
+                "binary": {
+                  "left": "1",
+                  "right": "1"
+                },
+                "mode": "binary",
+                "reduce": {
+                  "reducer": "sum"
+                }
+              }
+            }
+          ],
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "构建机监控"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "2": {
+                            "index": 0,
+                            "text": "查看"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": true,
+                        "title": "",
+                        "url": "${BK_MONITOR_URL}grafana/dashboard?spaceUid=bkci__${__data.fields.项目}&var-server=${__data.fields.节点IP}&dashName=BKCI-构建机"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "项目"
+                },
+                "properties": [
+                  {
+                    "id": "custom.hidden",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "nodeId"
+                },
+                "properties": [
+                  {
+                    "id": "custom.hidden",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "节点别名"
+                },
+                "properties": [
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": true,
+                        "title": "",
+                        "url": "https://devops.woa.com/console/environment/${__data.fields.项目}/node/nodeDetail/${__data.fields.nodeId}"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "查看任务"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "2": {
+                            "index": 0,
+                            "text": "查看"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": false,
+                        "title": "",
+                        "url": "/grafana/d/${panelUid}/?viewPanel=29&from={__from}&to={__to}&var-hostIp=${__data.fields.节点IP}&var-projectId=${projectId}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 8,
+            "y": 40
+          },
+          "hideTimeOverride": true,
+          "id": 30,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": true,
+                "displayName": "当前值"
+              }
+            ]
+          },
+          "pluginVersion": "10.4.10",
+          "targets": [
+            {
+              "cluster": [],
+              "datasource": {
+                "type": "bkmonitor-timeseries-datasource",
+                "uid": "${DS_蓝鲸监控_-_指标数据}"
+              },
+              "enableDownSampling": true,
+              "expressionList": [],
+              "format": "table",
+              "host": [],
+              "mode": "code",
+              "module": [],
+              "promqlAlias": "",
+              "query_configs": [],
+              "refId": "A",
+              "showLastPoint": false,
+              "source": "(max by (agentIp, nodeId, displayName, projectId) (agentmetric:heartbeat:busyTaskSize{projectId=\"$projectId\", agentIp=~\"^($hostIp)$\"} offset 4m) / max by (agentIp, nodeId, displayName, projectId) (agentmetric:heartbeat:parallelTaskCount{projectId=\"$projectId\", agentIp=~\"^($hostIp)$\"} offset 4m)) == 0",
+              "step": "1m",
+              "type": "instant"
+            }
+          ],
+          "title": "当前空闲节点",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "Value": true,
+                  "projectId": false
+                },
+                "includeByName": {},
+                "indexByName": {
+                  "Time": 3,
+                  "Value": 6,
+                  "agentId": 1,
+                  "hostIp": 4,
+                  "hostName": 2,
+                  "nodeId": 5,
+                  "projectId": 0
+                },
+                "renameByName": {
+                  "Time": "",
+                  "Value": "当前值",
+                  "agentId": "Agent ID",
+                  "agentIp": "节点IP",
+                  "displayName": "节点别名",
+                  "hostIp": "节点IP",
+                  "hostName": "节点别名",
+                  "nodeId": "",
+                  "projectId": "项目"
+                }
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "构建机监控",
+                "binary": {
+                  "left": "1",
+                  "right": "1"
+                },
+                "mode": "binary",
+                "reduce": {
+                  "reducer": "sum"
+                }
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "查看任务",
+                "binary": {
+                  "left": "1",
+                  "right": "1"
+                },
+                "mode": "binary",
+                "reduce": {
+                  "reducer": "sum"
+                }
+              }
+            }
+          ],
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "构建机监控"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "2": {
+                            "index": 0,
+                            "text": "查看"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": true,
+                        "title": "",
+                        "url": "${BK_MONITOR_URL}grafana/dashboard?spaceUid=bkci__${__data.fields.项目}&var-server=${__data.fields.节点IP}&dashName=BKCI-构建机"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "项目"
+                },
+                "properties": [
+                  {
+                    "id": "custom.hidden",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "nodeId"
+                },
+                "properties": [
+                  {
+                    "id": "custom.hidden",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "节点别名"
+                },
+                "properties": [
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": true,
+                        "title": "",
+                        "url": "https://devops.woa.com/console/environment/${__data.fields.项目}/node/nodeDetail/${__data.fields.nodeId}"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "查看任务"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "2": {
+                            "index": 0,
+                            "text": "查看"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": false,
+                        "title": "",
+                        "url": "/grafana/d/${panelUid}/?viewPanel=29&from={__from}&to={__to}&var-hostIp=${__data.fields.节点IP}&var-projectId=${projectId}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 16,
+            "y": 40
+          },
+          "hideTimeOverride": true,
+          "id": 31,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": true,
+                "displayName": "当前值"
+              }
+            ]
+          },
+          "pluginVersion": "10.4.10",
+          "targets": [
+            {
+              "cluster": [],
+              "datasource": {
+                "type": "bkmonitor-timeseries-datasource",
+                "uid": "${DS_蓝鲸监控_-_指标数据}"
+              },
+              "enableDownSampling": true,
+              "expressionList": [],
+              "format": "table",
+              "host": [],
+              "mode": "code",
+              "module": [],
+              "promqlAlias": "",
+              "query_configs": [],
+              "refId": "A",
+              "showLastPoint": false,
+              "source": "(max by (agentIp, nodeId, displayName, projectId) (agentmetric:heartbeat:busyTaskSize{projectId=\"$projectId\", agentIp=~\"^($hostIp)$\"} offset 4m) / max by (agentIp, nodeId, displayName, projectId) (agentmetric:heartbeat:parallelTaskCount{projectId=\"$projectId\", agentIp=~\"^($hostIp)$\"} offset 4m)) < 0.5",
+              "step": "1m",
+              "type": "instant"
+            }
+          ],
+          "title": "当前并发低于50%节点",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "Value": true,
+                  "projectId": false
+                },
+                "includeByName": {},
+                "indexByName": {
+                  "Time": 3,
+                  "Value": 6,
+                  "agentId": 1,
+                  "hostIp": 4,
+                  "hostName": 2,
+                  "nodeId": 5,
+                  "projectId": 0
+                },
+                "renameByName": {
+                  "Time": "",
+                  "Value": "当前值",
+                  "agentId": "Agent ID",
+                  "agentIp": "节点IP",
+                  "displayName": "节点别名",
+                  "hostIp": "节点IP",
+                  "hostName": "节点别名",
+                  "nodeId": "",
+                  "projectId": "项目"
+                }
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "构建机监控",
+                "binary": {
+                  "left": "1",
+                  "right": "1"
+                },
+                "mode": "binary",
+                "reduce": {
+                  "reducer": "sum"
+                }
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "查看任务",
+                "binary": {
+                  "left": "1",
+                  "right": "1"
+                },
+                "mode": "binary",
+                "reduce": {
+                  "reducer": "sum"
+                }
+              }
+            }
+          ],
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "构建机监控"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "2": {
+                            "index": 0,
+                            "text": "查看"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": true,
+                        "title": "",
+                        "url": "${BK_MONITOR_URL}grafana/dashboard?spaceUid=bkci__${__data.fields.项目}&var-server=${__data.fields.节点IP}&dashName=BKCI-构建机"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "项目"
+                },
+                "properties": [
+                  {
+                    "id": "custom.hidden",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "nodeId"
+                },
+                "properties": [
+                  {
+                    "id": "custom.hidden",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "节点别名"
+                },
+                "properties": [
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": true,
+                        "title": "",
+                        "url": "https://devops.woa.com/console/environment/${__data.fields.项目}/node/nodeDetail/${__data.fields.nodeId}"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "查看任务"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "2": {
+                            "index": 0,
+                            "text": "查看"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": false,
+                        "title": "",
+                        "url": "/grafana/d/${panelUid}/?viewPanel=29&from={__from}&to={__to}&var-hostIp=${__data.fields.节点IP}&var-projectId=${projectId}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 0,
+            "y": 48
+          },
+          "hideTimeOverride": true,
+          "id": 32,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": true,
+                "displayName": "当前值"
+              }
+            ]
+          },
+          "pluginVersion": "10.4.10",
+          "targets": [
+            {
+              "cluster": [],
+              "datasource": {
+                "type": "bkmonitor-timeseries-datasource",
+                "uid": "${DS_蓝鲸监控_-_指标数据}"
+              },
+              "enableDownSampling": true,
+              "expressionList": [],
+              "format": "table",
+              "host": [],
+              "mode": "code",
+              "module": [],
+              "promqlAlias": "",
+              "query_configs": [],
+              "refId": "A",
+              "showLastPoint": false,
+              "source": "(max by (agentIp, nodeId, displayName, projectId) (agentmetric:heartbeat:busyTaskSize{projectId=\"$projectId\", agentIp=~\"^($hostIp)$\"} offset 4m) / max by (agentIp, nodeId, displayName, projectId) (agentmetric:heartbeat:parallelTaskCount{projectId=\"$projectId\", agentIp=~\"^($hostIp)$\"} offset 4m)) >= 1",
+              "step": "1m",
+              "type": "instant"
+            }
+          ],
+          "title": "当前满并发运行节点",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "Value": true,
+                  "projectId": false
+                },
+                "includeByName": {},
+                "indexByName": {
+                  "Time": 3,
+                  "Value": 6,
+                  "agentId": 1,
+                  "hostIp": 4,
+                  "hostName": 2,
+                  "nodeId": 5,
+                  "projectId": 0
+                },
+                "renameByName": {
+                  "Time": "",
+                  "Value": "当前值",
+                  "agentId": "Agent ID",
+                  "agentIp": "节点IP",
+                  "displayName": "节点别名",
+                  "hostIp": "节点IP",
+                  "hostName": "节点别名",
+                  "nodeId": "",
+                  "projectId": "项目"
+                }
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "构建机监控",
+                "binary": {
+                  "left": "1",
+                  "right": "1"
+                },
+                "mode": "binary",
+                "reduce": {
+                  "reducer": "sum"
+                }
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "查看任务",
                 "binary": {
                   "left": "1",
                   "right": "1"
@@ -2803,7 +3914,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 42
+        "y": 32
       },
       "id": 28,
       "panels": [
@@ -2829,8 +3940,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -3107,7 +4217,7 @@
         "name": "projectId",
         "options": [],
         "query": {
-          "promql": "label_values($table:dimensions__bk_46__projectId, dimensions__bk_46__projectId)",
+          "promql": "label_values(agentmetric:cpu_detail:idle{}, projectId)",
           "queryType": "prometheus"
         },
         "refresh": 2,
@@ -3174,15 +4284,15 @@
         "type": "constant"
       },
       {
+        "current": {},
         "hide": 2,
         "label": "蓝盾 Url",
         "name": "devopsUrl",
+        "options": [],
         "query": "https://devops.woa.com",
-        "skipUrlSync": false,
-        "type": "constant",
-        "current": {},
         "refresh": 1,
-        "options": []
+        "skipUrlSync": false,
+        "type": "constant"
       }
     ]
   },
@@ -3193,7 +4303,7 @@
   "timepicker": {},
   "timezone": "",
   "title": "BKCI-构建资源趋势",
-  "version": 23,
+  "version": 33,
   "weekStart": "",
   "__inputs": [
     {
