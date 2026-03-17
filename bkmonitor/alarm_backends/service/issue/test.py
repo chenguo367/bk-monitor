@@ -34,9 +34,9 @@ def _get_strategy(strategy_id: int) -> dict:
         return strategy
 
     # fallback：直接查 MySQL Strategy 表
-    from bkmonitor.models.strategy import Strategy
+    from bkmonitor.models.strategy import StrategyModel
 
-    obj = Strategy.objects.filter(id=strategy_id).first()
+    obj = StrategyModel.objects.filter(id=strategy_id).first()
     if obj:
         return {"id": obj.id, "bk_biz_id": obj.bk_biz_id, "name": obj.name, "labels": [], "items": []}
 

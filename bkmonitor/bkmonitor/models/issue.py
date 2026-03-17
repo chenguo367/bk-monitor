@@ -139,12 +139,9 @@ class StrategyIssueConfigService:
 
 def _has_cache_role() -> bool:
     """仅 api / worker 进程具备缓存写入能力；web 进程无缓存配置，跳过。"""
-    try:
-        from django.conf import settings
+    from django.conf import settings
 
-        return getattr(settings, "ROLE", "") in ("api", "worker")
-    except Exception:
-        return False
+    return settings.ROLE in ("api", "worker")
 
 
 @receiver(post_save, sender=StrategyIssueConfig)
