@@ -377,6 +377,8 @@ class BCSClusterInfo(models.Model):
         biz_id = self.bk_biz_id
 
         # 1. 查询 cmdb relation DataSource（由 sync_relation_redis_data 创建）
+        # data_name 格式：{biz_id}_{space_type}_built_in_time_series
+        # BCS 集群始终绑定 bkcc 类型 Space（space_uid = f"bkcc__{bk_biz_id}"），因此 space_type 固定为 bkcc
         try:
             ds = DataSource.objects.get(data_name=f"{biz_id}_bkcc_built_in_time_series")
         except DataSource.DoesNotExist:
