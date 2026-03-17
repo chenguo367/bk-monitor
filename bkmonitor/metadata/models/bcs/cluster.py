@@ -365,14 +365,17 @@ class BCSClusterInfo(models.Model):
                     ensure_data_id_resource(api_client, datasource_name_lower, dataid_config)
                     logger.info("cluster->[%s] update resource->[%s]", self.cluster_id, dataid_config)
 
-        self._ensure_relation_dataid_resource()
+        self._ensure_relation_dataid_resource(resource_items)
 
-    def _ensure_relation_dataid_resource(self):
+    def _ensure_relation_dataid_resource(self, resource_items: dict | None = None):
         """下发 relation DataID CRD，使 K8s relation 指标复用 cmdb relation DataID 管道。
 
         通过在 operator_ns 内按名称后缀 -operator-relation 动态发现 ServiceMonitor，
         精准匹配 DataID CRD 的 monitorResource，实现 /relation/metrics 数据路由切换。
         调用方静默处理：DataSource 未就绪或 SM 未找到时跳过，下一个 refresh 周期自动重试。
+
+        :param resource_items: refresh_common_resource 已拉取的 CRD 快照（name → resource），
+                               用于跳过配置未变更的幂等调用；为 None 时退化为无条件下发。
         """
         biz_id = self.bk_biz_id
 
@@ -436,6 +439,12 @@ class BCSClusterInfo(models.Model):
                 },
             },
         }
+        # 与 refresh_common_resource 普通路径保持一致：CRD 已存在且配置相同则跳过，避免无意义 replace
+        if resource_items is not None and crd_name in resource_items:
+            if is_equal_config(dataid_config, resource_items[crd_name]):
+                logger.debug("cluster->[%s] relation DataID CRD [%s] unchanged, skip update", self.cluster_id, crd_name)
+                return
+
         ensure_data_id_resource(self.api_client, crd_name, dataid_config)
         logger.info(
             "cluster->[%s] ensure relation DataID CRD done, sm=[%s/%s] dataid=[%s]",
