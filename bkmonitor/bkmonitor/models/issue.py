@@ -137,8 +137,20 @@ class StrategyIssueConfigService:
         return config
 
 
+def _has_cache_role() -> bool:
+    """仅 api / worker 进程具备缓存写入能力；web 进程无缓存配置，跳过。"""
+    try:
+        from django.conf import settings
+
+        return getattr(settings, "ROLE", "") in ("api", "worker")
+    except Exception:
+        return False
+
+
 @receiver(post_save, sender=StrategyIssueConfig)
 def upsert_strategy_issue_config_cache(sender, instance, **kwargs):
+    if not _has_cache_role():
+        return
     try:
         from alarm_backends.core.cache.issue import StrategyIssueConfigCache
 
@@ -149,6 +161,8 @@ def upsert_strategy_issue_config_cache(sender, instance, **kwargs):
 
 @receiver(post_delete, sender=StrategyIssueConfig)
 def invalidate_strategy_issue_config_cache(sender, instance, **kwargs):
+    if not _has_cache_role():
+        return
     try:
         from alarm_backends.core.cache.issue import StrategyIssueConfigCache
 
