@@ -24,6 +24,9 @@ ISSUE_SCAN_PAGE_SIZE = 500
 ALERT_SCAN_PAGE_SIZE = 500
 
 
+PROGRESS_LOG_INTERVAL = 100
+
+
 @app.task(ignore_result=True, queue="celery_action_cron")
 def sync_issue_alert_stats():
     """
@@ -33,16 +36,52 @@ def sync_issue_alert_stats():
       3) 重算 impact_scope
       4) 检测 orphan issue 并触发监控告警
     """
-    for hit in _iter_issue_hits():
+    start_ts = time.time()
+    processed = 0
+    failed = 0
+    total = 0
+
+    for hit, total in _iter_issue_hits_with_total():
         issue = IssueDocument(**hit.to_dict())
+        processed += 1
+
+        if processed == 1:
+            logger.info("sync_issue_alert_stats: start, active_issues=%d", total)
+
+        logger.debug(
+            "sync_issue_alert_stats: processing [%d/%d] issue_id=%s, strategy_id=%s",
+            processed,
+            total,
+            issue.id,
+            issue.strategy_id,
+        )
+        if processed % PROGRESS_LOG_INTERVAL == 0:
+            logger.info(
+                "sync_issue_alert_stats: progress [%d/%d], failed=%d, elapsed=%.1fs",
+                processed,
+                total,
+                failed,
+                time.time() - start_ts,
+            )
+
         try:
             _process_single_issue(issue)
         except Exception:
+            failed += 1
             logger.exception(
                 "sync_issue_alert_stats: failed for issue_id=%s, strategy_id=%s",
                 issue.id,
                 issue.strategy_id,
             )
+
+    elapsed = time.time() - start_ts
+    logger.info(
+        "sync_issue_alert_stats: done, processed=%d/%d, failed=%d, elapsed=%.1fs",
+        processed,
+        total,
+        failed,
+        elapsed,
+    )
 
 
 def _process_single_issue(issue: IssueDocument):
@@ -149,21 +188,30 @@ def _build_impact_scope(issue_id: str) -> dict:
     }
 
 
-def _iter_issue_hits():
+def _iter_issue_hits_with_total():
+    """逐页迭代活跃 Issue，同时从首批响应中提取 total（无额外 ES count 请求）。
+    每次 yield (hit, total)，total 在首批确定后保持不变。
+    """
     search = (
         IssueDocument.search(all_indices=True)
         .filter("terms", status=IssueStatus.ACTIVE_STATUSES)
         .sort("create_time", "id")
+        .params(track_total_hits=True)
     )
     search_after = None
+    total = 0
     while True:
         current = search.params(size=ISSUE_SCAN_PAGE_SIZE)
         if search_after:
             current = current.extra(search_after=search_after)
-        hits = current.execute().hits
+        response = current.execute()
+        hits = response.hits
         if not hits:
             break
-        yield from hits
+        if total == 0:
+            total = getattr(getattr(hits, "total", None), "value", 0) or len(hits)
+        for hit in hits:
+            yield hit, total
         search_after = getattr(hits[-1].meta, "sort", None)
         if not search_after:
             break
