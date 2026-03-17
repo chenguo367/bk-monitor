@@ -204,7 +204,7 @@ class IssueAggregationProcessor:
             name=name,
             status=IssueStatus.PENDING_REVIEW,
             is_regression=is_regression,
-            assignee="",
+            assignee=[],
             priority=IssuePriority.DEFAULT,
             alert_count=1,
             first_alert_time=self.alert.begin_time or now,

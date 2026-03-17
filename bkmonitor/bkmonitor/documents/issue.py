@@ -40,7 +40,7 @@ class IssueDocument(BaseDocument):
 
     status = field.Keyword()
     is_regression = field.Boolean()
-    assignee = field.Keyword()
+    assignee = field.Keyword(multi=True)
     priority = field.Keyword()
 
     alert_count = field.Long()
@@ -89,33 +89,33 @@ class IssueDocument(BaseDocument):
 
     # ── 状态机方法 ──
 
-    def assign(self, assignee: str, operator: str) -> None:
+    def assign(self, assignees: list[str], operator: str) -> None:
         """首次指派负责人：PENDING_REVIEW → UNRESOLVED"""
         if self.status != IssueStatus.PENDING_REVIEW:
             raise ValueError(f"Cannot assign: current status={self.status}, expected={IssueStatus.PENDING_REVIEW}")
         old_status = self.status
-        self.assignee = assignee
+        self.assignee = assignees
         self.status = IssueStatus.UNRESOLVED
         self.update_time = int(time.time())
         self._persist_and_cache(active=True)
         self._write_activities(
             [
-                (IssueActivityType.ASSIGNEE_CHANGE, None, assignee, operator),
+                (IssueActivityType.ASSIGNEE_CHANGE, None, ",".join(assignees), operator),
                 (IssueActivityType.STATUS_CHANGE, old_status, IssueStatus.UNRESOLVED, operator),
             ]
         )
 
-    def reassign(self, assignee: str, operator: str) -> None:
+    def reassign(self, assignees: list[str], operator: str) -> None:
         """改派负责人：UNRESOLVED 下改派，不触发状态流转"""
         if self.status != IssueStatus.UNRESOLVED:
             raise ValueError(f"Cannot reassign: current status={self.status}, expected={IssueStatus.UNRESOLVED}")
-        old_assignee = self.assignee
-        self.assignee = assignee
+        old_assignees = list(self.assignee or [])
+        self.assignee = assignees
         self.update_time = int(time.time())
         self._persist_and_cache(active=True)
         self._write_activities(
             [
-                (IssueActivityType.ASSIGNEE_CHANGE, old_assignee, assignee, operator),
+                (IssueActivityType.ASSIGNEE_CHANGE, ",".join(old_assignees), ",".join(assignees), operator),
             ]
         )
 
@@ -134,17 +134,17 @@ class IssueDocument(BaseDocument):
             ]
         )
 
-    def reject(self, operator: str) -> None:
-        """拒绝/无效（实例级）：PENDING_REVIEW → REJECTED"""
+    def archive(self, operator: str) -> None:
+        """归档（实例级）：PENDING_REVIEW → ARCHIVED"""
         if self.status != IssueStatus.PENDING_REVIEW:
-            raise ValueError(f"Cannot reject: current status={self.status}, expected={IssueStatus.PENDING_REVIEW}")
+            raise ValueError(f"Cannot archive: current status={self.status}, expected={IssueStatus.PENDING_REVIEW}")
         old_status = self.status
-        self.status = IssueStatus.REJECTED
+        self.status = IssueStatus.ARCHIVED
         self.update_time = int(time.time())
         self._persist_and_cache(active=False)
         self._write_activities(
             [
-                (IssueActivityType.STATUS_CHANGE, old_status, IssueStatus.REJECTED, operator),
+                (IssueActivityType.STATUS_CHANGE, old_status, IssueStatus.ARCHIVED, operator),
             ]
         )
 

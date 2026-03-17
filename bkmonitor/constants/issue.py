@@ -15,7 +15,7 @@ class IssueStatus:
     PENDING_REVIEW = "pending_review"
     UNRESOLVED = "unresolved"
     RESOLVED = "resolved"
-    REJECTED = "rejected"
+    ARCHIVED = "archived"
 
     ACTIVE_STATUSES = [PENDING_REVIEW, UNRESOLVED]
 
@@ -23,7 +23,7 @@ class IssueStatus:
         (PENDING_REVIEW, _("待审核")),
         (UNRESOLVED, _("未解决")),
         (RESOLVED, _("已解决")),
-        (REJECTED, _("拒绝/无效")),
+        (ARCHIVED, _("归档")),
     )
 
 
