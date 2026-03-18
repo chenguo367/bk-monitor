@@ -44,7 +44,7 @@ SUPERVISOR_SERVER = "unix:///var/run/bkmonitorv3/monitor-supervisor.sock"
 SUPERVISOR_USERNAME = ""
 SUPERVISOR_PASSWORD = ""
 
-INSTALLED_APPS += (  # noqa: F405, F821
+INSTALLED_APPS += (  # noqa: F405,F821
     "django_celery_beat",
     "django_celery_results",
     "django_elasticsearch_dsl",
@@ -139,6 +139,7 @@ DEFAULT_CRONTAB = [
     ("alarm_backends.core.cache.action_config.refresh_total", "*/60 * * * *", "global"),
     ("alarm_backends.core.cache.action_config.refresh_latest_5_minutes", "* * * * *", "global"),
     ("alarm_backends.core.cache.assign", "* * * * *", "global"),
+    ("alarm_backends.core.cache.issue", "*/5 * * * *", "global"),
     ("alarm_backends.core.cache.calendar", "* * * * *", "global"),
     ("alarm_backends.core.cache.subscribe", "* * * * *", "global"),
     # api cache
@@ -225,6 +226,8 @@ ACTION_TASK_CRONTAB = [
     ("alarm_backends.service.fta_action.tasks.dispatch_demo_action_tasks", "* * * * *", "global"),
     # 定期进行告警索引轮转 隔天创建，时间稍微拉长一点，避免短时间任务堵塞的时候容易过期，导致创建不成功
     ("bkmonitor.documents.tasks.rollover_indices", "*/24 * * * *", "global"),
+    # 定期同步活跃 Issue 的告警统计（含漏关联补偿和 orphan issue 检测）
+    ("alarm_backends.service.fta_action.tasks.sync_issue_alert_stats", "*/5 * * * *", "cluster"),
     # 定期清理停用的ai 策略对应的flow任务(每天2点半)
     ("bkmonitor.management.commands.clean_aiflow.run_clean", "30 2 * * *", "global"),
     # aiops sdk策略历史依赖管理
