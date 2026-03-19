@@ -114,7 +114,8 @@ def get_alert_info_for_log_clustering_count(alert: AlertDocument, index_set_id: 
     query_config = alert.strategy["items"][0]["query_configs"][0]
     interval = query_config.get("agg_interval", 60)
     start_time = alert.begin_time - 60 * 60
-    end_time = max(alert.begin_time + interval, alert.latest_time) + 60 * 60
+    # 仅查询告警开始后一个聚合周期内的日志，避免因窗口过宽导致日志示例时间与告警时间相差过大
+    end_time = alert.begin_time + interval
     group_by = query_config.get("agg_dimension", [])
 
     try:
