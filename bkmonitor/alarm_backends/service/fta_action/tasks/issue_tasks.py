@@ -202,7 +202,12 @@ def _build_impact_scope(issue_id: str) -> dict:
             # ── 关键字段提取 ──────────────────────────────────────────────────
             target_type = hit_dict.get("target_type") or dim_map.get("target_type", "")
             target = dim_map.get("target", "")
-            host_key = str(hit_dict.get("bk_host_id") or dim_map.get("bk_host_id") or "")
+            host_key = str(
+                hit_dict.get("bk_host_id")
+                or dim_map.get("bk_host_id")
+                or hit_dict.get("event", {}).get("bk_host_id")
+                or ""
+            )
             sid = str(
                 hit_dict.get("bk_service_instance_id")
                 or dim_map.get("bk_service_instance_id")
@@ -241,13 +246,17 @@ def _build_impact_scope(issue_id: str) -> dict:
                 entry = sets[set_node]
                 if host_key:
                     entry["hosts"].add(host_key)
-                    all_hosts[host_key] = dim_map.get("ip") or str(hit_dict.get("ip") or host_key)
+                    all_hosts[host_key] = (
+                        dim_map.get("ip") or hit_dict.get("ip") or hit_dict.get("event", {}).get("ip") or host_key
+                    )
                 if target_type == "SERVICE" and sid:
                     entry["service_instances"].add(sid)
                     all_sids.setdefault(sid, _build_si_display_name(hit_dict, dim_map, sid))
 
             if target_type in ("HOST", "SERVICE") and host_key and host_key not in all_hosts:
-                all_hosts[host_key] = dim_map.get("ip") or str(hit_dict.get("ip") or host_key)
+                all_hosts[host_key] = (
+                    dim_map.get("ip") or hit_dict.get("ip") or hit_dict.get("event", {}).get("ip") or host_key
+                )
 
             # ── K8S Cluster 统计（与 CMDB Set 并行，不互斥）────────────────
             if target_type and target_type.startswith("K8S"):
