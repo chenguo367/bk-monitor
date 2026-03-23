@@ -1702,15 +1702,21 @@ class IssueConfig:
         """创建或更新 StrategyIssueConfig，由 Strategy.save_issue_config() 调用。"""
         from bkmonitor.models.issue import StrategyIssueConfig
 
+        defaults = {
+            "bk_biz_id": bk_biz_id,
+            "is_enabled": self.is_enabled,
+            "aggregate_dimensions": self.aggregate_dimensions,
+            "conditions": self.conditions,
+            "alert_levels": self.alert_levels,
+        }
+        # full_clean(validate_unique=False) 触发 StrategyIssueConfig.clean()，
+        # 兜底校验 alert_levels 等字段级约束，防 clean() 将来新增规则时再次漏掉。
+        temp = StrategyIssueConfig(strategy_id=strategy_id, **defaults)
+        temp.full_clean(validate_unique=False)
+
         StrategyIssueConfig.objects.update_or_create(
             strategy_id=strategy_id,
-            defaults={
-                "bk_biz_id": bk_biz_id,
-                "is_enabled": self.is_enabled,
-                "aggregate_dimensions": self.aggregate_dimensions,
-                "conditions": self.conditions,
-                "alert_levels": self.alert_levels,
-            },
+            defaults=defaults,
         )
 
     @staticmethod

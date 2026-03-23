@@ -2134,8 +2134,9 @@ class SaveStrategyV2Resource(Resource):
 
     @classmethod
     def validate_issue_config(cls, strategy: Strategy):
-        """校验 issue_config 的跨模型约束。
+        """校验 issue_config 的跨模型约束 + 字段级合法性。
 
+        - alert_levels 必须为 [1,2,3] 的非空子集（与 StrategyIssueConfig.clean() 保持一致）
         - aggregate_dimensions 必须是策略 public_dimensions 的子集
         - conditions.key 必须属于生效维度集合
 
@@ -2145,6 +2146,11 @@ class SaveStrategyV2Resource(Resource):
         from bkmonitor.models.issue import StrategyIssueConfigService
 
         ic = strategy.issue_config
+
+        # alert_levels：非空且只含 1/2/3
+        if not ic.alert_levels or not set(ic.alert_levels).issubset({1, 2, 3}):
+            raise ValidationError(detail=_("alert_levels 必须为 [1,2,3] 的非空子集"))
+
         public_dims = set(strategy.public_dimensions)
 
         if ic.aggregate_dimensions:
