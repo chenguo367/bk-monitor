@@ -132,24 +132,19 @@ def _has_cache_role() -> bool:
 
 
 @receiver(post_save, sender=StrategyIssueConfig)
-def upsert_strategy_issue_config_cache(sender, instance, **kwargs):
-    if not _has_cache_role():
-        return
-    try:
-        from alarm_backends.core.cache.issue import StrategyIssueConfigCache
-
-        StrategyIssueConfigCache.upsert(instance)
-    except Exception:
-        pass
-
-
 @receiver(post_delete, sender=StrategyIssueConfig)
-def invalidate_strategy_issue_config_cache(sender, instance, **kwargs):
+def refresh_strategy_cache_on_issue_config_change(sender, instance, **kwargs):
+    """issue_config 变更时刷新整个策略缓存（issue_config 已合并进策略 JSON）。
+
+    注意：Strategy.save() 保存 issue_config 后本身也会触发策略缓存刷新。
+    此 handler 主要兜底"直接操作 StrategyIssueConfig"的场景（如紧急运维），
+    正常路径下会有一次冗余刷新，可接受。
+    """
     if not _has_cache_role():
         return
     try:
-        from alarm_backends.core.cache.issue import StrategyIssueConfigCache
+        from alarm_backends.core.cache.strategy import StrategyCacheManager
 
-        StrategyIssueConfigCache.invalidate(instance.strategy_id)
+        StrategyCacheManager.refresh(instance.strategy_id)
     except Exception:
         pass
