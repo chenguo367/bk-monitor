@@ -50,18 +50,18 @@ def sync_issue_alert_stats():
         processed += 1
 
         if processed == 1:
-            logger.info("sync_issue_alert_stats: start, active_issues=%d", total)
+            logger.info("[issue] sync_issue_alert_stats: start, active_issues=%d", total)
 
         logger.debug(
-            "sync_issue_alert_stats: processing [%d/%d] issue_id=%s, strategy_id=%s",
+            "[issue] sync_issue_alert_stats: processing [%d/%d] strategy(%s) issue(%s)",
             processed,
             total,
-            issue.id,
             issue.strategy_id,
+            issue.id,
         )
         if processed % PROGRESS_LOG_INTERVAL == 0:
             logger.info(
-                "sync_issue_alert_stats: progress [%d/%d], failed=%d, elapsed=%.1fs",
+                "[issue] sync_issue_alert_stats: progress [%d/%d], failed=%d, elapsed=%.1fs",
                 processed,
                 total,
                 failed,
@@ -73,14 +73,14 @@ def sync_issue_alert_stats():
         except Exception:
             failed += 1
             logger.exception(
-                "sync_issue_alert_stats: failed for issue_id=%s, strategy_id=%s",
-                issue.id,
+                "[issue] sync_issue_alert_stats: failed, strategy(%s) issue(%s)",
                 issue.strategy_id,
+                issue.id,
             )
 
     elapsed = time.time() - start_ts
     logger.info(
-        "sync_issue_alert_stats: done, processed=%d/%d, failed=%d, elapsed=%.1fs",
+        "[issue] sync_issue_alert_stats: done, processed=%d/%d, failed=%d, elapsed=%.1fs",
         processed,
         total,
         failed,
@@ -99,7 +99,8 @@ def _process_single_issue(issue: IssueDocument):
     alert_count = int(result.aggregations.alert_count.value or 0)
     last_alert_time = result.aggregations.max_begin_time.value or issue.last_alert_time
 
-    impact_scope = _build_impact_scope(issue.id)
+    agg_dims: list[str] = (issue.aggregate_config or {}).get("aggregate_dimensions", [])
+    impact_scope = _build_impact_scope(issue.id, aggregate_dimensions=agg_dims)
 
     now = int(time.time())
     if alert_count == 0:
@@ -111,10 +112,9 @@ def _process_single_issue(issue: IssueDocument):
         age = now - issue_create_time
         if age > ORPHAN_ISSUE_THRESHOLD_SECONDS:
             logger.error(
-                "sync_issue_alert_stats: orphan issue detected (no alerts associated), "
-                "issue_id=%s, strategy_id=%s, age_seconds=%.0f",
-                issue.id,
+                "[issue] orphan issue detected (no alerts associated), strategy(%s) issue(%s) age_seconds=%.0f",
                 issue.strategy_id,
+                issue.id,
                 age,
             )
 
@@ -128,7 +128,9 @@ def _process_single_issue(issue: IssueDocument):
     try:
         IssueDocument.bulk_create([update_doc], action=BulkActionType.UPDATE)
     except Exception:
-        logger.exception("sync_issue_alert_stats: UPDATE failed, issue_id=%s", issue.id)
+        logger.exception(
+            "[issue] sync_issue_alert_stats: UPDATE failed, strategy(%s) issue(%s)", issue.strategy_id, issue.id
+        )
 
 
 def _backfill_unlinked_alerts(issue: IssueDocument):
@@ -156,20 +158,47 @@ def _backfill_unlinked_alerts(issue: IssueDocument):
             AlertDocument.bulk_create(update_docs, action=BulkActionType.UPSERT)
             total += len(update_docs)
         except Exception:
-            logger.exception("sync_issue_alert_stats: backfill failed, issue_id=%s", issue.id)
+            logger.exception("[issue] backfill failed, strategy(%s) issue(%s)", issue.strategy_id, issue.id)
             return
 
     if total:
-        logger.info("sync_issue_alert_stats: backfilled %d unlinked alerts for issue_id=%s", total, issue.id)
+        logger.info("[issue] backfilled %d unlinked alerts, strategy(%s) issue(%s)", total, issue.strategy_id, issue.id)
 
 
-def _build_impact_scope(issue_id: str) -> dict:
+def _allowed_scope_keys(aggregate_dimensions: list[str]) -> set[str] | None:
+    """
+    根据聚合维度决定 impact_scope 允许输出的 key 集合。
+    返回 None 表示不收窄（aggregate_dimensions 为空时）。
+    """
+    if not aggregate_dimensions:
+        return None
+
+    dims = set(aggregate_dimensions)
+    allowed: set[str] = set()
+
+    if dims & {"bk_target_ip", "ip", "bk_host_id", "bk_cloud_id", "bk_target_cloud_id"}:
+        allowed.update(["host", "set"])
+
+    if dims & {"bk_target_service_instance_id", "bk_service_instance_id"}:
+        allowed.update(["service_instances", "set"])
+
+    if dims & {"bcs_cluster_id", "pod", "pod_name", "node", "node_name"}:
+        allowed.update(["cluster", "node", "pod", "service"])
+
+    if dims & {"app_name"}:
+        allowed.update(["app", "apm_service"])
+
+    return allowed if allowed else None
+
+
+def _build_impact_scope(issue_id: str, aggregate_dimensions: list[str] | None = None) -> dict:
     """
     按关联告警汇总影响范围快照。
 
+    aggregate_dimensions 来自 IssueDocument.aggregate_config["aggregate_dimensions"]，
+    非空时按维度类型收窄输出 key；为空时全量输出。
     输出格式：每个资源维度均为 {count, instance_list, link_tpl}，
     支持 CMDB Set / Host / ServiceInstance / K8S 集群/节点/Pod/Service / APM 应用/服务。
-    详细设计见 docs/告警后台(alarm_backends)/modules/issues/impact-scope.md。
     """
     sets: dict[str, dict] = {}
     pending_set_names: dict[str, int] = {}
@@ -412,6 +441,11 @@ def _build_impact_scope(issue_id: str) -> dict:
                     "?bizId={bk_biz_id}#/apm/service?filter-app_name={app_name}&filter-service_name={service_name}"
                 ),
             }
+
+    # 聚合维度收窄：非空时仅保留与维度类型对应的 key
+    allowed_keys = _allowed_scope_keys(aggregate_dimensions or [])
+    if allowed_keys is not None:
+        result = {k: v for k, v in result.items() if k in allowed_keys}
 
     return result
 
