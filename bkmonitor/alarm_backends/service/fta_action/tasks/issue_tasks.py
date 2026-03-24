@@ -170,9 +170,13 @@ def _allowed_scope_keys(aggregate_dimensions: list[str]) -> set[str] | None:
     根据聚合维度决定 impact_scope 允许输出的 key 集合。
     返回 None 表示不收窄（aggregate_dimensions 为空时）。
 
-    service_name 的语义由共存的锚点维度决定，优先级从高到低：
-      1. app_name + service_name  → APM 服务名（apm_service / app）
-      2. bcs_cluster_id + service_name → K8S Service 资源（service / cluster）
+    APM 粒度规则（优先级从粗到细）：
+      - app_name 在 dims → 允许 apm_app（应用级）
+      - app_name + service_name 均在 dims → 额外允许 apm_service（服务级）
+
+    K8S 粒度规则：
+      - bcs_cluster_id / pod / node 等在 dims → 允许 cluster / node / pod
+      - 额外含 service_name / service → 允许 service
     """
     if not aggregate_dimensions:
         return None
@@ -186,13 +190,17 @@ def _allowed_scope_keys(aggregate_dimensions: list[str]) -> set[str] | None:
     if dims & {"bk_target_service_instance_id", "bk_service_instance_id"}:
         allowed.update(["service_instances", "set"])
 
-    # K8S：bcs_cluster_id 为必要锚点；service_name 在此语境指 K8S Service 资源
+    # K8S：bcs_cluster_id 为必要锚点；service 需 service_name/service 显式在聚合维度中
     if dims & {"bcs_cluster_id", "pod", "pod_name", "node", "node_name"}:
-        allowed.update(["cluster", "node", "pod", "service"])
+        allowed.update(["cluster", "node", "pod"])
+        if dims & {"service_name", "service"}:
+            allowed.add("service")
 
-    # APM：app_name 为锚点（优先级高于 K8S）；service_name 在此语境指 APM 服务名
+    # APM：app_name → 应用级（apm_app）；service_name 额外在 dims 才开放服务级（apm_service）
     if "app_name" in dims:
-        allowed.update(["app", "apm_service"])
+        allowed.add("apm_app")
+        if "service_name" in dims:
+            allowed.add("apm_service")
 
     return allowed if allowed else None
 
@@ -426,23 +434,22 @@ def _build_impact_scope(issue_id: str, aggregate_dimensions: list[str] | None = 
                 }
 
     if apm_apps:
-        if len(apm_apps) > 1:
-            result["app"] = {
-                "count": len(apm_apps),
-                "instance_list": [
-                    {"app_name": app, "bk_biz_id": data["bk_biz_id"], "display_name": app}
-                    for app, data in apm_apps.items()
-                ][:50],
-                "link_tpl": "?bizId={bk_biz_id}#/apm/application?filter-app_name={app_name}",
-            }
-        else:
-            app_name, app_data = next(iter(apm_apps.items()))
+        result["apm_app"] = {
+            "count": len(apm_apps),
+            "instance_list": [
+                {"app_name": app, "bk_biz_id": data["bk_biz_id"], "display_name": app} for app, data in apm_apps.items()
+            ][:50],
+            "link_tpl": "?bizId={bk_biz_id}#/apm/application?filter-app_name={app_name}",
+        }
+        all_apm_services = [
+            {"app_name": app_name, "service_name": svc, "bk_biz_id": biz_id, "display_name": dn}
+            for app_name, app_data in apm_apps.items()
+            for svc, (dn, biz_id) in app_data["services"].items()
+        ]
+        if all_apm_services:
             result["apm_service"] = {
-                "count": len(app_data["services"]),
-                "instance_list": [
-                    {"app_name": app_name, "service_name": svc, "bk_biz_id": biz_id, "display_name": dn}
-                    for svc, (dn, biz_id) in app_data["services"].items()
-                ][:50],
+                "count": len(all_apm_services),
+                "instance_list": all_apm_services[:50],
                 "link_tpl": (
                     "?bizId={bk_biz_id}#/apm/service?filter-app_name={app_name}&filter-service_name={service_name}"
                 ),
