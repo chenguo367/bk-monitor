@@ -169,6 +169,10 @@ def _allowed_scope_keys(aggregate_dimensions: list[str]) -> set[str] | None:
     """
     根据聚合维度决定 impact_scope 允许输出的 key 集合。
     返回 None 表示不收窄（aggregate_dimensions 为空时）。
+
+    service_name 的语义由共存的锚点维度决定，优先级从高到低：
+      1. app_name + service_name  → APM 服务名（apm_service / app）
+      2. bcs_cluster_id + service_name → K8S Service 资源（service / cluster）
     """
     if not aggregate_dimensions:
         return None
@@ -182,10 +186,12 @@ def _allowed_scope_keys(aggregate_dimensions: list[str]) -> set[str] | None:
     if dims & {"bk_target_service_instance_id", "bk_service_instance_id"}:
         allowed.update(["service_instances", "set"])
 
+    # K8S：bcs_cluster_id 为必要锚点；service_name 在此语境指 K8S Service 资源
     if dims & {"bcs_cluster_id", "pod", "pod_name", "node", "node_name"}:
         allowed.update(["cluster", "node", "pod", "service"])
 
-    if dims & {"app_name"}:
+    # APM：app_name 为锚点（优先级高于 K8S）；service_name 在此语境指 APM 服务名
+    if "app_name" in dims:
         allowed.update(["app", "apm_service"])
 
     return allowed if allowed else None
