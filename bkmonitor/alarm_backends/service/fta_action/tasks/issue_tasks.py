@@ -168,7 +168,11 @@ def _backfill_unlinked_alerts(issue: IssueDocument):
 def _allowed_scope_keys(aggregate_dimensions: list[str]) -> set[str] | None:
     """
     根据聚合维度决定 impact_scope 允许输出的 key 集合。
-    返回 None 表示不收窄（aggregate_dimensions 为空时）。
+
+    返回值语义：
+      - None  → aggregate_dimensions 为空，不收窄，全量输出
+      - set() → 非空 dims 但无已知资源映射，收窄为空（输出 {}）
+      - {...} → 允许输出的 key 集合
 
     APM 粒度规则（优先级从粗到细）：
       - app_name 在 dims → 允许 apm_app（应用级）
@@ -202,7 +206,9 @@ def _allowed_scope_keys(aggregate_dimensions: list[str]) -> set[str] | None:
         if "service_name" in dims:
             allowed.add("apm_service")
 
-    return allowed if allowed else None
+    # 非空 dims 但无已知资源映射时，返回空集合而非 None：
+    # None 表示"不收窄"，空集合表示"收窄为空"，两者语义不同
+    return allowed
 
 
 def _build_impact_scope(issue_id: str, aggregate_dimensions: list[str] | None = None) -> dict:
