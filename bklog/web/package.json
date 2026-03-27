@@ -124,7 +124,7 @@
     "eslint-plugin-oxlint": "^1.11.2",
     "eslint-plugin-vue": "^9.26.0",
     "ifdef-loader": "^2.3.2",
-    "lint-staged": "15.2.0",
+    "lint-staged": "15.5.2",
     "nodemon": "3.1.0",
     "oxlint": "^1.11.2",
     "picocolors": "1.0.0",
