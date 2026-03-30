@@ -30,9 +30,9 @@ class SearchSerializer(serializers.Serializer):
     query = serializers.CharField(label="搜索关键字")
     page_size = serializers.IntegerField(
         label="每类结果数量",
-        default=5,
+        default=20,
         min_value=1,
-        max_value=20,
+        max_value=100,
         required=False,
     )
 
