@@ -1329,6 +1329,7 @@ class StrategyCacheManager(CacheManager):
             refresh_bk_biz_ids,
             refresh_nodata_strategy_ids,
             refresh_aiops_sdk_strategy_ids,
+            cls.inject_issue_config,  # 注入 StrategyIssueConfig，须在 refresh_strategy 前执行
             refresh_strategy,
         ]
 
