@@ -325,12 +325,7 @@ class ApmApplicationSearchItem(SearchItem):
         if cls.RE_APP_NAME.match(query):
             query_filter |= Q(app_name__icontains=query)
 
-        # 在 DB 层限制候选数量，避免对全量结果逐条查询业务名触发 N+1。
-        # 取 limit * 10 作为候选池，为权限过滤留足余量，同时将查询规模控制在可接受范围内。
-        candidate_limit = limit * 10
-        applications = list(
-            Application.objects.filter(bk_tenant_id=bk_tenant_id).filter(query_filter)[:candidate_limit]
-        )
+        applications = list(Application.objects.filter(bk_tenant_id=bk_tenant_id).filter(query_filter))
         if not applications:
             return
 
