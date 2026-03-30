@@ -911,7 +911,6 @@ class StrategyCacheManager(CacheManager):
         strategy_ids = [s["id"] for s in strategies]
         configs = StrategyIssueConfig.objects.filter(
             strategy_id__in=strategy_ids,
-            is_enabled=True,
             is_deleted=False,
         ).values("strategy_id", "is_enabled", "aggregate_dimensions", "conditions", "alert_levels")
         config_map = {c["strategy_id"]: c for c in configs}
