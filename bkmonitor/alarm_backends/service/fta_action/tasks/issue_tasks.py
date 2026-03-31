@@ -18,6 +18,7 @@ from alarm_backends.service.scheduler.app import app
 from bkmonitor.documents.alert import AlertDocument
 from bkmonitor.documents.base import BulkActionType
 from bkmonitor.documents.issue import IssueDocument
+from bkmonitor.utils.common_utils import safe_int
 from bkmonitor.utils.tenant import bk_biz_id_to_bk_tenant_id
 from constants.issue import IssueStatus
 
@@ -497,9 +498,9 @@ def _build_set_display_name(set_node: str, translation: list) -> str:
         if obj in ("biz", "业务"):
             biz_name = name
         elif obj in ("set", "集群") and set_id:
-            inst_id = item.get("bk_inst_id")
-            # bk_inst_id 缺失时直接信任该条目（translation 中的集群条目即为当前 set）
-            if inst_id is None or int(inst_id) == set_id:
+            inst_id = safe_int(item.get("bk_inst_id"), dft=None)
+            # inst_id 缺失或无法解析时直接信任该条目（translation 中集群条目即为当前 set）
+            if inst_id is None or inst_id == set_id:
                 set_name = name
     if biz_name and set_name:
         return f"{biz_name}/{set_name}"
