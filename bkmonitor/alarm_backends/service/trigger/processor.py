@@ -13,12 +13,15 @@ import logging
 import time
 
 from alarm_backends.core.alert.adapter import MonitorEventAdapter
-from alarm_backends.core.cache.key import ANOMALY_LIST_KEY, ANOMALY_SIGNAL_KEY
+from alarm_backends.core.cache.key import ANOMALY_LIST_KEY, ANOMALY_SIGNAL_KEY, TRIGGER_EVENT_RATE_LIMIT_KEY
 from alarm_backends.core.control.strategy import Strategy
 from alarm_backends.core.storage.redis_cluster import get_node_by_strategy_id
 from alarm_backends.service.trigger.checker import AnomalyChecker
 from core.errors.alarm_backends import StrategyNotFound
 from core.prometheus import metrics
+
+# 每个（策略, 数据时间戳）计数器的最大 event 数，超过则丢弃
+TRIGGER_EVENT_RATE_LIMIT_THRESHOLD = 5000
 
 logger = logging.getLogger("trigger")
 
@@ -77,11 +80,119 @@ class TriggerProcessor:
                 f"[pull anomaly record] strategy({self.strategy_id}), item({self.item_id}) pull {len(self.anomaly_points)} record"
             )
 
+    def _get_rate_limit_drop_count(self, event_records):
+        """
+        按（strategy_id, 数据时间戳）对本批 event_records 进行限流判定。
+
+        算法：
+        1. 内存中按 source_time 分组统计本批各时间戳的 event 数。
+        2. pipeline MGET 一次取各计数器的 Redis 已有值。
+        3. 逐条判定：redis_count + 本批已通过数 >= 阈值时拒绝本条。
+        4. 对每个时间戳做一次 INCRBY（通过数），避免逐条 INCR。
+
+        返回：(allowed_records, drop_count_per_ts)
+          - allowed_records：允许下发的记录列表（与 event_records 顺序一致的子集）
+          - drop_count_per_ts：{source_time: drop_count}，用于上报指标
+        """
+        client = TRIGGER_EVENT_RATE_LIMIT_KEY.client
+        threshold = TRIGGER_EVENT_RATE_LIMIT_THRESHOLD
+
+        # step1: 收集本批各时间戳对应的 key 及顺序
+        ts_keys = {}  # source_time -> redis key
+        for record in event_records:
+            event_record = record["event_record"]
+            source_time = event_record.get("data", {}).get("time")
+            if source_time is None:
+                # 拿不到数据时间，fail-open
+                continue
+            source_time = int(source_time)
+            if source_time not in ts_keys:
+                ts_keys[source_time] = TRIGGER_EVENT_RATE_LIMIT_KEY.get_key(
+                    strategy_id=self.strategy_id, source_time=source_time
+                )
+
+        if not ts_keys:
+            return event_records, {}
+
+        # step2: pipeline MGET 取 Redis 已有计数
+        pipe = client.pipeline(transaction=False)
+        ordered_ts = list(ts_keys.keys())
+        for ts in ordered_ts:
+            pipe.get(ts_keys[ts])
+        try:
+            redis_results = pipe.execute()
+        except Exception as e:
+            logger.warning("[trigger rate limit] redis MGET failed, fail-open. reason: %s", e)
+            return event_records, {}
+
+        redis_counts = {}  # source_time -> 已有计数
+        for ts, val in zip(ordered_ts, redis_results):
+            redis_counts[ts] = int(val) if val is not None else 0
+
+        # step3: 内存逐条判定
+        allowed_records = []
+        batch_counts = {ts: 0 for ts in ordered_ts}  # 本批内各 ts 已通过数
+        drop_counts = {}  # source_time -> 本批丢弃数
+
+        for record in event_records:
+            event_record = record["event_record"]
+            source_time = event_record.get("data", {}).get("time")
+            if source_time is None:
+                allowed_records.append(record)
+                continue
+            source_time = int(source_time)
+            already = redis_counts[source_time] + batch_counts[source_time]
+            if already >= threshold:
+                drop_counts[source_time] = drop_counts.get(source_time, 0) + 1
+                logger.warning(
+                    "[trigger rate limit] drop event: strategy(%s) source_time(%s) count(%s) threshold(%s)",
+                    self.strategy_id,
+                    source_time,
+                    already + 1,
+                    threshold,
+                )
+            else:
+                batch_counts[source_time] += 1
+                allowed_records.append(record)
+
+        # step4: pipeline INCRBY + EXPIRE，每个 ts 至多一次
+        if any(cnt > 0 for cnt in batch_counts.values()):
+            pipe = client.pipeline(transaction=False)
+            for ts, cnt in batch_counts.items():
+                if cnt > 0:
+                    key = ts_keys[ts]
+                    pipe.incrby(key, cnt)
+                    pipe.expire(key, TRIGGER_EVENT_RATE_LIMIT_KEY.ttl)
+            try:
+                pipe.execute()
+            except Exception as e:
+                logger.warning("[trigger rate limit] redis INCRBY failed. reason: %s", e)
+
+        return allowed_records, drop_counts
+
     def push_event_to_kafka(self, event_records):
+        # 限流：按策略+数据时间戳计数，超过阈值的丢弃
+        try:
+            cache_node = get_node_by_strategy_id(self.strategy_id)
+            redis_node = cache_node.node_alias or f"{cache_node.host}:{cache_node.port}"
+        except Exception:
+            redis_node = "unknown"
+
+        allowed_records, drop_counts = self._get_rate_limit_drop_count(event_records)
+        total_drop = sum(drop_counts.values())
+        if total_drop > 0:
+            metrics.TRIGGER_EVENT_RATE_LIMIT_DROP.labels(
+                module="trigger",
+                strategy_id=self.strategy_id,
+                bk_biz_id=self.strategy.bk_biz_id,
+                strategy_name=self.strategy.name,
+                redis_node=redis_node,
+            ).inc(total_drop)
+
         events = []
         current_time = time.time()
         max_latency = 0
-        for record in event_records:
+        for record in allowed_records:
             event_record = record["event_record"]
             detect_time = event_record.get("data", {}).get("detect_time")
             if detect_time:
