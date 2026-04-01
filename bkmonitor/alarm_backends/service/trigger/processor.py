@@ -137,7 +137,9 @@ class TriggerProcessor:
         drop_counts = {}
 
         for record in event_records:
-            source_time = record["event_record"].get("data", {}).get("time")
+            event_record = record["event_record"]
+            event_data = event_record.get("data", {})
+            source_time = event_data.get("time")
             if source_time is None:
                 allowed_records.append(record)
                 continue
@@ -146,10 +148,13 @@ class TriggerProcessor:
             if already >= threshold:
                 drop_counts[source_time] = drop_counts.get(source_time, 0) + 1
                 logger.warning(
-                    "[trigger rate limit] drop event: strategy(%s) item(%s) source_time(%s) count(%s) threshold(%s)",
+                    "[trigger rate limit] drop event: strategy(%s) item(%s) source_time(%s) "
+                    "record_id(%s) dimensions(%s) count(%s) threshold(%s)",
                     self.strategy_id,
                     self.item_id,
                     source_time,
+                    event_data.get("record_id"),
+                    event_data.get("dimensions"),
                     already + 1,
                     threshold,
                 )
