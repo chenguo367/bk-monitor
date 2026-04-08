@@ -33,6 +33,7 @@ import { useAlarmCenterStore } from '@/store/modules/alarm-center';
 
 import type { AnalysisListItem, AnalysisTopNDataResponse } from '../typings';
 
+// 需与后端 AlertTopNResource.MAX_NESTED_TOP_N_FIELDS 保持同步
 const TAG_FIELD_BATCH_SIZE = 20;
 
 const chunkFields = <T>(fields: T[], size: number): T[][] => {
@@ -170,7 +171,8 @@ export function useAlarmAnalysis() {
     );
 
     const data = {
-      doc_count: responses[0]?.doc_count || 0,
+      // doc_count 只受查询条件影响，拆分聚合字段不会改变总文档数，取首个响应即可。
+      doc_count: responses[0]?.doc_count ?? 0,
       fields: responses.flatMap(item => item.fields),
     };
 

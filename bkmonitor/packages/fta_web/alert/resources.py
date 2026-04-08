@@ -2099,6 +2099,7 @@ class AlertTopNResultResource(BaseTopNResource):
 
 class AlertTopNResource(Resource):
     handler_cls = AlertQueryHandler
+    # 需与前端 use-analysis.ts 中的 TAG_FIELD_BATCH_SIZE 保持同步
     MAX_NESTED_TOP_N_FIELDS = 20
 
     class RequestSerializer(AlertSearchSerializer, BaseTopNResource.RequestSerializer):
