@@ -310,9 +310,7 @@ class AlertHandler(base.BaseHandler):
                         group_id=f"{settings.APP_CODE}.alert.builder",
                         # 每个分区单次获取大小最大值为5M
                         max_partition_fetch_bytes=1024 * 1024 * 5,
-                        # 底层 TCP socket 超时，防止 broker 过载时 poll() 永久阻塞
-                        socket_timeout_ms=10000,
-                        # 请求级超时，必须大于 socket_timeout_ms
+                        # 请求级超时，限制 broker 不可用时初始化 poll() 的最长阻塞时间
                         request_timeout_ms=30000,
                     )
                     new_consumers[bootstrap_server].poll()
