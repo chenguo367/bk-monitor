@@ -1260,6 +1260,9 @@ class Event extends Mixins(authorityMixinCreate(eventAuth)) {
       ).catch(() => ({ doc_count: 0, fields: [] }));
       fieldList = fields;
       count = doc_count;
+      if (!isLatestRequest()) {
+        return;
+      }
       if (!isDetail) {
         const allTagIds = (tagList || []).map(item => item.id);
         const tagBatches: string[][] = [];
