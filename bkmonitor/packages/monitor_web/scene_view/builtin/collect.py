@@ -475,8 +475,8 @@ class CollectBuiltinProcessor(BuiltinProcessor):
         return view
 
     @classmethod
-    def get_view_config(cls, view: SceneViewModel, *args, **kwargs) -> dict:
-        params = args[0] if args else {}
+    def get_view_config(cls, view: SceneViewModel, params: dict = None, *args, **kwargs) -> dict:
+        params = params or {}
         default_config = cls.get_default_view_config(view.bk_biz_id, view.scene_id)
 
         if params.get("only_simple_info"):
