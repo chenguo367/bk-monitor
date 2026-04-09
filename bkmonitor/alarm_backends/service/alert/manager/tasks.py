@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Tencent is pleased to support the open source community by making 蓝鲸智云 - 监控平台 (BlueKing - Monitor) available.
 Copyright (C) 2017-2025 Tencent. All rights reserved.
@@ -8,9 +7,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
+
 import logging
 import time
-from typing import Dict, List
 
 from elasticsearch.helpers import BulkIndexError
 from elasticsearch_dsl import Q
@@ -32,6 +31,36 @@ logger = logging.getLogger("alert.manager")
 BATCH_SIZE = 200
 # 默认检测周期
 DEFAULT_CHECK_INTERVAL = 60
+# ES 深分页每页大小
+SCAN_PAGE_SIZE = 5000
+
+
+def _search_after_hits(search, page_size: int):
+    """
+    基于 search_after 对 elasticsearch_dsl Search 对象做深分页迭代。
+
+    替代 scan()（scroll API），避免在 ES 上积累大量 scroll context，
+    从而消除 "too many scroll contexts" 错误。
+
+    :param search: 已配置好 filter/source 的 elasticsearch_dsl Search 对象
+    :param page_size: 每页大小
+    """
+    es_client = AlertDocument._index._get_connection()
+    index = AlertDocument.build_all_indices_read_index_name()
+    body = search.to_dict()
+    body["sort"] = [{"_id": "asc"}]
+    body["size"] = page_size
+    search_after = None
+
+    while True:
+        if search_after:
+            body["search_after"] = search_after
+        resp = es_client.search(index=index, body=body, ignore_unavailable=True, request_timeout=30)
+        hits = resp["hits"]["hits"]
+        if not hits:
+            break
+        yield from hits
+        search_after = hits[-1]["sort"]
 
 
 def check_abnormal_alert():
@@ -40,7 +69,7 @@ def check_abnormal_alert():
     """
     search = (
         AlertDocument.search(all_indices=True)
-        .filter(Q("term", status=EventStatus.ABNORMAL) & ~Q('term', is_blocked=True))
+        .filter(Q("term", status=EventStatus.ABNORMAL) & ~Q("term", is_blocked=True))
         .source(fields=["id", "strategy_id", "event.bk_biz_id"])
     )
 
@@ -48,14 +77,17 @@ def check_abnormal_alert():
     cluster_bk_biz_ids = set(get_cluster_bk_biz_ids())
 
     alerts = []
-    # 这里用 scan 迭代的查询方式，目的是为了突破 ES 查询条数 1w 的限制
-    for hit in search.params(size=5000).scan():
-        if not getattr(hit, "id", None) or not getattr(hit, "event", None) or not getattr(hit.event, "bk_biz_id", None):
+    # 使用 search_after 深分页替代 scan()，避免 ES scroll context 积压
+    for hit in _search_after_hits(search, page_size=SCAN_PAGE_SIZE):
+        src = hit.get("_source") or {}
+        alert_id = src.get("id")
+        bk_biz_id = (src.get("event") or {}).get("bk_biz_id")
+        if not alert_id or not bk_biz_id:
             continue
         # 只处理集群内的告警
-        if hit.event.bk_biz_id not in cluster_bk_biz_ids:
+        if bk_biz_id not in cluster_bk_biz_ids:
             continue
-        alerts.append({"id": hit.id, "strategy_id": getattr(hit, "strategy_id", None)})
+        alerts.append({"id": alert_id, "strategy_id": src.get("strategy_id")})
 
     if alerts:
         send_check_task(alerts)
@@ -63,7 +95,7 @@ def check_abnormal_alert():
 
 def check_blocked_alert():
     """
-    拉取异常告警，对这些告警进行状态管理
+    拉取被屏蔽的异常告警，对这些告警进行状态管理
     """
     current_time = int(time.time())
     end_time = current_time - CONST_ONE_HOUR
@@ -71,7 +103,7 @@ def check_blocked_alert():
     logger.info("[check_blocked_alert] begin %s - %s", start_time, end_time)
     search = (
         AlertDocument.search(start_time=start_time, end_time=end_time)
-        .filter(Q("term", status=EventStatus.ABNORMAL) & Q('term', is_blocked=True))
+        .filter(Q("term", status=EventStatus.ABNORMAL) & Q("term", is_blocked=True))
         .source(fields=["id", "strategy_id", "event.bk_biz_id"])
     )
 
@@ -80,14 +112,17 @@ def check_blocked_alert():
 
     alerts = []
     total = 0
-    # 这里用 scan 迭代的查询方式，目的是为了突破 ES 查询条数 1w 的限制
-    for hit in search.params(size=BATCH_SIZE).scan():
-        if not getattr(hit, "id", None) or not getattr(hit, "event", None) or not getattr(hit.event, "bk_biz_id", None):
+    # 使用 search_after 深分页替代 scan()，避免 ES scroll context 积压
+    for hit in _search_after_hits(search, page_size=BATCH_SIZE):
+        src = hit.get("_source") or {}
+        alert_id = src.get("id")
+        bk_biz_id = (src.get("event") or {}).get("bk_biz_id")
+        if not alert_id or not bk_biz_id:
             continue
         # 只处理集群内的告警
-        if hit.event.bk_biz_id not in cluster_bk_biz_ids:
+        if bk_biz_id not in cluster_bk_biz_ids:
             continue
-        alerts.append({"id": hit.id, "strategy_id": getattr(hit, "strategy_id", None)})
+        alerts.append({"id": alert_id, "strategy_id": src.get("strategy_id")})
         total += 1
         if total % BATCH_SIZE == 0:
             alert_keys = [AlertKey(alert_id=alert["id"], strategy_id=alert.get("strategy_id")) for alert in alerts]
@@ -151,7 +186,7 @@ def check_blocked_alert_finished(alert_keys):
     )
 
 
-def send_check_task(alerts: List[Dict], run_immediately=True):
+def send_check_task(alerts: list[dict], run_immediately=True):
     """
     生成告警检测任务
     :param alerts: 告警对象列表
@@ -191,7 +226,7 @@ def send_check_task(alerts: List[Dict], run_immediately=True):
 
 
 @app.task(ignore_result=True, queue="celery_alert_manager")
-def handle_alerts(alert_keys: List[AlertKey]):
+def handle_alerts(alert_keys: list[AlertKey]):
     """
     处理告警（异步任务）
     """
@@ -221,7 +256,7 @@ def handle_alerts(alert_keys: List[AlertKey]):
     metrics.report_all()
 
 
-def fetch_agg_interval(strategy_ids: List[int]):
+def fetch_agg_interval(strategy_ids: list[int]):
     """
     根据策略ID获取每个策略的聚合周期
     """
@@ -248,7 +283,7 @@ def fetch_agg_interval(strategy_ids: List[int]):
     return agg_interval_by_strategy
 
 
-def cal_alerts_check_interval(alerts: List[Dict]):
+def cal_alerts_check_interval(alerts: list[dict]):
     """
     计算告警的检查周期
     监控周期<30s，每15s检查一次
