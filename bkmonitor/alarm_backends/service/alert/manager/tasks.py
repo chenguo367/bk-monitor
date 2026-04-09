@@ -46,7 +46,8 @@ def _search_after_hits(search, page_size: int):
     :param page_size: 每页大小
     """
     es_client = AlertDocument._index._get_connection()
-    index = AlertDocument.build_all_indices_read_index_name()
+    # 从 search 对象自身提取 index，保留调用方指定的 all_indices / 时间范围等差异
+    index = search._index
     body = search.to_dict()
     body["sort"] = [{"_id": "asc"}]
     body["size"] = page_size
