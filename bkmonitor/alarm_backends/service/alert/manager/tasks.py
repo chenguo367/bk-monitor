@@ -37,10 +37,10 @@ SCAN_PAGE_SIZE = 5000
 
 def _search_after_hits(search, page_size: int):
     """
-    基于 search_after 对 elasticsearch_dsl Search 对象做深分页迭代。
+    基于 search_after + PIT 对 elasticsearch_dsl Search 对象做深分页迭代。
 
-    替代 scan()（scroll API），避免在 ES 上积累大量 scroll context，
-    从而消除 "too many scroll contexts" 错误。
+    替代 scan()（scroll API），既避免 ES scroll context 积压，又通过 PIT 保留查询
+    开始时的快照语义，防止分页期间 refresh 导致的漏扫或重复扫描。
 
     :param search: 已配置好 filter/source 的 elasticsearch_dsl Search 对象
     :param page_size: 每页大小
@@ -48,20 +48,36 @@ def _search_after_hits(search, page_size: int):
     es_client = AlertDocument._index._get_connection()
     # 从 search 对象自身提取 index，保留调用方指定的 all_indices / 时间范围等差异
     index = search._index
-    body = search.to_dict()
-    body["sort"] = [{"_id": "asc"}]
-    body["size"] = page_size
-    search_after = None
+    base_body = search.to_dict()
+    # 使用映射字段 id（Keyword，带 doc_values）而非元字段 _id，与 Elastic 官方推荐一致
+    base_body["sort"] = [{"id": "asc"}]
+    base_body["size"] = page_size
 
-    while True:
-        if search_after:
-            body["search_after"] = search_after
-        resp = es_client.search(index=index, body=body, ignore_unavailable=True, request_timeout=30)
-        hits = resp["hits"]["hits"]
-        if not hits:
-            break
-        yield from hits
-        search_after = hits[-1]["sort"]
+    pit_resp = es_client.open_point_in_time(index=index, keep_alive="1m", ignore_unavailable=True)
+    pit_id = pit_resp["id"]
+
+    try:
+        search_after = None
+        while True:
+            # 每次构造独立 body，避免多次迭代间共享 dict 引发的状态污染
+            body = {**base_body, "pit": {"id": pit_id, "keep_alive": "1m"}}
+            if search_after:
+                body["search_after"] = search_after
+            # 使用 PIT 时不传 index，PIT 已携带索引快照信息
+            resp = es_client.search(body=body, request_timeout=30)
+            # ES 每轮响应可能刷新 pit_id，需同步更新
+            if resp.get("pit_id"):
+                pit_id = resp["pit_id"]
+            hits = resp["hits"]["hits"]
+            if not hits:
+                break
+            yield from hits
+            search_after = hits[-1]["sort"]
+    finally:
+        try:
+            es_client.close_point_in_time(body={"id": pit_id})
+        except Exception:
+            logger.warning("[_search_after_hits] failed to close PIT %s", pit_id)
 
 
 def check_abnormal_alert():
