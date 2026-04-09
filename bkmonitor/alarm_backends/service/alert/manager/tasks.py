@@ -96,7 +96,7 @@ def check_abnormal_alert():
 
 def check_blocked_alert():
     """
-    拉取被屏蔽的异常告警，对这些告警进行状态管理
+    拉取被流控的异常告警，对这些告警进行状态管理
     """
     current_time = int(time.time())
     end_time = current_time - CONST_ONE_HOUR
