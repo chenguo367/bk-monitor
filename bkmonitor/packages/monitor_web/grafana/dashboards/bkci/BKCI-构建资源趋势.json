@@ -2271,8 +2271,9 @@
                     "id": "links",
                     "value": [
                       {
+                        "targetBlank": true,
                         "title": "",
-                        "url": "/grafana/d/${panelUid}/?viewPanel=29&from={__from}&to={__to}&var-hostIp=${__data.fields.节点IP}&var-projectId=${projectId}"
+                        "url": "${BK_MONITOR_URL}grafana/dashboard?spaceUid=bkci__${__data.fields.项目}&var-hostIp=${__data.fields.节点IP}&from=${__from}&to=${__to}&dashName=BKCI-构建资源趋势&viewPanel=29"
                       }
                     ]
                   }
@@ -2521,9 +2522,9 @@
                     "id": "links",
                     "value": [
                       {
-                        "targetBlank": false,
+                        "targetBlank": true,
                         "title": "",
-                        "url": "/grafana/d/${panelUid}/?viewPanel=29&from={__from}&to={__to}&var-hostIp=${__data.fields.节点IP}&var-projectId=${projectId}"
+                        "url": "${BK_MONITOR_URL}grafana/dashboard?spaceUid=bkci__${__data.fields.项目}&var-hostIp=${__data.fields.节点IP}&from=${__from}&to=${__to}&dashName=BKCI-构建资源趋势&viewPanel=29"
                       }
                     ]
                   }
@@ -2773,8 +2774,9 @@
                     "id": "links",
                     "value": [
                       {
+                        "targetBlank": true,
                         "title": "",
-                        "url": "/grafana/d/${panelUid}/?viewPanel=29&from={__from}&to={__to}&var-hostIp=${__data.fields.节点IP}&var-projectId=${projectId}"
+                        "url": "${BK_MONITOR_URL}grafana/dashboard?spaceUid=bkci__${__data.fields.项目}&var-hostIp=${__data.fields.节点IP}&from=${__from}&to=${__to}&dashName=BKCI-构建资源趋势&viewPanel=29"
                       }
                     ]
                   }
@@ -3022,8 +3024,9 @@
                     "id": "links",
                     "value": [
                       {
+                        "targetBlank": true,
                         "title": "",
-                        "url": "/grafana/d/${panelUid}/?viewPanel=29&from={__from}&to={__to}&var-hostIp=${__data.fields.节点IP}&var-projectId=${projectId}"
+                        "url": "${BK_MONITOR_URL}grafana/dashboard?spaceUid=bkci__${__data.fields.项目}&var-hostIp=${__data.fields.节点IP}&from=${__from}&to=${__to}&dashName=BKCI-构建资源趋势&viewPanel=29"
                       }
                     ]
                   }
@@ -3271,9 +3274,9 @@
                     "id": "links",
                     "value": [
                       {
-                        "targetBlank": false,
+                        "targetBlank": true,
                         "title": "",
-                        "url": "/grafana/d/${panelUid}/?viewPanel=29&from={__from}&to={__to}&var-hostIp=${__data.fields.节点IP}&var-projectId=${projectId}"
+                        "url": "${BK_MONITOR_URL}grafana/dashboard?spaceUid=bkci__${__data.fields.项目}&var-hostIp=${__data.fields.节点IP}&from=${__from}&to=${__to}&dashName=BKCI-构建资源趋势&viewPanel=29"
                       }
                     ]
                   }
@@ -3526,9 +3529,9 @@
                     "id": "links",
                     "value": [
                       {
-                        "targetBlank": false,
+                        "targetBlank": true,
                         "title": "",
-                        "url": "/grafana/d/${panelUid}/?viewPanel=29&from={__from}&to={__to}&var-hostIp=${__data.fields.节点IP}&var-projectId=${projectId}"
+                        "url": "${BK_MONITOR_URL}grafana/dashboard?spaceUid=bkci__${__data.fields.项目}&var-hostIp=${__data.fields.节点IP}&from=${__from}&to=${__to}&dashName=BKCI-构建资源趋势&viewPanel=29"
                       }
                     ]
                   }
@@ -3781,9 +3784,9 @@
                     "id": "links",
                     "value": [
                       {
-                        "targetBlank": false,
+                        "targetBlank": true,
                         "title": "",
-                        "url": "/grafana/d/${panelUid}/?viewPanel=29&from={__from}&to={__to}&var-hostIp=${__data.fields.节点IP}&var-projectId=${projectId}"
+                        "url": "${BK_MONITOR_URL}grafana/dashboard?spaceUid=bkci__${__data.fields.项目}&var-hostIp=${__data.fields.节点IP}&from=${__from}&to=${__to}&dashName=BKCI-构建资源趋势&viewPanel=29"
                       }
                     ]
                   }

@@ -134,7 +134,7 @@
           "refId": "A",
           "showLastPoint": false,
           "source": "sum(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_END\", dimensions__bk_46__status=~\"SUCCEED|STAGE_SUCCESS\"}[$__range])) / sum(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_END\", dimensions__bk_46__status!=\"QUEUE_TIMEOUT\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         }
       ],
@@ -335,7 +335,7 @@
           "refId": "A",
           "showLastPoint": false,
           "source": "sum(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_END\", dimensions__bk_46__status=\"SUCCEED\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         }
       ],
@@ -421,7 +421,7 @@
           "refId": "A",
           "showLastPoint": false,
           "source": "sum(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_END\", dimensions__bk_46__status=\"STAGE_SUCCESS\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "range"
         }
       ],
@@ -507,7 +507,7 @@
           "refId": "A",
           "showLastPoint": false,
           "source": "sum(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_END\", dimensions__bk_46__status=\"FAILED\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         }
       ],
@@ -593,7 +593,7 @@
           "refId": "A",
           "showLastPoint": false,
           "source": "sum(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_END\", dimensions__bk_46__status=\"CANCELED\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         }
       ],
@@ -679,7 +679,7 @@
           "refId": "A",
           "showLastPoint": false,
           "source": "sum(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_END\", dimensions__bk_46__status=\"QUEUE_TIMEOUT\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         }
       ],
@@ -892,7 +892,7 @@
           "refId": "A",
           "showLastPoint": false,
           "source": "sum by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId) (count_over_time($table:event__bk_46__extra__bk_46__duration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_END\", dimensions__bk_46__status=~\"SUCCEED|STAGE_SUCCESS\"}[$__range])) / sum by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId) (count_over_time($table:event__bk_46__extra__bk_46__duration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_END\", dimensions__bk_46__status!=\"QUEUE_TIMEOUT\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         },
         {
@@ -913,7 +913,7 @@
           "refId": "B",
           "showLastPoint": false,
           "source": "sum by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId) (count_over_time($table:event__bk_46__extra__bk_46__duration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__eventType=\"BUILD_END\", dimensions__bk_46__level=\"PIPELINE\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         },
         {
@@ -934,7 +934,7 @@
           "refId": "C",
           "showLastPoint": false,
           "source": "avg by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId) (avg_over_time($table:event__bk_46__extra__bk_46__duration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_END\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         },
         {
@@ -955,7 +955,7 @@
           "refId": "E",
           "showLastPoint": false,
           "source": "avg by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId) (avg_over_time($table:event__bk_46__extra__bk_46__queueDuration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_END\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         },
         {
@@ -976,7 +976,7 @@
           "refId": "G",
           "showLastPoint": false,
           "source": "avg by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId) (avg_over_time($table:event__bk_46__extra__bk_46__executeDuration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__eventType=\"BUILD_END\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         }
       ],
@@ -2170,7 +2170,7 @@
           "refId": "A",
           "showLastPoint": false,
           "source": "sum by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__stageName) (count_over_time($table:dimensions__bk_46__projectId{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STAGE\", dimensions__bk_46__eventType=\"BUILD_STAGE_END\", dimensions__bk_46__status=~\"SUCCEED|STAGE_SUCCESS\", dimensions__bk_46__stageName=~\".+\"}[$__range])) / sum by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__stageName) (count_over_time($table:dimensions__bk_46__projectId{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STAGE\", dimensions__bk_46__eventType=\"BUILD_STAGE_END\", dimensions__bk_46__stageName=~\".+\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         },
         {
@@ -2191,7 +2191,7 @@
           "refId": "B",
           "showLastPoint": false,
           "source": "sum by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__stageName) (count_over_time($table:event__bk_46__extra__bk_46__duration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__eventType=\"BUILD_STAGE_END\", dimensions__bk_46__level=\"STAGE\", dimensions__bk_46__stageName=~\".+\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         },
         {
@@ -2212,7 +2212,7 @@
           "refId": "C",
           "showLastPoint": false,
           "source": "avg by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__stageName) (avg_over_time($table:event__bk_46__extra__bk_46__duration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STAGE\", dimensions__bk_46__eventType=\"BUILD_STAGE_END\", dimensions__bk_46__stageName=~\".+\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         },
         {
@@ -2233,7 +2233,7 @@
           "refId": "E",
           "showLastPoint": false,
           "source": "avg by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__stageName) (avg_over_time($table:event__bk_46__extra__bk_46__queueDuration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STAGE\", dimensions__bk_46__eventType=\"BUILD_STAGE_END\", dimensions__bk_46__stageName=~\".+\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         },
         {
@@ -2254,7 +2254,7 @@
           "refId": "G",
           "showLastPoint": false,
           "source": "avg by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__stageName) (avg_over_time($table:event__bk_46__extra__bk_46__executeDuration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STAGE\", dimensions__bk_46__eventType=\"BUILD_STAGE_END\", dimensions__bk_46__stageName=~\".+\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         }
       ],
@@ -3108,7 +3108,7 @@
           "refId": "B",
           "showLastPoint": false,
           "source": "sum by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__jobName) (count_over_time($table:event__bk_46__extra__bk_46__duration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__jobName=~\".+\", dimensions__bk_46__eventType=\"BUILD_JOB_END\", dimensions__bk_46__level=\"JOB\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         },
         {
@@ -3129,7 +3129,7 @@
           "refId": "A",
           "showLastPoint": false,
           "source": "sum by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__jobName) (count_over_time($table:dimensions__bk_46__pipelineId{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__jobName=~\".+\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__eventType=\"BUILD_JOB_END\", dimensions__bk_46__status=\"SUCCEED\"}[$__range])) / sum by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__jobName) (count_over_time($table:dimensions__bk_46__pipelineId{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__jobName=~\".+\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__eventType=\"BUILD_JOB_END\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         },
         {
@@ -3150,7 +3150,7 @@
           "refId": "C",
           "showLastPoint": false,
           "source": "avg by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__jobName) (avg_over_time($table:event__bk_46__extra__bk_46__duration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__jobName=~\".+\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__eventType=\"BUILD_JOB_END\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         },
         {
@@ -3171,7 +3171,7 @@
           "refId": "E",
           "showLastPoint": false,
           "source": "avg by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__jobName) (avg_over_time($table:event__bk_46__extra__bk_46__queueDuration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__jobName=~\".+\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__eventType=\"BUILD_JOB_END\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         },
         {
@@ -3192,7 +3192,7 @@
           "refId": "G",
           "showLastPoint": false,
           "source": "avg by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__jobName) (avg_over_time($table:event__bk_46__extra__bk_46__executeDuration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__jobName=~\".+\", dimensions__bk_46__level=\"JOB\", dimensions__bk_46__eventType=\"BUILD_JOB_END\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         }
       ],
@@ -4061,7 +4061,7 @@
           "refId": "A",
           "showLastPoint": false,
           "source": "sum by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__stepName) (count_over_time($table:dimensions__bk_46__pipelineId{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STEP\", dimensions__bk_46__eventType=\"BUILD_TASK_END\", dimensions__bk_46__status=\"SUCCEED\", dimensions__bk_46__stepName=~\".+\", dimensions__bk_46__stepName!~\"DEVOPS_INNER.*\"}[$__range])) / sum by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__stepName) (count_over_time($table:dimensions__bk_46__pipelineId{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STEP\", dimensions__bk_46__eventType=\"BUILD_TASK_END\", dimensions__bk_46__stepName=~\".+\", dimensions__bk_46__stepName!~\"DEVOPS_INNER.*\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         },
         {
@@ -4082,7 +4082,7 @@
           "refId": "B",
           "showLastPoint": false,
           "source": "sum by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__stepName) (count_over_time($table:event__bk_46__extra__bk_46__duration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__eventType=\"BUILD_TASK_END\", dimensions__bk_46__level=\"STEP\", dimensions__bk_46__stepName!=\"\", dimensions__bk_46__stepName!~\"DEVOPS_INNER.*\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         },
         {
@@ -4103,7 +4103,7 @@
           "refId": "C",
           "showLastPoint": false,
           "source": "avg by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__stepName) (avg_over_time($table:event__bk_46__extra__bk_46__duration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STEP\", dimensions__bk_46__eventType=\"BUILD_TASK_END\", dimensions__bk_46__stepName=~\".+\", dimensions__bk_46__stepName!~\"DEVOPS_INNER.*\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         },
         {
@@ -4124,7 +4124,7 @@
           "refId": "D",
           "showLastPoint": false,
           "source": "max by (dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__stepName) (max_over_time($table:event__bk_46__extra__bk_46__duration{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STEP\", dimensions__bk_46__eventType=\"BUILD_TASK_END\", dimensions__bk_46__stepName=~\".+\", dimensions__bk_46__stepName!~\"DEVOPS_INNER.*\"}[$__range]))",
-          "step": "$interval",
+          "step": "1m",
           "type": "instant"
         }
       ],
@@ -4738,7 +4738,7 @@
               "refId": "A",
               "showLastPoint": false,
               "source": "sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, dimensions__bk_46__status, dimensions__bk_46__trigger, dimensions__bk_46__triggerUser, event__bk_46__extra__bk_46__startTime, event__bk_46__extra__bk_46__duration)(count_over_time($table:dtEventTimestamp{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"PIPELINE\", dimensions__bk_46__status=\"$status\", dimensions__bk_46__eventType=\"BUILD_END\"}[$__range]))",
-              "step": "$interval",
+              "step": "1m",
               "type": "instant"
             }
           ],
@@ -4984,7 +4984,7 @@
               "query_configs": [],
               "refId": "A",
               "source": "sum by (dimensions__bk_46__buildId, dimensions__bk_46__pipelineName, dimensions__bk_46__pipelineId, event__bk_46__extra__bk_46__startTime, dimensions__bk_46__errorCode, dimensions__bk_46__errorType, dimensions__bk_46__errorMessage)(count_over_time($table:dimensions__bk_46__pipelineName{dimensions__bk_46__projectId=\"${projectId}\", dimensions__bk_46__pipelineName=~\"${pipelineName}\", dimensions__bk_46__level=\"STEP\", dimensions__bk_46__eventType=\"BUILD_TASK_END\", dimensions__bk_46__errorCode=~\"${errorCode}\"}[$__range]))",
-              "step": "$interval",
+              "step": "1m",
               "type": "instant"
             }
           ],
