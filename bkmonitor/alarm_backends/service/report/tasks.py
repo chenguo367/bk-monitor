@@ -143,7 +143,13 @@ def report_mail_detect():
         else:
             run_time_strings = [f"{datetime.datetime.today().strftime('%Y-%m-%d')} {item.frequency['run_time']}"]
         for time_str in run_time_strings:
-            run_time = TimeMatch.convert_datetime_to_arrow(datetime.datetime.strptime(time_str, "%Y-%m-%d %H:%M:%S"))
+            try:
+                run_time = TimeMatch.convert_datetime_to_arrow(
+                    datetime.datetime.strptime(time_str[:19], "%Y-%m-%d %H:%M:%S")
+                )
+            except ValueError:
+                logger.warning("[mail_report] report_item(%s) invalid run_time format, skip: %s", item.id, time_str)
+                continue
             if time_check.is_match(run_time):
                 # 更新发送时间
                 item.last_send_time = datetime.datetime.now()
