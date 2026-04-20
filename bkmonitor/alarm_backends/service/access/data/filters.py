@@ -112,12 +112,16 @@ class HostStatusFilter(base.Filter):
             return False
 
         if host is None:
+            logger.debug(f"Discard the record ({record.raw_data}) because host is unknown")
             return True
 
         is_filtered = host.ignore_monitoring
         for item in record.items:
             record.is_retains[item.id] = not is_filtered and record.is_retains[item.id]
         if is_filtered:
+            logger.debug(
+                f"Discard the record ({record.raw_data}) because host({host.display_name}) status is {host.bk_state}"
+            )
             warn_key = (host.bk_host_id, "ignore_monitoring")
             if warn_key not in self._warned_hosts:
                 self._warned_hosts.add(warn_key)
