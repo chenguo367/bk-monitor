@@ -192,12 +192,6 @@ ACCESS_TOKEN_FORBIDDEN_COUNT = Counter(
     documentation="access 流控限制次数",
 )
 
-ACCESS_HOST_STATUS_FILTER_COUNT = Counter(
-    name="bkmonitor_access_host_status_filter_count",
-    documentation="access(data) HostStatusFilter 过滤计数：主机 CMDB 状态不告警或不存在导致数据跳过 detect",
-    labelnames=("strategy_id", "reason"),
-)
-
 ACCESS_INCIDENT_PROCESS_COUNT = Counter(
     name="bkmonitor_access_incident_process_count",
     documentation="access(incident) 模块处理次数",

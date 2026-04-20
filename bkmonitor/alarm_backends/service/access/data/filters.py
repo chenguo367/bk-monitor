@@ -18,7 +18,6 @@ from alarm_backends.core.control.item import Item
 from alarm_backends.service.access import base
 from alarm_backends.service.access.data.records import DataRecord
 from bkmonitor.utils.common_utils import safe_int
-from core.prometheus import metrics
 
 logger = logging.getLogger("access.data")
 
@@ -120,12 +119,11 @@ class HostStatusFilter(base.Filter):
                 self._warned_hosts.add(warn_key)
                 logger.warning(
                     "[HostStatusFilter] host not found in CMDB cache, all records for this host will be discarded:"
-                    " ip=%s bk_cloud_id=%s",
+                    " ip=%s bk_cloud_id=%s strategy_ids=%s",
                     ip,
                     cloud_id,
+                    [item.strategy.id for item in record.items],
                 )
-            for item in record.items:
-                metrics.ACCESS_HOST_STATUS_FILTER_COUNT.labels(strategy_id=item.strategy.id, reason="host_none").inc()
             return True
 
         is_filtered = host.ignore_monitoring
@@ -137,13 +135,10 @@ class HostStatusFilter(base.Filter):
                 self._warned_hosts.add(warn_key)
                 logger.warning(
                     "[HostStatusFilter] host ignore_monitoring=True, is_retains set to False:"
-                    " bk_host_id=%s ip=%s bk_state=%s",
+                    " bk_host_id=%s ip=%s bk_state=%s strategy_ids=%s",
                     host.bk_host_id,
                     record.dimensions.get("bk_target_ip") or record.dimensions.get("ip", ""),
                     host.bk_state,
+                    [item.strategy.id for item in record.items],
                 )
-            for item in record.items:
-                metrics.ACCESS_HOST_STATUS_FILTER_COUNT.labels(
-                    strategy_id=item.strategy.id, reason="ignore_monitoring"
-                ).inc()
         return False
