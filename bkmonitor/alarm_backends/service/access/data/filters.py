@@ -112,18 +112,6 @@ class HostStatusFilter(base.Filter):
             return False
 
         if host is None:
-            ip = record.dimensions.get("bk_target_ip") or record.dimensions.get("ip", "")
-            cloud_id = record.dimensions.get("bk_target_cloud_id", 0)
-            warn_key = (ip, cloud_id, "host_none")
-            if warn_key not in self._warned_hosts:
-                self._warned_hosts.add(warn_key)
-                logger.warning(
-                    "[HostStatusFilter] host not found in CMDB cache, all records for this host will be discarded:"
-                    " ip=%s bk_cloud_id=%s strategy_ids=%s",
-                    ip,
-                    cloud_id,
-                    [item.strategy.id for item in record.items],
-                )
             return True
 
         is_filtered = host.ignore_monitoring
