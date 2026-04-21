@@ -757,13 +757,6 @@ class Event extends Mixins(authorityMixinCreate(eventAuth)) {
 
   handleUrl2Params(): any {
     const defaultData: any = { ...this.handleGetDefaultRouteData(), ...this.handleGetRouteQueryParams() };
-    const hasExplicitTimeRange = !!(this.$route.query.from && this.$route.query.to);
-    const hasActionIdQuery = /(^|\sAND\s)action_id\s*:/.test(defaultData.queryString || '');
-
-    if (hasActionIdQuery && !hasExplicitTimeRange) {
-      defaultData.timeRange = ['now-7d', 'now'];
-    }
-
     if (defaultData.actionId && defaultData.actionId.toString().length > 10) {
       defaultData.queryString = defaultData.queryString
         ? `${defaultData.queryString} AND action_id : ${defaultData.actionId}`
