@@ -10,9 +10,9 @@
     "fix": "npm run lint"
   },
   "dependencies": {
-    "axios": "^0.30.0",
+    "axios": "^0.30.3",
     "monitor-common": "workspace:*",
-    "qs": "^6.14.0"
+    "qs": "^6.14.2"
   },
   "keywords": [
     "monitor",
