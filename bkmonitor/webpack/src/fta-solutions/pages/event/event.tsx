@@ -2687,7 +2687,7 @@ class Event extends Mixins(authorityMixinCreate(eventAuth)) {
               class='header-tools'
               isSplitPanel={this.isSplitPanel}
               refreshInterval={this.refreshInterval}
-              showGotoNew={false}
+              showGotoNew={true}
               showListMenu={false}
               timeRange={this.timeRange}
               timezone={this.timezone}
