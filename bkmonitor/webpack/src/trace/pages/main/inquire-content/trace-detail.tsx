@@ -256,7 +256,7 @@ export default defineComponent({
     // 快捷跳转文案
     const exploreButtonName = computed(() => {
       if (state.activePanel === 'log') {
-        return t('日志检索');
+        return t('更多日志');
       }
       return '';
     });
@@ -873,6 +873,12 @@ export default defineComponent({
       }
       window.open(url, '_blank');
     };
+
+    // 跳转应用配置
+    const handleConfigQuickJump = () => {
+      const url = location.href.replace(location.hash, `#/apm/application/config/${props.appName}`);
+      window.open(url, '_blank');
+    };
     return {
       ...toRefs(state),
       isLoading,
@@ -930,6 +936,7 @@ export default defineComponent({
       handleChangeEnableTimeALignment,
       disabledSpanKindById,
       handleLogQuickJump,
+      handleConfigQuickJump,
       t,
     };
   },
@@ -1129,16 +1136,32 @@ export default defineComponent({
                 }
                 if (this.exploreButtonName) {
                   return (
-                    <Button
-                      class='quick-jump'
-                      size='small'
-                      theme='primary'
-                      outline
-                      onClick={this.handleLogQuickJump}
-                    >
-                      {this.exploreButtonName}
-                      <i class='icon-monitor icon-fenxiang' />
-                    </Button>
+                    <div class='quick-jump-container'>
+                      {this.activePanel === 'log' && (
+                        <Button
+                          class='quick-jump'
+                          size='small'
+                          theme='primary'
+                          text
+                          outline
+                          onClick={this.handleConfigQuickJump}
+                        >
+                          {this.t('关联配置')}
+                          <i class='icon-monitor icon-fenxiang' />
+                        </Button>
+                      )}
+                      <Button
+                        class='quick-jump'
+                        size='small'
+                        text
+                        theme='primary'
+                        outline
+                        onClick={this.handleLogQuickJump}
+                      >
+                        {this.exploreButtonName}
+                        <i class='icon-monitor icon-fenxiang' />
+                      </Button>
+                    </div>
                   );
                 }
                 return '';
