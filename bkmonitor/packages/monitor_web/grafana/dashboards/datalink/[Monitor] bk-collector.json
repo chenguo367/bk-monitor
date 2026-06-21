@@ -298,7 +298,7 @@
       "type": "table"
     },
     {
-      "collapsed": true,
+      "collapsed": false,
       "datasource": {
         "type": "bkmonitor-timeseries-datasource",
         "uid": "${DS_蓝鲸监控_-_指标数据}"
@@ -310,278 +310,7 @@
         "y": 7
       },
       "id": 53,
-      "panels": [
-        {
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 10,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "never",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "decimals": 2,
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "s"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 9,
-            "w": 8,
-            "x": 0,
-            "y": 8
-          },
-          "id": 13,
-          "options": {
-            "legend": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "displayMode": "table",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "desc"
-            }
-          },
-          "pluginVersion": "9.1.0",
-          "targets": [
-            {
-              "cluster": [],
-              "datasource": {
-                "type": "bkmonitor-timeseries-datasource",
-                "uid": "${DS_蓝鲸监控_-_指标数据}"
-              },
-              "enableDownSampling": true,
-              "expressionList": [],
-              "format": "time_series",
-              "host": [],
-              "mode": "code",
-              "module": [],
-              "promqlAlias": "$tag_pod",
-              "query_configs": [
-                {
-                  "alias": "$tag_ip",
-                  "data_label": "pushgateway_bk_collector",
-                  "data_source_label": "bk_monitor",
-                  "data_type_label": "time_series",
-                  "display": true,
-                  "filter_dict": {},
-                  "functions": [],
-                  "group_by": [
-                    "ip"
-                  ],
-                  "interval": 30,
-                  "interval_unit": "s",
-                  "method": "AVG",
-                  "metric_field": "bk_collector_uptime",
-                  "refId": "a",
-                  "result_table_id": "pushgateway_bk_collector",
-                  "result_table_label": "component",
-                  "time_field": "time",
-                  "where": [
-                    {
-                      "key": "ip",
-                      "method": "eq",
-                      "value": [
-                        "$ip"
-                      ]
-                    }
-                  ]
-                }
-              ],
-              "refId": "A",
-              "source": "min by (pod) (bkmonitor:bk_collector_uptime{pod=~\"$pod\"})",
-              "step": "",
-              "type": "range"
-            }
-          ],
-          "title": "进程运行时间",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 10,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "never",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "short"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 9,
-            "w": 8,
-            "x": 8,
-            "y": 8
-          },
-          "id": 45,
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "table",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "desc"
-            }
-          },
-          "pluginVersion": "9.1.0",
-          "targets": [
-            {
-              "cluster": [],
-              "datasource": {
-                "type": "bkmonitor-timeseries-datasource",
-                "uid": "${DS_蓝鲸监控_-_指标数据}"
-              },
-              "enableDownSampling": true,
-              "expressionList": [],
-              "format": "time_series",
-              "host": [],
-              "mode": "code",
-              "module": [],
-              "promqlAlias": "$tag_pod: v$tag_version",
-              "query_configs": [
-                {
-                  "alias": "$tag_ip: v$tag_version",
-                  "data_label": "pushgateway_bk_collector",
-                  "data_source_label": "bk_monitor",
-                  "data_type_label": "time_series",
-                  "display": true,
-                  "filter_dict": {},
-                  "functions": [],
-                  "group_by": [
-                    "version",
-                    "ip"
-                  ],
-                  "interval": 60,
-                  "interval_unit": "s",
-                  "method": "AVG",
-                  "metric_field": "bk_collector_app_build_info",
-                  "refId": "a",
-                  "result_table_id": "pushgateway_bk_collector",
-                  "result_table_label": "component",
-                  "time_field": "time",
-                  "where": [
-                    {
-                      "key": "ip",
-                      "method": "eq",
-                      "value": [
-                        "$ip"
-                      ]
-                    }
-                  ]
-                }
-              ],
-              "refId": "A",
-              "source": "avg by (version, pod) (bkmonitor:bk_collector_app_build_info{pod=~\"$pod\"})",
-              "step": "",
-              "type": "range"
-            }
-          ],
-          "title": "collector 版本",
-          "type": "timeseries"
-        }
-      ],
+      "panels": [],
       "targets": [
         {
           "datasource": {
@@ -595,6 +324,278 @@
       "type": "row"
     },
     {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 8
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "9.1.0",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "$tag_pod",
+          "query_configs": [
+            {
+              "alias": "$tag_ip",
+              "data_label": "pushgateway_bk_collector",
+              "data_source_label": "bk_monitor",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "ip"
+              ],
+              "interval": 30,
+              "interval_unit": "s",
+              "method": "AVG",
+              "metric_field": "bk_collector_uptime",
+              "refId": "a",
+              "result_table_id": "pushgateway_bk_collector",
+              "result_table_label": "component",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "ip",
+                  "method": "eq",
+                  "value": [
+                    "$ip"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "source": "min by (pod) (bkmonitor:bk_collector_uptime{pod=~\"$pod\"})",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "进程运行时间",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 8
+      },
+      "id": 45,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "9.1.0",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "$tag_pod: v$tag_version",
+          "query_configs": [
+            {
+              "alias": "$tag_ip: v$tag_version",
+              "data_label": "pushgateway_bk_collector",
+              "data_source_label": "bk_monitor",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "version",
+                "ip"
+              ],
+              "interval": 60,
+              "interval_unit": "s",
+              "method": "AVG",
+              "metric_field": "bk_collector_app_build_info",
+              "refId": "a",
+              "result_table_id": "pushgateway_bk_collector",
+              "result_table_label": "component",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "ip",
+                  "method": "eq",
+                  "value": [
+                    "$ip"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "source": "avg by (version, pod) (bkmonitor:bk_collector_app_build_info{pod=~\"$pod\"})",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "collector 版本",
+      "type": "timeseries"
+    },
+    {
       "collapsed": true,
       "datasource": {
         "type": "bkmonitor-timeseries-datasource",
@@ -604,7 +605,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 8
+        "y": 17
       },
       "id": 19,
       "panels": [
@@ -655,8 +656,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -801,8 +801,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -947,8 +946,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1093,8 +1091,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1239,8 +1236,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1386,8 +1382,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -1516,7 +1511,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 9
+        "y": 18
       },
       "id": 199,
       "panels": [],
@@ -1700,7 +1695,7 @@
         "h": 9,
         "w": 8,
         "x": 0,
-        "y": 10
+        "y": 19
       },
       "id": 200,
       "options": {
@@ -2102,7 +2097,7 @@
         "h": 9,
         "w": 8,
         "x": 8,
-        "y": 10
+        "y": 19
       },
       "id": 201,
       "options": {
@@ -2160,7 +2155,7 @@
           ],
           "refId": "A",
           "showLastPoint": false,
-          "source": "sum(rate(container_cpu_usage_seconds_total{bcs_cluster_id=~\"$bcs_cluster_id\", pod=~\"$pod\"}[2m])) by (pod) / sum(bkmonitor:kube_pod_container_resource_limits_cpu_cores{bcs_cluster_id=~\"$bcs_cluster_id\",pod=~\"$pod\"}) by (pod)",
+          "source": "sum(rate(container_cpu_usage_seconds_total{bcs_cluster_id=~\"$bcs_cluster_id\", pod=~\"$pod\", container=\"collector\"}[1m])) by (pod) / sum(bkmonitor:kube_pod_container_resource_limits_cpu_cores{bcs_cluster_id=~\"$bcs_cluster_id\",pod=~\"$pod\", container=\"collector\"}) by (pod)\n",
           "step": "",
           "type": "range"
         },
@@ -2293,6 +2288,129 @@
       "fieldConfig": {
         "defaults": {
           "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "Normal（正常）"
+                },
+                "1": {
+                  "color": "orange",
+                  "index": 1,
+                  "text": "Shedding（降级）"
+                },
+                "2": {
+                  "color": "red",
+                  "index": 2,
+                  "text": "Open（熔断）"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 2
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 19
+      },
+      "id": 203,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "$tag_record_type",
+          "query_configs": [
+            {
+              "alias": "",
+              "data_label": "pushgateway_bk_collector",
+              "data_source_label": "bk_monitor",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "record_type"
+              ],
+              "interval": 30,
+              "interval_unit": "s",
+              "method": "AVG",
+              "metric_field": "bk_collector_throttle_state",
+              "refId": "a",
+              "result_table_id": "pushgateway_bk_collector",
+              "result_table_label": "component",
+              "time_field": "time",
+              "where": []
+            }
+          ],
+          "refId": "A",
+          "source": "max by (record_type) (bkmonitor:bk_collector_throttle_state{pod=~\"$pod\", record_type=~\"$recordtype\"})",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "状态",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
             "mode": "palette-classic"
           },
           "custom": {
@@ -2381,14 +2499,51 @@
                 "value": "never"
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/^OOM .*/"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "shades"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 44
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 4
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "never"
+              }
+            ]
           }
         ]
       },
       "gridPos": {
         "h": 9,
         "w": 8,
-        "x": 16,
-        "y": 10
+        "x": 0,
+        "y": 28
       },
       "id": 202,
       "options": {
@@ -2488,7 +2643,7 @@
           ],
           "refId": "B",
           "showLastPoint": false,
-          "source": "sum(container_memory_working_set_bytes{bcs_cluster_id=~\"$bcs_cluster_id\", pod=~\"$pod\"}) by (pod) / sum(bkmonitor:kube_pod_container_resource_limits_memory_bytes{bcs_cluster_id=~\"$bcs_cluster_id\",pod=~\"$pod\"}) by (pod)",
+          "source": "sum(container_memory_working_set_bytes{bcs_cluster_id=~\"$bcs_cluster_id\", pod=~\"$pod\", container=\"collector\"}) by (pod) / sum(bkmonitor:kube_pod_container_resource_limits_memory_bytes{bcs_cluster_id=~\"$bcs_cluster_id\",pod=~\"$pod\", container=\"collector\"}) by (pod)",
           "step": "",
           "type": "range"
         },
@@ -2530,89 +2685,7 @@
           "source": "max(bkmonitor:bk_collector_throttle_water_level{pod=~\"$pod\", kind=\"mem_hard\"})",
           "step": "",
           "type": "range"
-        }
-      ],
-      "title": "内存使用率（Sampler & Limits）",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "bkmonitor-timeseries-datasource",
-        "uid": "${DS_蓝鲸监控_-_指标数据}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [
-            {
-              "options": {
-                "0": {
-                  "color": "green",
-                  "index": 0,
-                  "text": "Normal（正常）"
-                },
-                "1": {
-                  "color": "orange",
-                  "index": 1,
-                  "text": "Shedding（降级）"
-                },
-                "2": {
-                  "color": "red",
-                  "index": 2,
-                  "text": "Open（熔断）"
-                }
-              },
-              "type": "value"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "orange",
-                "value": 1
-              },
-              {
-                "color": "red",
-                "value": 2
-              }
-            ]
-          },
-          "unit": "short"
         },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 8,
-        "x": 0,
-        "y": 19
-      },
-      "id": 203,
-      "options": {
-        "colorMode": "background",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "value_and_name",
-        "wideLayout": true
-      },
-      "pluginVersion": "10.4.10",
-      "targets": [
         {
           "cluster": [],
           "datasource": {
@@ -2622,10 +2695,11 @@
           "enableDownSampling": true,
           "expressionList": [],
           "format": "time_series",
+          "hide": false,
           "host": [],
           "mode": "code",
           "module": [],
-          "promqlAlias": "$tag_record_type",
+          "promqlAlias": "OOM $tag_pod",
           "query_configs": [
             {
               "alias": "",
@@ -2635,13 +2709,11 @@
               "display": true,
               "filter_dict": {},
               "functions": [],
-              "group_by": [
-                "record_type"
-              ],
+              "group_by": [],
               "interval": 30,
               "interval_unit": "s",
               "method": "AVG",
-              "metric_field": "bk_collector_throttle_state",
+              "metric_field": "bk_collector_throttle_water_level",
               "refId": "a",
               "result_table_id": "pushgateway_bk_collector",
               "result_table_label": "component",
@@ -2649,14 +2721,15 @@
               "where": []
             }
           ],
-          "refId": "A",
-          "source": "max by (record_type) (bkmonitor:bk_collector_throttle_state{pod=~\"$pod\", record_type=~\"$recordtype\"})",
+          "refId": "D",
+          "showLastPoint": false,
+          "source": "sum by (pod) (increase(bkmonitor:kube_pod_container_status_terminated_reason{bcs_cluster_id=~\"$bcs_cluster_id\", pod=~\"$pod\", reason=\"OOMKilled\"}[2m])) > 0",
           "step": "",
           "type": "range"
         }
       ],
-      "title": "状态",
-      "type": "stat"
+      "title": "内存使用率（Sampler & Limits）",
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -2764,9 +2837,9 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 16,
+        "w": 8,
         "x": 8,
-        "y": 19
+        "y": 28
       },
       "id": 204,
       "options": {
@@ -2866,7 +2939,7 @@
           ],
           "refId": "B",
           "showLastPoint": false,
-          "source": "sum by (pod) (rate(bkmonitor:bk_collector_throttle_requests_total{pod=~\"$pod\", protocol=~\"$protocol\", record_type=~\"$recordtype\", decision=\"denied\"}[1m])) or sum by (pod) (rate(bkmonitor:bk_collector_throttle_requests_total{pod=~\"$pod\", protocol=~\"$protocol\", record_type=~\"$recordtype\"}[1m])) < bool 0 / sum by (pod) (rate(bkmonitor:bk_collector_throttle_requests_total{pod=~\"$pod\", protocol=~\"$protocol\", record_type=~\"$recordtype\"}[1m]))",
+          "source": "((sum by (pod) (rate(bkmonitor:bk_collector_throttle_requests_total{pod=~\"$pod\", protocol=~\"$protocol\", record_type=~\"$recordtype\", decision=\"denied\"}[1m]))) or (sum by (pod) (rate(bkmonitor:bk_collector_throttle_requests_total{pod=~\"$pod\", protocol=~\"$protocol\", record_type=~\"$recordtype\"}[1m])) < bool 0)) / sum by (pod) (rate(bkmonitor:bk_collector_throttle_requests_total{pod=~\"$pod\", protocol=~\"$protocol\", record_type=~\"$recordtype\"}[1m]))",
           "step": "",
           "type": "range"
         }
@@ -2880,7 +2953,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 28
+        "y": 37
       },
       "id": 116,
       "panels": [
@@ -2947,7 +3020,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 29
+            "y": 38
           },
           "id": 114,
           "options": {
@@ -3112,7 +3185,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 29
+            "y": 38
           },
           "id": 129,
           "options": {
@@ -3261,7 +3334,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 29
+            "y": 38
           },
           "id": 118,
           "options": {
@@ -3418,7 +3491,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 38
+            "y": 47
           },
           "id": 103,
           "options": {
@@ -3522,7 +3595,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 29
+        "y": 38
       },
       "id": 131,
       "panels": [],
@@ -3593,7 +3666,7 @@
         "h": 9,
         "w": 8,
         "x": 0,
-        "y": 30
+        "y": 39
       },
       "id": 120,
       "options": {
@@ -3769,7 +3842,7 @@
         "h": 9,
         "w": 8,
         "x": 8,
-        "y": 30
+        "y": 39
       },
       "id": 81,
       "options": {
@@ -3947,7 +4020,7 @@
         "h": 9,
         "w": 8,
         "x": 16,
-        "y": 30
+        "y": 39
       },
       "id": 162,
       "options": {
@@ -4122,7 +4195,7 @@
         "h": 9,
         "w": 8,
         "x": 0,
-        "y": 39
+        "y": 48
       },
       "id": 60,
       "options": {
@@ -4296,7 +4369,7 @@
         "h": 9,
         "w": 8,
         "x": 8,
-        "y": 39
+        "y": 48
       },
       "id": 111,
       "options": {
@@ -4463,7 +4536,7 @@
         "h": 9,
         "w": 8,
         "x": 16,
-        "y": 39
+        "y": 48
       },
       "id": 113,
       "options": {
@@ -4592,7 +4665,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 48
+        "y": 57
       },
       "id": 23,
       "panels": [
@@ -4659,7 +4732,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 13
+            "y": 40
           },
           "id": 100,
           "options": {
@@ -4824,7 +4897,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 13
+            "y": 40
           },
           "id": 10,
           "options": {
@@ -4999,7 +5072,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 13
+            "y": 40
           },
           "id": 150,
           "options": {
@@ -5173,7 +5246,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 22
+            "y": 49
           },
           "id": 128,
           "options": {
@@ -5320,7 +5393,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 22
+            "y": 49
           },
           "id": 149,
           "options": {
@@ -5486,7 +5559,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 22
+            "y": 49
           },
           "id": 154,
           "options": {
@@ -5651,7 +5724,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 31
+            "y": 58
           },
           "id": 91,
           "options": {
@@ -5863,7 +5936,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 31
+            "y": 58
           },
           "id": 107,
           "options": {
@@ -6049,7 +6122,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 31
+            "y": 58
           },
           "id": 151,
           "options": {
@@ -6161,7 +6234,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 49
+        "y": 58
       },
       "id": 102,
       "panels": [
@@ -6228,7 +6301,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 67
+            "y": 41
           },
           "id": 7,
           "options": {
@@ -6431,7 +6504,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 67
+            "y": 41
           },
           "id": 108,
           "options": {
@@ -6575,7 +6648,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 67
+            "y": 41
           },
           "id": 99,
           "options": {
@@ -6721,7 +6794,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 76
+            "y": 50
           },
           "id": 119,
           "options": {
@@ -6865,7 +6938,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 76
+            "y": 50
           },
           "id": 11,
           "options": {
@@ -7013,7 +7086,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 76
+            "y": 50
           },
           "id": 152,
           "options": {
@@ -7106,7 +7179,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 50
+        "y": 59
       },
       "id": 123,
       "panels": [
@@ -7173,7 +7246,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 122
+            "y": 33
           },
           "id": 98,
           "options": {
@@ -7321,7 +7394,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 122
+            "y": 33
           },
           "id": 97,
           "options": {
@@ -7478,7 +7551,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 122
+            "y": 33
           },
           "id": 80,
           "options": {
@@ -7645,7 +7718,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 131
+            "y": 42
           },
           "id": 8,
           "options": {
@@ -7811,7 +7884,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 131
+            "y": 42
           },
           "id": 125,
           "options": {
@@ -7949,7 +8022,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 131
+            "y": 42
           },
           "id": 147,
           "options": {
@@ -8058,7 +8131,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 51
+        "y": 60
       },
       "id": 41,
       "panels": [
@@ -8139,7 +8212,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 16
+            "y": 43
           },
           "id": 126,
           "options": {
@@ -8213,7 +8286,8 @@
                 }
               ],
               "refId": "A",
-              "source": "sum(rate(container_cpu_usage_seconds_total{bcs_cluster_id=~\"$bcs_cluster_id\", pod=~\"$pod\"}[2m])) by (pod)",
+              "showLastPoint": false,
+              "source": "sum(rate(container_cpu_usage_seconds_total{bcs_cluster_id=~\"$bcs_cluster_id\", pod=~\"$pod\", container=\"${container}\"}[1m])) by (pod)",
               "step": "",
               "type": "range"
             }
@@ -8285,7 +8359,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 16
+            "y": 43
           },
           "id": 157,
           "options": {
@@ -8359,7 +8433,8 @@
                 }
               ],
               "refId": "A",
-              "source": "sum(rate(container_cpu_usage_seconds_total{bcs_cluster_id=~\"$bcs_cluster_id\", pod=~\"$pod\"}[2m])) by (pod) /  sum (bkmonitor:kube_pod_container_resource_requests_cpu_cores{bcs_cluster_id=~\"$bcs_cluster_id\",pod=~\"$pod\"}) by (pod)",
+              "showLastPoint": false,
+              "source": "sum(rate(container_cpu_usage_seconds_total{bcs_cluster_id=~\"$bcs_cluster_id\", pod=~\"$pod\", container=\"${container}\"}[1m])) by (pod) /  sum (bkmonitor:kube_pod_container_resource_requests_cpu_cores{bcs_cluster_id=~\"$bcs_cluster_id\",pod=~\"$pod\", container=\"${container}\"}) by (pod)",
               "step": "",
               "type": "range"
             }
@@ -8431,7 +8506,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 16
+            "y": 43
           },
           "id": 158,
           "options": {
@@ -8505,7 +8580,8 @@
                 }
               ],
               "refId": "A",
-              "source": "sum(rate(container_cpu_usage_seconds_total{bcs_cluster_id=~\"$bcs_cluster_id\", pod=~\"$pod\"}[2m])) by (pod) /  sum (bkmonitor:kube_pod_container_resource_limits_cpu_cores{bcs_cluster_id=~\"$bcs_cluster_id\",pod=~\"$pod\"}) by (pod)",
+              "showLastPoint": false,
+              "source": "sum(rate(container_cpu_usage_seconds_total{bcs_cluster_id=~\"$bcs_cluster_id\", pod=~\"$pod\", container=\"${container}\"}[1m])) by (pod) /  sum (bkmonitor:kube_pod_container_resource_limits_cpu_cores{bcs_cluster_id=~\"$bcs_cluster_id\",pod=~\"$pod\", container=\"${container}\"}) by (pod)",
               "step": "",
               "type": "range"
             }
@@ -8576,7 +8652,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 25
+            "y": 52
           },
           "id": 33,
           "options": {
@@ -8640,7 +8716,8 @@
                 }
               ],
               "refId": "A",
-              "source": "sum(container_memory_working_set_bytes{bcs_cluster_id=~\"$bcs_cluster_id\", pod=~\"$pod\"}) by (pod)",
+              "showLastPoint": false,
+              "source": "sum(container_memory_working_set_bytes{bcs_cluster_id=~\"$bcs_cluster_id\", pod=~\"$pod\", container=\"${container}\"}) by (pod)",
               "step": "",
               "type": "range"
             }
@@ -8711,7 +8788,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 25
+            "y": 52
           },
           "id": 160,
           "options": {
@@ -8775,7 +8852,8 @@
                 }
               ],
               "refId": "A",
-              "source": "sum(container_memory_working_set_bytes{bcs_cluster_id=~\"$bcs_cluster_id\", pod=~\"$pod\"}) by (pod) / sum(bkmonitor:kube_pod_container_resource_requests_memory_bytes{bcs_cluster_id=~\"$bcs_cluster_id\",pod=~\"$pod\"}) by (pod)",
+              "showLastPoint": false,
+              "source": "sum(container_memory_working_set_bytes{bcs_cluster_id=~\"$bcs_cluster_id\", pod=~\"$pod\", container=\"${container}\"}) by (pod) / sum(bkmonitor:kube_pod_container_resource_requests_memory_bytes{bcs_cluster_id=~\"$bcs_cluster_id\",pod=~\"$pod\", container=\"${container}\"}) by (pod)",
               "step": "",
               "type": "range"
             }
@@ -8846,7 +8924,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 25
+            "y": 52
           },
           "id": 159,
           "options": {
@@ -8910,7 +8988,8 @@
                 }
               ],
               "refId": "A",
-              "source": "sum(container_memory_working_set_bytes{bcs_cluster_id=~\"$bcs_cluster_id\", pod=~\"$pod\"}) by (pod) / sum(bkmonitor:kube_pod_container_resource_limits_memory_bytes{bcs_cluster_id=~\"$bcs_cluster_id\",pod=~\"$pod\"}) by (pod)",
+              "showLastPoint": false,
+              "source": "sum(container_memory_working_set_bytes{bcs_cluster_id=~\"$bcs_cluster_id\", pod=~\"$pod\", container=\"${container}\"}) by (pod) / sum(bkmonitor:kube_pod_container_resource_limits_memory_bytes{bcs_cluster_id=~\"$bcs_cluster_id\",pod=~\"$pod\", container=\"${container}\"}) by (pod)",
               "step": "",
               "type": "range"
             }
@@ -8981,7 +9060,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 34
+            "y": 61
           },
           "id": 27,
           "options": {
@@ -9116,7 +9195,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 34
+            "y": 61
           },
           "id": 74,
           "options": {
@@ -9262,7 +9341,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 34
+            "y": 61
           },
           "id": 43,
           "options": {
@@ -9407,7 +9486,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 43
+            "y": 70
           },
           "id": 68,
           "options": {
@@ -9552,7 +9631,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 43
+            "y": 70
           },
           "id": 21,
           "options": {
@@ -9643,7 +9722,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 52
+        "y": 61
       },
       "id": 89,
       "panels": [
@@ -9709,7 +9788,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 70
+            "y": 35
           },
           "id": 85,
           "options": {
@@ -9856,7 +9935,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 70
+            "y": 35
           },
           "id": 9,
           "options": {
@@ -10014,7 +10093,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 70
+            "y": 35
           },
           "id": 155,
           "options": {
@@ -10163,7 +10242,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 79
+            "y": 44
           },
           "id": 110,
           "options": {
@@ -10321,7 +10400,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 79
+            "y": 44
           },
           "id": 109,
           "options": {
@@ -10502,6 +10581,75 @@
                 "method": "eq",
                 "value": [
                   "bkm-collector"
+                ]
+              }
+            ]
+          },
+          "queryType": "dimension",
+          "variables": "$bcs_cluster_id"
+        },
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": "",
+        "current": {},
+        "datasource": {
+          "type": "bkmonitor-timeseries-datasource",
+          "uid": "${DS_蓝鲸监控_-_指标数据}"
+        },
+        "definition": "- Blueking Monitor - 维度",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Container",
+        "multi": false,
+        "name": "container",
+        "options": [],
+        "query": {
+          "metricConfig": {
+            "data_label": "",
+            "data_source_label": "bk_monitor",
+            "data_type_label": "time_series",
+            "group_by": "container",
+            "metric_field": "container_cpu_usage_seconds_total",
+            "result_table_id": "",
+            "result_table_label": "kubernetes",
+            "where": [
+              {
+                "key": "bcs_cluster_id",
+                "method": "eq",
+                "value": [
+                  "$bcs_cluster_id"
+                ]
+              },
+              {
+                "condition": "and",
+                "key": "namespace",
+                "method": "eq",
+                "value": [
+                  "bkmonitor-operator"
+                ]
+              },
+              {
+                "condition": "and",
+                "key": "workload_name",
+                "method": "eq",
+                "value": [
+                  "bkm-collector"
+                ]
+              },
+              {
+                "condition": "and",
+                "key": "container",
+                "method": "neq",
+                "value": [
+                  "POD"
                 ]
               }
             ]
@@ -10730,7 +10878,7 @@
   "timepicker": {},
   "timezone": "",
   "title": "[Monitor] bk-collector",
-  "version": 5,
+  "version": 13,
   "weekStart": "",
   "__inputs": [
     {
