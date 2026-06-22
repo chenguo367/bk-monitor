@@ -2502,6 +2502,80 @@
           },
           {
             "matcher": {
+              "id": "byName",
+              "options": "mem_enter（进入分级）"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 3
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "never"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mem_exit（退出分级）"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 3
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "never"
+              }
+            ]
+          },
+          {
+            "matcher": {
               "id": "byRegexp",
               "options": "/^OOM .*/"
             },
@@ -2695,6 +2769,84 @@
           "enableDownSampling": true,
           "expressionList": [],
           "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "mem_enter（进入分级）",
+          "query_configs": [
+            {
+              "alias": "",
+              "data_label": "pushgateway_bk_collector",
+              "data_source_label": "bk_monitor",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [],
+              "interval": 30,
+              "interval_unit": "s",
+              "method": "AVG",
+              "metric_field": "bk_collector_throttle_water_level",
+              "refId": "a",
+              "result_table_id": "pushgateway_bk_collector",
+              "result_table_label": "component",
+              "time_field": "time",
+              "where": []
+            }
+          ],
+          "refId": "D",
+          "source": "max(bkmonitor:bk_collector_throttle_water_level{pod=~\"$pod\", kind=\"mem_enter\"})",
+          "step": "",
+          "type": "range"
+        },
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "mem_exit（退出分级）",
+          "query_configs": [
+            {
+              "alias": "",
+              "data_label": "pushgateway_bk_collector",
+              "data_source_label": "bk_monitor",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [],
+              "interval": 30,
+              "interval_unit": "s",
+              "method": "AVG",
+              "metric_field": "bk_collector_throttle_water_level",
+              "refId": "a",
+              "result_table_id": "pushgateway_bk_collector",
+              "result_table_label": "component",
+              "time_field": "time",
+              "where": []
+            }
+          ],
+          "refId": "E",
+          "source": "max(bkmonitor:bk_collector_throttle_water_level{pod=~\"$pod\", kind=\"mem_exit\"})",
+          "step": "",
+          "type": "range"
+        },
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
           "hide": false,
           "host": [],
           "mode": "code",
@@ -2721,7 +2873,7 @@
               "where": []
             }
           ],
-          "refId": "D",
+          "refId": "F",
           "showLastPoint": false,
           "source": "sum by (pod) (increase(bkmonitor:kube_pod_container_status_terminated_reason{bcs_cluster_id=~\"$bcs_cluster_id\", pod=~\"$pod\", reason=\"OOMKilled\"}[2m])) > 0",
           "step": "",
