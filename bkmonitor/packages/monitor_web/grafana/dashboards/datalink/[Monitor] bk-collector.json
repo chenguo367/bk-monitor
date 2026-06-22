@@ -10599,7 +10599,11 @@
       },
       {
         "allValue": "",
-        "current": {},
+        "current": {
+          "selected": false,
+          "text": "collector",
+          "value": "collector"
+        },
         "datasource": {
           "type": "bkmonitor-timeseries-datasource",
           "uid": "${DS_蓝鲸监控_-_指标数据}"
