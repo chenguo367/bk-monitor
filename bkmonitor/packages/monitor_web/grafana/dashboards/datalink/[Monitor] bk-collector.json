@@ -1581,7 +1581,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "cpu_hard（硬熔断）"
+              "options": "cpu.hard（熔断阈值）"
             },
             "properties": [
               {
@@ -1618,7 +1618,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "cpu_enter（进入分级）"
+              "options": "cpu.enter（降级阈值）"
             },
             "properties": [
               {
@@ -1655,7 +1655,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "cpu_exit（退出分级）"
+              "options": "cpu.exit（期望正常阈值）"
             },
             "properties": [
               {
@@ -1706,7 +1706,9 @@
           ],
           "displayMode": "table",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": true,
+          "sortBy": "Max",
+          "sortDesc": false
         },
         "tooltip": {
           "mode": "multi",
@@ -1724,10 +1726,11 @@
           "enableDownSampling": true,
           "expressionList": [],
           "format": "time_series",
+          "hide": false,
           "host": [],
           "mode": "code",
           "module": [],
-          "promqlAlias": "cpu_slow（历史权重高） $tag_pod",
+          "promqlAlias": "cpu.slow（慢信号） $tag_pod",
           "query_configs": [
             {
               "alias": "",
@@ -1753,7 +1756,7 @@
           ],
           "refId": "A",
           "showLastPoint": false,
-          "source": "max by (pod) (bkmonitor:bk_collector_throttle_water_level{pod=~\"$pod\", kind=\"cpu_slow\"})",
+          "source": "max by (pod) (max_over_time(bkmonitor:bk_collector_throttle_water_level{pod=~\"$pod\", kind=\"cpu_slow\"}[1m]))",
           "step": "",
           "type": "range"
         },
@@ -1766,10 +1769,11 @@
           "enableDownSampling": true,
           "expressionList": [],
           "format": "time_series",
+          "hide": false,
           "host": [],
           "mode": "code",
           "module": [],
-          "promqlAlias": "cpu_fast（当前权重高） $tag_pod",
+          "promqlAlias": "cpu.fast（快信号） $tag_pod",
           "query_configs": [
             {
               "alias": "",
@@ -1795,7 +1799,7 @@
           ],
           "refId": "B",
           "showLastPoint": false,
-          "source": "max by (pod) (bkmonitor:bk_collector_throttle_water_level{pod=~\"$pod\", kind=\"cpu_fast\"})",
+          "source": "max by (pod) (max_over_time(bkmonitor:bk_collector_throttle_water_level{pod=~\"$pod\", kind=\"cpu_fast\"}[1m]))",
           "step": "",
           "type": "range"
         },
@@ -1811,7 +1815,7 @@
           "host": [],
           "mode": "code",
           "module": [],
-          "promqlAlias": "cpu_hard（硬熔断）",
+          "promqlAlias": "cpu.hard（熔断阈值）",
           "query_configs": [
             {
               "alias": "",
@@ -1834,6 +1838,7 @@
             }
           ],
           "refId": "C",
+          "showLastPoint": false,
           "source": "max(bkmonitor:bk_collector_throttle_water_level{pod=~\"$pod\", kind=\"cpu_hard\"})",
           "step": "",
           "type": "range"
@@ -1850,7 +1855,7 @@
           "host": [],
           "mode": "code",
           "module": [],
-          "promqlAlias": "cpu_enter（进入分级）",
+          "promqlAlias": "cpu.enter（降级阈值）",
           "query_configs": [
             {
               "alias": "",
@@ -1873,6 +1878,7 @@
             }
           ],
           "refId": "D",
+          "showLastPoint": false,
           "source": "max(bkmonitor:bk_collector_throttle_water_level{pod=~\"$pod\", kind=\"cpu_enter\"})",
           "step": "",
           "type": "range"
@@ -1889,7 +1895,7 @@
           "host": [],
           "mode": "code",
           "module": [],
-          "promqlAlias": "cpu_exit（退出分级）",
+          "promqlAlias": "cpu.exit（期望正常阈值）",
           "query_configs": [
             {
               "alias": "",
@@ -1912,211 +1918,11 @@
             }
           ],
           "refId": "E",
+          "showLastPoint": false,
           "source": "max(bkmonitor:bk_collector_throttle_water_level{pod=~\"$pod\", kind=\"cpu_exit\"})",
           "step": "",
           "type": "range"
-        }
-      ],
-      "title": "CPU 使用率（Sampler）",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "bkmonitor-timeseries-datasource",
-        "uid": "${DS_蓝鲸监控_-_指标数据}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 1,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "decimals": 2,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "percentunit"
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "cpu_hard（硬熔断）"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "red",
-                  "mode": "fixed"
-                }
-              },
-              {
-                "id": "custom.lineStyle",
-                "value": {
-                  "dash": [
-                    10,
-                    10
-                  ],
-                  "fill": "dash"
-                }
-              },
-              {
-                "id": "custom.lineWidth",
-                "value": 3
-              },
-              {
-                "id": "custom.fillOpacity",
-                "value": 0
-              },
-              {
-                "id": "custom.showPoints",
-                "value": "never"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "cpu_enter（进入分级）"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "orange",
-                  "mode": "fixed"
-                }
-              },
-              {
-                "id": "custom.lineStyle",
-                "value": {
-                  "dash": [
-                    10,
-                    10
-                  ],
-                  "fill": "dash"
-                }
-              },
-              {
-                "id": "custom.lineWidth",
-                "value": 3
-              },
-              {
-                "id": "custom.fillOpacity",
-                "value": 0
-              },
-              {
-                "id": "custom.showPoints",
-                "value": "never"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "cpu_exit（退出分级）"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "green",
-                  "mode": "fixed"
-                }
-              },
-              {
-                "id": "custom.lineStyle",
-                "value": {
-                  "dash": [
-                    10,
-                    10
-                  ],
-                  "fill": "dash"
-                }
-              },
-              {
-                "id": "custom.lineWidth",
-                "value": 3
-              },
-              {
-                "id": "custom.fillOpacity",
-                "value": 0
-              },
-              {
-                "id": "custom.showPoints",
-                "value": "never"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 8,
-        "x": 8,
-        "y": 19
-      },
-      "id": 201,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull",
-            "max"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
-      },
-      "pluginVersion": "9.1.0",
-      "targets": [
         {
           "cluster": [],
           "datasource": {
@@ -2126,10 +1932,11 @@
           "enableDownSampling": true,
           "expressionList": [],
           "format": "time_series",
+          "hide": false,
           "host": [],
           "mode": "code",
           "module": [],
-          "promqlAlias": "CPU 使用率（Limits） $tag_pod",
+          "promqlAlias": "$tag_pod",
           "query_configs": [
             {
               "alias": "",
@@ -2139,13 +1946,11 @@
               "display": true,
               "filter_dict": {},
               "functions": [],
-              "group_by": [
-                "pod"
-              ],
+              "group_by": [],
               "interval": 30,
               "interval_unit": "s",
               "method": "AVG",
-              "metric_field": "container_cpu_usage_seconds_total",
+              "metric_field": "bk_collector_throttle_water_level",
               "refId": "a",
               "result_table_id": "pushgateway_bk_collector",
               "result_table_label": "component",
@@ -2153,255 +1958,15 @@
               "where": []
             }
           ],
-          "refId": "A",
+          "refId": "F",
           "showLastPoint": false,
           "source": "sum(rate(container_cpu_usage_seconds_total{bcs_cluster_id=~\"$bcs_cluster_id\", pod=~\"$pod\", container=\"collector\"}[1m])) by (pod) / sum(bkmonitor:kube_pod_container_resource_limits_cpu_cores{bcs_cluster_id=~\"$bcs_cluster_id\",pod=~\"$pod\", container=\"collector\"}) by (pod)\n",
           "step": "",
           "type": "range"
-        },
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "time_series",
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "cpu_hard（硬熔断）",
-          "query_configs": [
-            {
-              "alias": "",
-              "data_label": "pushgateway_bk_collector",
-              "data_source_label": "bk_monitor",
-              "data_type_label": "time_series",
-              "display": true,
-              "filter_dict": {},
-              "functions": [],
-              "group_by": [],
-              "interval": 30,
-              "interval_unit": "s",
-              "method": "AVG",
-              "metric_field": "bk_collector_throttle_water_level",
-              "refId": "a",
-              "result_table_id": "pushgateway_bk_collector",
-              "result_table_label": "component",
-              "time_field": "time",
-              "where": []
-            }
-          ],
-          "refId": "C",
-          "source": "max(bkmonitor:bk_collector_throttle_water_level{pod=~\"$pod\", kind=\"cpu_hard\"})",
-          "step": "",
-          "type": "range"
-        },
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "time_series",
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "cpu_enter（进入分级）",
-          "query_configs": [
-            {
-              "alias": "",
-              "data_label": "pushgateway_bk_collector",
-              "data_source_label": "bk_monitor",
-              "data_type_label": "time_series",
-              "display": true,
-              "filter_dict": {},
-              "functions": [],
-              "group_by": [],
-              "interval": 30,
-              "interval_unit": "s",
-              "method": "AVG",
-              "metric_field": "bk_collector_throttle_water_level",
-              "refId": "a",
-              "result_table_id": "pushgateway_bk_collector",
-              "result_table_label": "component",
-              "time_field": "time",
-              "where": []
-            }
-          ],
-          "refId": "D",
-          "source": "max(bkmonitor:bk_collector_throttle_water_level{pod=~\"$pod\", kind=\"cpu_enter\"})",
-          "step": "",
-          "type": "range"
-        },
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "time_series",
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "cpu_exit（退出分级）",
-          "query_configs": [
-            {
-              "alias": "",
-              "data_label": "pushgateway_bk_collector",
-              "data_source_label": "bk_monitor",
-              "data_type_label": "time_series",
-              "display": true,
-              "filter_dict": {},
-              "functions": [],
-              "group_by": [],
-              "interval": 30,
-              "interval_unit": "s",
-              "method": "AVG",
-              "metric_field": "bk_collector_throttle_water_level",
-              "refId": "a",
-              "result_table_id": "pushgateway_bk_collector",
-              "result_table_label": "component",
-              "time_field": "time",
-              "where": []
-            }
-          ],
-          "refId": "E",
-          "source": "max(bkmonitor:bk_collector_throttle_water_level{pod=~\"$pod\", kind=\"cpu_exit\"})",
-          "step": "",
-          "type": "range"
         }
       ],
-      "title": "CPU 使用率（Limits）",
+      "title": "CPU 使用率",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "bkmonitor-timeseries-datasource",
-        "uid": "${DS_蓝鲸监控_-_指标数据}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [
-            {
-              "options": {
-                "0": {
-                  "color": "green",
-                  "index": 0,
-                  "text": "Normal（正常）"
-                },
-                "1": {
-                  "color": "orange",
-                  "index": 1,
-                  "text": "Shedding（降级）"
-                },
-                "2": {
-                  "color": "red",
-                  "index": 2,
-                  "text": "Open（熔断）"
-                }
-              },
-              "type": "value"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "orange",
-                "value": 1
-              },
-              {
-                "color": "red",
-                "value": 2
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 8,
-        "x": 16,
-        "y": 19
-      },
-      "id": 203,
-      "options": {
-        "colorMode": "background",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "value_and_name",
-        "wideLayout": true
-      },
-      "pluginVersion": "10.4.10",
-      "targets": [
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "time_series",
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "$tag_record_type",
-          "query_configs": [
-            {
-              "alias": "",
-              "data_label": "pushgateway_bk_collector",
-              "data_source_label": "bk_monitor",
-              "data_type_label": "time_series",
-              "display": true,
-              "filter_dict": {},
-              "functions": [],
-              "group_by": [
-                "record_type"
-              ],
-              "interval": 30,
-              "interval_unit": "s",
-              "method": "AVG",
-              "metric_field": "bk_collector_throttle_state",
-              "refId": "a",
-              "result_table_id": "pushgateway_bk_collector",
-              "result_table_label": "component",
-              "time_field": "time",
-              "where": []
-            }
-          ],
-          "refId": "A",
-          "source": "max by (record_type) (bkmonitor:bk_collector_throttle_state{pod=~\"$pod\", record_type=~\"$recordtype\"})",
-          "step": "",
-          "type": "range"
-        }
-      ],
-      "title": "状态",
-      "type": "stat"
     },
     {
       "datasource": {
@@ -2466,7 +2031,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "mem_hard（硬熔断）"
+              "options": "mem.hard（熔断阈值）"
             },
             "properties": [
               {
@@ -2503,7 +2068,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "mem_enter（进入分级）"
+              "options": "mem.enter（降级阈值）"
             },
             "properties": [
               {
@@ -2540,7 +2105,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "mem_exit（退出分级）"
+              "options": "mem.exit（期望正常阈值）"
             },
             "properties": [
               {
@@ -2616,8 +2181,8 @@
       "gridPos": {
         "h": 9,
         "w": 8,
-        "x": 0,
-        "y": 28
+        "x": 8,
+        "y": 19
       },
       "id": 202,
       "options": {
@@ -2649,7 +2214,7 @@
           "host": [],
           "mode": "code",
           "module": [],
-          "promqlAlias": "内存使用率（Limits from Sampler） $tag_pod",
+          "promqlAlias": "sampler - $tag_pod",
           "query_configs": [
             {
               "alias": "",
@@ -2675,7 +2240,7 @@
           ],
           "refId": "A",
           "showLastPoint": false,
-          "source": "max by (pod) (bkmonitor:bk_collector_throttle_water_level{pod=~\"$pod\", kind=\"mem\"})",
+          "source": "max by (pod) (max_over_time(bkmonitor:bk_collector_throttle_water_level{pod=~\"$pod\", kind=\"mem\"}[1m]))",
           "step": "",
           "type": "range"
         },
@@ -2691,7 +2256,7 @@
           "host": [],
           "mode": "code",
           "module": [],
-          "promqlAlias": "内存使用率（Limits） $tag_pod",
+          "promqlAlias": "$tag_pod",
           "query_configs": [
             {
               "alias": "",
@@ -2733,7 +2298,7 @@
           "host": [],
           "mode": "code",
           "module": [],
-          "promqlAlias": "mem_hard（硬熔断）",
+          "promqlAlias": "mem.hard（熔断阈值）",
           "query_configs": [
             {
               "alias": "",
@@ -2756,6 +2321,7 @@
             }
           ],
           "refId": "C",
+          "showLastPoint": false,
           "source": "max(bkmonitor:bk_collector_throttle_water_level{pod=~\"$pod\", kind=\"mem_hard\"})",
           "step": "",
           "type": "range"
@@ -2772,7 +2338,7 @@
           "host": [],
           "mode": "code",
           "module": [],
-          "promqlAlias": "mem_enter（进入分级）",
+          "promqlAlias": "mem.enter（降级阈值）",
           "query_configs": [
             {
               "alias": "",
@@ -2795,6 +2361,7 @@
             }
           ],
           "refId": "D",
+          "showLastPoint": false,
           "source": "max(bkmonitor:bk_collector_throttle_water_level{pod=~\"$pod\", kind=\"mem_enter\"})",
           "step": "",
           "type": "range"
@@ -2811,7 +2378,7 @@
           "host": [],
           "mode": "code",
           "module": [],
-          "promqlAlias": "mem_exit（退出分级）",
+          "promqlAlias": "mem.exit（期望正常阈值）",
           "query_configs": [
             {
               "alias": "",
@@ -2834,6 +2401,7 @@
             }
           ],
           "refId": "E",
+          "showLastPoint": false,
           "source": "max(bkmonitor:bk_collector_throttle_water_level{pod=~\"$pod\", kind=\"mem_exit\"})",
           "step": "",
           "type": "range"
@@ -2880,7 +2448,256 @@
           "type": "range"
         }
       ],
-      "title": "内存使用率（Sampler & Limits）",
+      "title": "内存使用率",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "description": "展示 sampler 实际采样间隔与单次采样耗时的分位数，用于判断 CPU 限流或调度延迟下 sampler 是否被明显推迟。",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "采样间隔",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 1,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 3,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/^采样耗时 .*/"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "custom.axisLabel",
+                "value": "采样耗时"
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    6,
+                    6
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 19
+      },
+      "id": 205,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "9.1.0",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "采样间隔 $tag_pod [$qua] 分位",
+          "query_configs": [
+            {
+              "alias": "",
+              "data_label": "pushgateway_bk_collector",
+              "data_source_label": "bk_monitor",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "increase",
+                  "params": [
+                    {
+                      "id": "window",
+                      "value": "1m"
+                    }
+                  ]
+                },
+                {
+                  "id": "histogram_quantile",
+                  "params": [
+                    {
+                      "id": "scalar",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "le",
+                "pod"
+              ],
+              "interval": 30,
+              "interval_unit": "s",
+              "method": "SUM",
+              "metric_field": "bk_collector_throttle_sampler_interval_seconds_bucket",
+              "refId": "a",
+              "result_table_id": "pushgateway_bk_collector",
+              "result_table_label": "component",
+              "time_field": "time",
+              "where": []
+            }
+          ],
+          "refId": "A",
+          "showLastPoint": false,
+          "source": "histogram_quantile($qua, sum by (le, pod) (increase(bkmonitor:bk_collector_throttle_sampler_interval_seconds_bucket{pod=~\"$pod\"}[1m])))",
+          "step": "",
+          "type": "range"
+        },
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "采样耗时 $tag_pod [$qua] 分位",
+          "query_configs": [
+            {
+              "alias": "",
+              "data_label": "pushgateway_bk_collector",
+              "data_source_label": "bk_monitor",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "increase",
+                  "params": [
+                    {
+                      "id": "window",
+                      "value": "1m"
+                    }
+                  ]
+                },
+                {
+                  "id": "histogram_quantile",
+                  "params": [
+                    {
+                      "id": "scalar",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "le",
+                "pod"
+              ],
+              "interval": 30,
+              "interval_unit": "s",
+              "method": "SUM",
+              "metric_field": "bk_collector_throttle_sampler_duration_seconds_bucket",
+              "refId": "a",
+              "result_table_id": "pushgateway_bk_collector",
+              "result_table_label": "component",
+              "time_field": "time",
+              "where": []
+            }
+          ],
+          "refId": "B",
+          "showLastPoint": false,
+          "source": "histogram_quantile($qua, sum by (le, pod) (increase(bkmonitor:bk_collector_throttle_sampler_duration_seconds_bucket{pod=~\"$pod\"}[1m])))",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "采样间隔 / 耗时（$qua 分位）",
       "type": "timeseries"
     },
     {
@@ -2990,7 +2807,7 @@
       "gridPos": {
         "h": 9,
         "w": 8,
-        "x": 8,
+        "x": 0,
         "y": 28
       },
       "id": 204,
@@ -3096,650 +2913,131 @@
           "type": "range"
         }
       ],
-      "title": "请求量",
+      "title": "请求量 / 丢弃率",
       "type": "timeseries"
     },
     {
-      "collapsed": true,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 37
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
       },
-      "id": 116,
-      "panels": [
-        {
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
           },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 10,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "never",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "short"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 9,
-            "w": 8,
-            "x": 0,
-            "y": 38
-          },
-          "id": 114,
-          "options": {
-            "legend": {
-              "calcs": [
-                "lastNotNull",
-                "max",
-                "mean"
-              ],
-              "displayMode": "table",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "desc"
-            }
-          },
-          "pluginVersion": "9.1.0",
-          "targets": [
+          "mappings": [
             {
-              "cluster": [],
-              "datasource": {
-                "type": "bkmonitor-timeseries-datasource",
-                "uid": "${DS_蓝鲸监控_-_指标数据}"
-              },
-              "enableDownSampling": true,
-              "expressionList": [],
-              "format": "time_series",
-              "hide": false,
-              "host": [],
-              "mode": "code",
-              "module": [],
-              "promqlAlias": "$tag_token",
-              "query_configs": [
-                {
-                  "alias": "$tag_token",
-                  "data_label": "pushgateway_bk_collector",
-                  "data_source_label": "bk_monitor",
-                  "data_type_label": "time_series",
-                  "display": true,
-                  "filter_dict": {},
-                  "functions": [
-                    {
-                      "id": "rate",
-                      "params": [
-                        {
-                          "id": "window",
-                          "value": "1m"
-                        }
-                      ]
-                    },
-                    {
-                      "id": "topk",
-                      "params": [
-                        {
-                          "id": "k",
-                          "value": 5
-                        }
-                      ]
-                    }
-                  ],
-                  "group_by": [
-                    "token"
-                  ],
-                  "interval": 30,
-                  "interval_unit": "s",
-                  "method": "SUM",
-                  "metric_field": "bk_collector_receiver_handled_total",
-                  "refId": "a",
-                  "result_table_id": "pushgateway_bk_collector",
-                  "result_table_label": "component",
-                  "time_field": "time",
-                  "where": [
-                    {
-                      "key": "ip",
-                      "method": "eq",
-                      "value": [
-                        "$ip"
-                      ]
-                    },
-                    {
-                      "condition": "and",
-                      "key": "record_type",
-                      "method": "eq",
-                      "value": [
-                        "$recordtype"
-                      ]
-                    }
-                  ]
+              "options": {
+                "0": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "Normal（正常）"
+                },
+                "1": {
+                  "color": "orange",
+                  "index": 1,
+                  "text": "Shedding（降级）"
+                },
+                "2": {
+                  "color": "red",
+                  "index": 2,
+                  "text": "Open（熔断）"
                 }
-              ],
-              "refId": "A",
-              "source": "topk(5, sum by (token) (rate(bkmonitor:bk_collector_receiver_handled_total{pod=~\"$pod\",record_type=~\"$recordtype\"}[1m]))>0)",
-              "step": "",
-              "type": "range"
+              },
+              "type": "value"
             }
           ],
-          "title": "Receiver 请求 QPS TopK Token",
-          "type": "timeseries"
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 2
+              }
+            ]
+          },
+          "unit": "short"
         },
-        {
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 10,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 1,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "none"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 9,
-            "w": 8,
-            "x": 8,
-            "y": 38
-          },
-          "id": 129,
-          "options": {
-            "legend": {
-              "calcs": [
-                "lastNotNull",
-                "mean",
-                "max"
-              ],
-              "displayMode": "table",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "desc"
-            }
-          },
-          "targets": [
-            {
-              "cluster": [],
-              "datasource": {
-                "type": "bkmonitor-timeseries-datasource",
-                "uid": "${DS_蓝鲸监控_-_指标数据}"
-              },
-              "enableDownSampling": true,
-              "expressionList": [],
-              "format": "time_series",
-              "host": [],
-              "mode": "code",
-              "module": [],
-              "promqlAlias": "$tag_processor: $tag_token",
-              "query_configs": [
-                {
-                  "alias": "$tag_processor: $tag_token",
-                  "data_label": "pushgateway_bk_collector",
-                  "data_source_label": "bk_monitor",
-                  "data_type_label": "time_series",
-                  "display": true,
-                  "filter_dict": {},
-                  "functions": [
-                    {
-                      "id": "rate",
-                      "params": [
-                        {
-                          "id": "window",
-                          "value": "1m"
-                        }
-                      ]
-                    },
-                    {
-                      "id": "topk",
-                      "params": [
-                        {
-                          "id": "k",
-                          "value": 5
-                        }
-                      ]
-                    }
-                  ],
-                  "group_by": [
-                    "le",
-                    "token",
-                    "processor"
-                  ],
-                  "interval": 30,
-                  "interval_unit": "s",
-                  "method": "SUM",
-                  "metric_field": "bk_collector_receiver_precheck_failed_total",
-                  "refId": "a",
-                  "result_table_id": "pushgateway_bk_collector",
-                  "result_table_label": "component",
-                  "time_field": "time",
-                  "where": []
-                }
-              ],
-              "refId": "A",
-              "source": "topk(5, sum by (le, token, processor) (rate(bkmonitor:bk_collector_receiver_precheck_failed_total{pod=~\"$pod\"}[1m])>0))",
-              "step": "",
-              "type": "range"
-            }
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 28
+      },
+      "id": 203,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
           ],
-          "title": "Receiver 接收拒绝速率 TopK Token",
-          "type": "timeseries"
+          "fields": "",
+          "values": false
         },
+        "showPercentChange": false,
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.10",
+      "targets": [
         {
+          "cluster": [],
           "datasource": {
             "type": "bkmonitor-timeseries-datasource",
             "uid": "${DS_蓝鲸监控_-_指标数据}"
           },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 10,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 1,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "bytes"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 9,
-            "w": 8,
-            "x": 16,
-            "y": 38
-          },
-          "id": 118,
-          "options": {
-            "legend": {
-              "calcs": [
-                "lastNotNull",
-                "mean",
-                "max"
-              ],
-              "displayMode": "table",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "desc"
-            }
-          },
-          "targets": [
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "$tag_record_type",
+          "query_configs": [
             {
-              "cluster": [],
-              "datasource": {
-                "type": "bkmonitor-timeseries-datasource",
-                "uid": "${DS_蓝鲸监控_-_指标数据}"
-              },
-              "enableDownSampling": true,
-              "expressionList": [],
-              "format": "time_series",
-              "host": [],
-              "mode": "code",
-              "module": [],
-              "promqlAlias": "$tag_token",
-              "query_configs": [
-                {
-                  "alias": "$tag_token",
-                  "data_label": "pushgateway_bk_collector",
-                  "data_source_label": "bk_monitor",
-                  "data_type_label": "time_series",
-                  "display": true,
-                  "filter_dict": {},
-                  "functions": [
-                    {
-                      "id": "rate",
-                      "params": [
-                        {
-                          "id": "window",
-                          "value": "1m"
-                        }
-                      ]
-                    },
-                    {
-                      "id": "histogram_quantile",
-                      "params": [
-                        {
-                          "id": "scalar",
-                          "value": 0.95
-                        }
-                      ]
-                    },
-                    {
-                      "id": "topk",
-                      "params": [
-                        {
-                          "id": "k",
-                          "value": 5
-                        }
-                      ]
-                    }
-                  ],
-                  "group_by": [
-                    "le",
-                    "token"
-                  ],
-                  "interval": 30,
-                  "interval_unit": "s",
-                  "method": "SUM",
-                  "metric_field": "bk_collector_receiver_received_bytes_size_bucket",
-                  "refId": "a",
-                  "result_table_id": "pushgateway_bk_collector",
-                  "result_table_label": "component",
-                  "time_field": "time",
-                  "where": []
-                }
+              "alias": "",
+              "data_label": "pushgateway_bk_collector",
+              "data_source_label": "bk_monitor",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [],
+              "group_by": [
+                "record_type"
               ],
-              "refId": "A",
-              "source": "topk(5, histogram_quantile($qua, sum by (le, token) (rate(bkmonitor:bk_collector_receiver_received_bytes_size_bucket{pod=~\"$pod\"}[1m]))))",
-              "step": "",
-              "type": "range"
+              "interval": 30,
+              "interval_unit": "s",
+              "method": "AVG",
+              "metric_field": "bk_collector_throttle_state",
+              "refId": "a",
+              "result_table_id": "pushgateway_bk_collector",
+              "result_table_label": "component",
+              "time_field": "time",
+              "where": []
             }
           ],
-          "title": "Receiver 接收字节大小分布 TopK Token",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 10,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "never",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "bytes"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 9,
-            "w": 8,
-            "x": 0,
-            "y": 47
-          },
-          "id": 103,
-          "options": {
-            "legend": {
-              "calcs": [
-                "lastNotNull",
-                "max",
-                "mean"
-              ],
-              "displayMode": "table",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "desc"
-            }
-          },
-          "pluginVersion": "9.1.0",
-          "targets": [
-            {
-              "cluster": [],
-              "datasource": {
-                "type": "bkmonitor-timeseries-datasource",
-                "uid": "${DS_蓝鲸监控_-_指标数据}"
-              },
-              "enableDownSampling": true,
-              "expressionList": [],
-              "format": "time_series",
-              "hide": false,
-              "host": [],
-              "mode": "code",
-              "module": [],
-              "promqlAlias": "$tag_id",
-              "query_configs": [
-                {
-                  "alias": "$tag_id",
-                  "data_label": "pushgateway_bk_collector",
-                  "data_source_label": "bk_monitor",
-                  "data_type_label": "time_series",
-                  "display": true,
-                  "filter_dict": {},
-                  "functions": [
-                    {
-                      "id": "rate",
-                      "params": [
-                        {
-                          "id": "window",
-                          "value": "1m"
-                        }
-                      ]
-                    },
-                    {
-                      "id": "topk",
-                      "params": [
-                        {
-                          "id": "k",
-                          "value": 10
-                        }
-                      ]
-                    }
-                  ],
-                  "group_by": [
-                    "id"
-                  ],
-                  "interval": 30,
-                  "interval_unit": "s",
-                  "method": "SUM",
-                  "metric_field": "bk_collector_beat_sent_bytes_total",
-                  "refId": "a",
-                  "result_table_id": "pushgateway_bk_collector",
-                  "result_table_label": "component",
-                  "time_field": "time",
-                  "where": [
-                    {
-                      "key": "ip",
-                      "method": "eq",
-                      "value": [
-                        "$ip"
-                      ]
-                    }
-                  ]
-                }
-              ],
-              "refId": "A",
-              "source": "topk(10, sum by (id) (rate(bkmonitor:bk_collector_beat_sent_bytes_total{pod=~\"$pod\"}[1m])))",
-              "step": "",
-              "type": "range"
-            }
-          ],
-          "title": "exporter DataID TopK 流量",
-          "type": "timeseries"
+          "refId": "A",
+          "source": "max by (record_type) (bkmonitor:bk_collector_throttle_state{pod=~\"$pod\", record_type=~\"$recordtype\"})",
+          "step": "",
+          "type": "range"
         }
       ],
-      "title": "高频上报",
-      "type": "row"
+      "title": "状态",
+      "type": "stat"
     },
     {
       "collapsed": false,
@@ -3747,7 +3045,652 @@
         "h": 1,
         "w": 24,
         "x": 0,
+        "y": 37
+      },
+      "id": 116,
+      "panels": [],
+      "title": "高频上报",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
         "y": 38
+      },
+      "id": 114,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "9.1.0",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "hide": false,
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "$tag_token",
+          "query_configs": [
+            {
+              "alias": "$tag_token",
+              "data_label": "pushgateway_bk_collector",
+              "data_source_label": "bk_monitor",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "rate",
+                  "params": [
+                    {
+                      "id": "window",
+                      "value": "1m"
+                    }
+                  ]
+                },
+                {
+                  "id": "topk",
+                  "params": [
+                    {
+                      "id": "k",
+                      "value": 5
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "token"
+              ],
+              "interval": 30,
+              "interval_unit": "s",
+              "method": "SUM",
+              "metric_field": "bk_collector_receiver_handled_total",
+              "refId": "a",
+              "result_table_id": "pushgateway_bk_collector",
+              "result_table_label": "component",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "ip",
+                  "method": "eq",
+                  "value": [
+                    "$ip"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "record_type",
+                  "method": "eq",
+                  "value": [
+                    "$recordtype"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "source": "topk(5, sum by (token) (rate(bkmonitor:bk_collector_receiver_handled_total{pod=~\"$pod\",record_type=~\"$recordtype\"}[1m]))>0)",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "Receiver 请求 QPS TopK Token",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 38
+      },
+      "id": 129,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "$tag_processor: $tag_token",
+          "query_configs": [
+            {
+              "alias": "$tag_processor: $tag_token",
+              "data_label": "pushgateway_bk_collector",
+              "data_source_label": "bk_monitor",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "rate",
+                  "params": [
+                    {
+                      "id": "window",
+                      "value": "1m"
+                    }
+                  ]
+                },
+                {
+                  "id": "topk",
+                  "params": [
+                    {
+                      "id": "k",
+                      "value": 5
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "le",
+                "token",
+                "processor"
+              ],
+              "interval": 30,
+              "interval_unit": "s",
+              "method": "SUM",
+              "metric_field": "bk_collector_receiver_precheck_failed_total",
+              "refId": "a",
+              "result_table_id": "pushgateway_bk_collector",
+              "result_table_label": "component",
+              "time_field": "time",
+              "where": []
+            }
+          ],
+          "refId": "A",
+          "source": "topk(5, sum by (le, token, processor) (rate(bkmonitor:bk_collector_receiver_precheck_failed_total{pod=~\"$pod\"}[1m])>0))",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "Receiver 接收拒绝速率 TopK Token",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 38
+      },
+      "id": 118,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "$tag_token",
+          "query_configs": [
+            {
+              "alias": "$tag_token",
+              "data_label": "pushgateway_bk_collector",
+              "data_source_label": "bk_monitor",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "rate",
+                  "params": [
+                    {
+                      "id": "window",
+                      "value": "1m"
+                    }
+                  ]
+                },
+                {
+                  "id": "histogram_quantile",
+                  "params": [
+                    {
+                      "id": "scalar",
+                      "value": 0.95
+                    }
+                  ]
+                },
+                {
+                  "id": "topk",
+                  "params": [
+                    {
+                      "id": "k",
+                      "value": 5
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "le",
+                "token"
+              ],
+              "interval": 30,
+              "interval_unit": "s",
+              "method": "SUM",
+              "metric_field": "bk_collector_receiver_received_bytes_size_bucket",
+              "refId": "a",
+              "result_table_id": "pushgateway_bk_collector",
+              "result_table_label": "component",
+              "time_field": "time",
+              "where": []
+            }
+          ],
+          "refId": "A",
+          "source": "topk(5, histogram_quantile($qua, sum by (le, token) (rate(bkmonitor:bk_collector_receiver_received_bytes_size_bucket{pod=~\"$pod\"}[1m]))))",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "Receiver 接收字节大小分布 TopK Token",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 47
+      },
+      "id": 103,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "9.1.0",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "hide": false,
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "$tag_id",
+          "query_configs": [
+            {
+              "alias": "$tag_id",
+              "data_label": "pushgateway_bk_collector",
+              "data_source_label": "bk_monitor",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "rate",
+                  "params": [
+                    {
+                      "id": "window",
+                      "value": "1m"
+                    }
+                  ]
+                },
+                {
+                  "id": "topk",
+                  "params": [
+                    {
+                      "id": "k",
+                      "value": 10
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "id"
+              ],
+              "interval": 30,
+              "interval_unit": "s",
+              "method": "SUM",
+              "metric_field": "bk_collector_beat_sent_bytes_total",
+              "refId": "a",
+              "result_table_id": "pushgateway_bk_collector",
+              "result_table_label": "component",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "ip",
+                  "method": "eq",
+                  "value": [
+                    "$ip"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "source": "topk(10, sum by (id) (rate(bkmonitor:bk_collector_beat_sent_bytes_total{pod=~\"$pod\"}[1m])))",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "exporter DataID TopK 流量",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 56
       },
       "id": 131,
       "panels": [],
@@ -3818,7 +3761,7 @@
         "h": 9,
         "w": 8,
         "x": 0,
-        "y": 39
+        "y": 57
       },
       "id": 120,
       "options": {
@@ -3994,7 +3937,183 @@
         "h": 9,
         "w": 8,
         "x": 8,
-        "y": 39
+        "y": 57
+      },
+      "id": 162,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "9.1.0",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "$tag_pod / $tag_token: $tag_record_type",
+          "query_configs": [
+            {
+              "alias": "$tag_token: $tag_record_type[$qua] 分位",
+              "data_label": "pushgateway_bk_collector",
+              "data_source_label": "bk_monitor",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "increase",
+                  "params": [
+                    {
+                      "id": "window",
+                      "value": "1m"
+                    }
+                  ]
+                },
+                {
+                  "id": "histogram_quantile",
+                  "params": [
+                    {
+                      "id": "scalar",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "le",
+                "record_type",
+                "token"
+              ],
+              "interval": 30,
+              "interval_unit": "s",
+              "method": "AVG",
+              "metric_field": "bk_collector_receiver_handled_duration_seconds_bucket",
+              "refId": "a",
+              "result_table_id": "pushgateway_bk_collector",
+              "result_table_label": "component",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "ip",
+                  "method": "eq",
+                  "value": [
+                    "$ip"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "record_type",
+                  "method": "eq",
+                  "value": [
+                    "$recordtype"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "token",
+                  "method": "eq",
+                  "value": [
+                    "$token"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "source": "sum by (record_type, pod, token) (increase(bkmonitor:bk_collector_receiver_handled_duration_seconds_sum{pod=~\"$pod\",record_type=~\"$recordtype\",token=~\"$token\"}[1m])) / sum by (record_type, pod, token) (increase(bkmonitor:bk_collector_receiver_handled_duration_seconds_count{pod=~\"$pod\",record_type=~\"$recordtype\",token=~\"$token\"}[1m]))",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "Receiver 处理平均耗时",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 57
       },
       "id": 81,
       "options": {
@@ -4149,182 +4268,6 @@
               "mode": "off"
             }
           },
-          "decimals": 2,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "s"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 8,
-        "x": 16,
-        "y": 39
-      },
-      "id": 162,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull",
-            "max",
-            "mean"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
-      },
-      "pluginVersion": "9.1.0",
-      "targets": [
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "time_series",
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "$tag_pod / $tag_token: $tag_record_type",
-          "query_configs": [
-            {
-              "alias": "$tag_token: $tag_record_type[$qua] 分位",
-              "data_label": "pushgateway_bk_collector",
-              "data_source_label": "bk_monitor",
-              "data_type_label": "time_series",
-              "display": true,
-              "filter_dict": {},
-              "functions": [
-                {
-                  "id": "increase",
-                  "params": [
-                    {
-                      "id": "window",
-                      "value": "1m"
-                    }
-                  ]
-                },
-                {
-                  "id": "histogram_quantile",
-                  "params": [
-                    {
-                      "id": "scalar",
-                      "value": 0.95
-                    }
-                  ]
-                }
-              ],
-              "group_by": [
-                "le",
-                "record_type",
-                "token"
-              ],
-              "interval": 30,
-              "interval_unit": "s",
-              "method": "AVG",
-              "metric_field": "bk_collector_receiver_handled_duration_seconds_bucket",
-              "refId": "a",
-              "result_table_id": "pushgateway_bk_collector",
-              "result_table_label": "component",
-              "time_field": "time",
-              "where": [
-                {
-                  "key": "ip",
-                  "method": "eq",
-                  "value": [
-                    "$ip"
-                  ]
-                },
-                {
-                  "condition": "and",
-                  "key": "record_type",
-                  "method": "eq",
-                  "value": [
-                    "$recordtype"
-                  ]
-                },
-                {
-                  "condition": "and",
-                  "key": "token",
-                  "method": "eq",
-                  "value": [
-                    "$token"
-                  ]
-                }
-              ]
-            }
-          ],
-          "refId": "A",
-          "source": "sum by (record_type, pod, token) (increase(bkmonitor:bk_collector_receiver_handled_duration_seconds_sum{pod=~\"$pod\",record_type=~\"$recordtype\",token=~\"$token\"}[1m])) / sum by (record_type, pod, token) (increase(bkmonitor:bk_collector_receiver_handled_duration_seconds_count{pod=~\"$pod\",record_type=~\"$recordtype\",token=~\"$token\"}[1m]))",
-          "step": "",
-          "type": "range"
-        }
-      ],
-      "title": "Receiver 处理平均耗时",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "bkmonitor-timeseries-datasource",
-        "uid": "${DS_蓝鲸监控_-_指标数据}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -4347,7 +4290,7 @@
         "h": 9,
         "w": 8,
         "x": 0,
-        "y": 48
+        "y": 66
       },
       "id": 60,
       "options": {
@@ -4485,173 +4428,6 @@
             "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 8,
-        "x": 8,
-        "y": 48
-      },
-      "id": 111,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull",
-            "max",
-            "mean"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
-      },
-      "pluginVersion": "9.1.0",
-      "targets": [
-        {
-          "cluster": [],
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "enableDownSampling": true,
-          "expressionList": [],
-          "format": "time_series",
-          "host": [],
-          "mode": "code",
-          "module": [],
-          "promqlAlias": "$tag_token: $tag_protocol/$tag_record_type: $tag_processor",
-          "query_configs": [
-            {
-              "alias": "$tag_token: $tag_protocol/$tag_record_type: $tag_processor",
-              "data_label": "pushgateway_bk_collector",
-              "data_source_label": "bk_monitor",
-              "data_type_label": "time_series",
-              "display": true,
-              "filter_dict": {},
-              "functions": [
-                {
-                  "id": "rate",
-                  "params": [
-                    {
-                      "id": "window",
-                      "value": "1m"
-                    }
-                  ]
-                }
-              ],
-              "group_by": [
-                "record_type",
-                "protocol",
-                "processor",
-                "token"
-              ],
-              "interval": 30,
-              "interval_unit": "s",
-              "method": "SUM",
-              "metric_field": "bk_collector_receiver_precheck_failed_total",
-              "refId": "a",
-              "result_table_id": "pushgateway_bk_collector",
-              "result_table_label": "component",
-              "time_field": "time",
-              "where": [
-                {
-                  "key": "ip",
-                  "method": "eq",
-                  "value": [
-                    "$ip"
-                  ]
-                },
-                {
-                  "condition": "and",
-                  "key": "record_type",
-                  "method": "eq",
-                  "value": [
-                    "$recordtype"
-                  ]
-                },
-                {
-                  "condition": "and",
-                  "key": "token",
-                  "method": "eq",
-                  "value": [
-                    "$token"
-                  ]
-                }
-              ]
-            }
-          ],
-          "refId": "A",
-          "source": "sum by (record_type, protocol, processor, token) (rate(bkmonitor:bk_collector_receiver_precheck_failed_total{pod=~\"$pod\",record_type=~\"$recordtype\",token=~\"$token\"}[1m]))",
-          "step": "",
-          "type": "range"
-        }
-      ],
-      "title": "Receiver PreCheck Fail 速率",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "bkmonitor-timeseries-datasource",
-        "uid": "${DS_蓝鲸监控_-_指标数据}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
             "pointSize": 1,
             "scaleDistribution": {
               "type": "linear"
@@ -4687,8 +4463,8 @@
       "gridPos": {
         "h": 9,
         "w": 8,
-        "x": 16,
-        "y": 48
+        "x": 8,
+        "y": 66
       },
       "id": 113,
       "options": {
@@ -4808,6 +4584,173 @@
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 66
+      },
+      "id": 111,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "9.1.0",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "$tag_token: $tag_protocol/$tag_record_type: $tag_processor",
+          "query_configs": [
+            {
+              "alias": "$tag_token: $tag_protocol/$tag_record_type: $tag_processor",
+              "data_label": "pushgateway_bk_collector",
+              "data_source_label": "bk_monitor",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "rate",
+                  "params": [
+                    {
+                      "id": "window",
+                      "value": "1m"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "record_type",
+                "protocol",
+                "processor",
+                "token"
+              ],
+              "interval": 30,
+              "interval_unit": "s",
+              "method": "SUM",
+              "metric_field": "bk_collector_receiver_precheck_failed_total",
+              "refId": "a",
+              "result_table_id": "pushgateway_bk_collector",
+              "result_table_label": "component",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "ip",
+                  "method": "eq",
+                  "value": [
+                    "$ip"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "record_type",
+                  "method": "eq",
+                  "value": [
+                    "$recordtype"
+                  ]
+                },
+                {
+                  "condition": "and",
+                  "key": "token",
+                  "method": "eq",
+                  "value": [
+                    "$token"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "source": "sum by (record_type, protocol, processor, token) (rate(bkmonitor:bk_collector_receiver_precheck_failed_total{pod=~\"$pod\",record_type=~\"$recordtype\",token=~\"$token\"}[1m]))",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "Receiver PreCheck Fail 速率",
+      "type": "timeseries"
+    },
+    {
       "collapsed": true,
       "datasource": {
         "type": "bkmonitor-timeseries-datasource",
@@ -4817,7 +4760,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 57
+        "y": 75
       },
       "id": 23,
       "panels": [
@@ -6386,7 +6329,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 58
+        "y": 76
       },
       "id": 102,
       "panels": [
@@ -7331,7 +7274,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 59
+        "y": 77
       },
       "id": 123,
       "panels": [
@@ -8283,7 +8226,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 60
+        "y": 78
       },
       "id": 41,
       "panels": [
@@ -9869,789 +9812,793 @@
       "type": "row"
     },
     {
-      "collapsed": true,
+      "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 61
+        "y": 79
       },
       "id": 89,
-      "panels": [
-        {
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 10,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 1,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              }
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 9,
-            "w": 8,
-            "x": 0,
-            "y": 35
-          },
-          "id": 85,
-          "options": {
-            "legend": {
-              "calcs": [
-                "lastNotNull",
-                "mean",
-                "max"
-              ],
-              "displayMode": "table",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "desc"
-            }
-          },
-          "targets": [
-            {
-              "cluster": [],
-              "datasource": {
-                "type": "bkmonitor-timeseries-datasource",
-                "uid": "${DS_蓝鲸监控_-_指标数据}"
-              },
-              "enableDownSampling": true,
-              "expressionList": [],
-              "format": "time_series",
-              "host": [],
-              "mode": "code",
-              "module": [],
-              "promqlAlias": "$tag_pod",
-              "query_configs": [
-                {
-                  "alias": "$tag_ip",
-                  "data_label": "pushgateway_bk_collector",
-                  "data_source_label": "bk_monitor",
-                  "data_type_label": "time_series",
-                  "display": true,
-                  "filter_dict": {},
-                  "functions": [
-                    {
-                      "id": "rate",
-                      "params": [
-                        {
-                          "id": "window",
-                          "value": "1m"
-                        }
-                      ]
-                    }
-                  ],
-                  "group_by": [
-                    "ip"
-                  ],
-                  "interval": 30,
-                  "interval_unit": "s",
-                  "method": "AVG",
-                  "metric_field": "bk_collector_exporter_sent_total",
-                  "refId": "a",
-                  "result_table_id": "pushgateway_bk_collector",
-                  "result_table_label": "component",
-                  "time_field": "time",
-                  "where": [
-                    {
-                      "key": "ip",
-                      "method": "eq",
-                      "value": [
-                        "$ip"
-                      ]
-                    }
-                  ]
-                }
-              ],
-              "refId": "A",
-              "source": "avg by (pod) (rate(bkmonitor:bk_collector_exporter_sent_total{pod=~\"$pod\"}[1m]))",
-              "step": "",
-              "type": "range"
-            }
-          ],
-          "title": "Exporter 总发送速率",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 10,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "never",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "decimals": 2,
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "s"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 9,
-            "w": 8,
-            "x": 8,
-            "y": 35
-          },
-          "id": 9,
-          "options": {
-            "legend": {
-              "calcs": [
-                "lastNotNull",
-                "max",
-                "mean"
-              ],
-              "displayMode": "table",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "desc"
-            }
-          },
-          "pluginVersion": "9.1.0",
-          "targets": [
-            {
-              "cluster": [],
-              "datasource": {
-                "type": "bkmonitor-timeseries-datasource",
-                "uid": "${DS_蓝鲸监控_-_指标数据}"
-              },
-              "enableDownSampling": true,
-              "expressionList": [],
-              "format": "time_series",
-              "hide": false,
-              "host": [],
-              "mode": "code",
-              "module": [],
-              "promqlAlias": "$tag_pod: [$qua] 分位",
-              "query_configs": [
-                {
-                  "alias": "$tag_ip: [$qua] 分位",
-                  "data_label": "pushgateway_bk_collector",
-                  "data_source_label": "bk_monitor",
-                  "data_type_label": "time_series",
-                  "display": true,
-                  "filter_dict": {},
-                  "functions": [
-                    {
-                      "id": "rate",
-                      "params": [
-                        {
-                          "id": "window",
-                          "value": "1m"
-                        }
-                      ]
-                    },
-                    {
-                      "id": "histogram_quantile",
-                      "params": [
-                        {
-                          "id": "scalar",
-                          "value": 0.95
-                        }
-                      ]
-                    }
-                  ],
-                  "group_by": [
-                    "le",
-                    "ip"
-                  ],
-                  "interval": 30,
-                  "interval_unit": "s",
-                  "method": "AVG",
-                  "metric_field": "bk_collector_exporter_sent_duration_seconds_bucket",
-                  "refId": "a",
-                  "result_table_id": "pushgateway_bk_collector",
-                  "result_table_label": "component",
-                  "time_field": "time",
-                  "where": [
-                    {
-                      "key": "ip",
-                      "method": "eq",
-                      "value": [
-                        "$ip"
-                      ]
-                    }
-                  ]
-                }
-              ],
-              "refId": "C",
-              "source": "histogram_quantile($qua, sum by (le, pod) (increase(bkmonitor:bk_collector_exporter_sent_duration_seconds_bucket{pod=~\"$pod\"}[1m])))",
-              "step": "",
-              "type": "range"
-            }
-          ],
-          "title": "Exporter 发送耗时",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 10,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "never",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "bytes"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 9,
-            "w": 8,
-            "x": 16,
-            "y": 35
-          },
-          "id": 155,
-          "options": {
-            "legend": {
-              "calcs": [
-                "lastNotNull",
-                "max",
-                "mean"
-              ],
-              "displayMode": "table",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "desc"
-            }
-          },
-          "pluginVersion": "9.1.0",
-          "targets": [
-            {
-              "cluster": [],
-              "datasource": {
-                "type": "bkmonitor-timeseries-datasource",
-                "uid": "${DS_蓝鲸监控_-_指标数据}"
-              },
-              "enableDownSampling": true,
-              "expressionList": [],
-              "format": "time_series",
-              "hide": false,
-              "host": [],
-              "mode": "code",
-              "module": [],
-              "promqlAlias": "$tag_pod",
-              "query_configs": [
-                {
-                  "alias": "$tag_ip",
-                  "data_label": "pushgateway_bk_collector",
-                  "data_source_label": "bk_monitor",
-                  "data_type_label": "time_series",
-                  "display": true,
-                  "filter_dict": {},
-                  "functions": [
-                    {
-                      "id": "rate",
-                      "params": [
-                        {
-                          "id": "window",
-                          "value": "1m"
-                        }
-                      ]
-                    }
-                  ],
-                  "group_by": [
-                    "ip"
-                  ],
-                  "interval": 30,
-                  "interval_unit": "s",
-                  "method": "SUM",
-                  "metric_field": "bk_collector_beat_sent_bytes_total",
-                  "refId": "a",
-                  "result_table_id": "pushgateway_bk_collector",
-                  "result_table_label": "component",
-                  "time_field": "time",
-                  "where": [
-                    {
-                      "key": "ip",
-                      "method": "eq",
-                      "value": [
-                        "$ip"
-                      ]
-                    }
-                  ]
-                }
-              ],
-              "refId": "A",
-              "source": "sum by (pod) (rate(bkmonitor:bk_collector_beat_sent_bytes_total{pod=~\"$pod\"}[1m]))",
-              "step": "",
-              "type": "range"
-            }
-          ],
-          "title": "Beat 每秒发送字节总数",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 10,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "never",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "decimals": 2,
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "s"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 9,
-            "w": 8,
-            "x": 0,
-            "y": 44
-          },
-          "id": 110,
-          "options": {
-            "legend": {
-              "calcs": [
-                "lastNotNull",
-                "max",
-                "mean"
-              ],
-              "displayMode": "table",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "desc"
-            }
-          },
-          "pluginVersion": "9.1.0",
-          "targets": [
-            {
-              "cluster": [],
-              "datasource": {
-                "type": "bkmonitor-timeseries-datasource",
-                "uid": "${DS_蓝鲸监控_-_指标数据}"
-              },
-              "enableDownSampling": true,
-              "expressionList": [],
-              "format": "time_series",
-              "host": [],
-              "mode": "code",
-              "module": [],
-              "promqlAlias": "$tag_pod: [$qua] 分位",
-              "query_configs": [
-                {
-                  "alias": "$tag_ip: [$qua] 分位",
-                  "data_label": "pushgateway_bk_collector",
-                  "data_source_label": "bk_monitor",
-                  "data_type_label": "time_series",
-                  "display": true,
-                  "filter_dict": {},
-                  "functions": [
-                    {
-                      "id": "rate",
-                      "params": [
-                        {
-                          "id": "window",
-                          "value": "1m"
-                        }
-                      ]
-                    },
-                    {
-                      "id": "histogram_quantile",
-                      "params": [
-                        {
-                          "id": "scalar",
-                          "value": 0.95
-                        }
-                      ]
-                    }
-                  ],
-                  "group_by": [
-                    "le",
-                    "ip"
-                  ],
-                  "interval": 30,
-                  "interval_unit": "s",
-                  "method": "SUM",
-                  "metric_field": "bk_collector_accumulator_gc_duration_seconds_bucket",
-                  "refId": "a",
-                  "result_table_id": "pushgateway_bk_collector",
-                  "result_table_label": "component",
-                  "time_field": "time",
-                  "where": [
-                    {
-                      "key": "ip",
-                      "method": "eq",
-                      "value": [
-                        "$ip"
-                      ]
-                    }
-                  ]
-                }
-              ],
-              "refId": "A",
-              "source": "histogram_quantile($qua, sum by (le, pod) (rate(bkmonitor:bk_collector_accumulator_gc_duration_seconds_bucket{pod=~\"$pod\"}[1m])))",
-              "step": "",
-              "type": "range"
-            }
-          ],
-          "title": "Accumulator GC 耗时",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "bkmonitor-timeseries-datasource",
-            "uid": "${DS_蓝鲸监控_-_指标数据}"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 10,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "never",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "decimals": 2,
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "s"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 9,
-            "w": 8,
-            "x": 8,
-            "y": 44
-          },
-          "id": 109,
-          "options": {
-            "legend": {
-              "calcs": [
-                "lastNotNull",
-                "max",
-                "mean"
-              ],
-              "displayMode": "table",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "desc"
-            }
-          },
-          "pluginVersion": "9.1.0",
-          "targets": [
-            {
-              "cluster": [],
-              "datasource": {
-                "type": "bkmonitor-timeseries-datasource",
-                "uid": "${DS_蓝鲸监控_-_指标数据}"
-              },
-              "enableDownSampling": true,
-              "expressionList": [],
-              "format": "time_series",
-              "host": [],
-              "mode": "code",
-              "module": [],
-              "promqlAlias": "$tag_pod: [$qua] 分位",
-              "query_configs": [
-                {
-                  "alias": "$tag_ip: [$qua] 分位",
-                  "data_label": "pushgateway_bk_collector",
-                  "data_source_label": "bk_monitor",
-                  "data_type_label": "time_series",
-                  "display": true,
-                  "filter_dict": {},
-                  "functions": [
-                    {
-                      "id": "rate",
-                      "params": [
-                        {
-                          "id": "window",
-                          "value": "1m"
-                        }
-                      ]
-                    },
-                    {
-                      "id": "histogram_quantile",
-                      "params": [
-                        {
-                          "id": "scalar",
-                          "value": 0.95
-                        }
-                      ]
-                    }
-                  ],
-                  "group_by": [
-                    "le",
-                    "ip"
-                  ],
-                  "interval": 30,
-                  "interval_unit": "s",
-                  "method": "SUM",
-                  "metric_field": "bk_collector_accumulator_published_duration_seconds_bucket",
-                  "refId": "a",
-                  "result_table_id": "pushgateway_bk_collector",
-                  "result_table_label": "component",
-                  "time_field": "time",
-                  "where": [
-                    {
-                      "key": "ip",
-                      "method": "eq",
-                      "value": [
-                        "$ip"
-                      ]
-                    }
-                  ]
-                }
-              ],
-              "refId": "A",
-              "source": "histogram_quantile($qua, sum by (le, pod) (rate(bkmonitor:bk_collector_accumulator_published_duration_seconds_bucket{pod=~\"$pod\"}[1m])))",
-              "step": "",
-              "type": "range"
-            }
-          ],
-          "title": "Accumulator 发送耗时",
-          "type": "timeseries"
-        }
-      ],
+      "panels": [],
       "title": "发送性能",
       "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 80
+      },
+      "id": 85,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "$tag_pod",
+          "query_configs": [
+            {
+              "alias": "$tag_ip",
+              "data_label": "pushgateway_bk_collector",
+              "data_source_label": "bk_monitor",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "rate",
+                  "params": [
+                    {
+                      "id": "window",
+                      "value": "1m"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "ip"
+              ],
+              "interval": 30,
+              "interval_unit": "s",
+              "method": "AVG",
+              "metric_field": "bk_collector_exporter_sent_total",
+              "refId": "a",
+              "result_table_id": "pushgateway_bk_collector",
+              "result_table_label": "component",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "ip",
+                  "method": "eq",
+                  "value": [
+                    "$ip"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "source": "avg by (pod) (rate(bkmonitor:bk_collector_exporter_sent_total{pod=~\"$pod\"}[1m]))",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "Exporter 总发送速率",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 80
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "9.1.0",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "hide": false,
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "$tag_pod: [$qua] 分位",
+          "query_configs": [
+            {
+              "alias": "$tag_ip: [$qua] 分位",
+              "data_label": "pushgateway_bk_collector",
+              "data_source_label": "bk_monitor",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "rate",
+                  "params": [
+                    {
+                      "id": "window",
+                      "value": "1m"
+                    }
+                  ]
+                },
+                {
+                  "id": "histogram_quantile",
+                  "params": [
+                    {
+                      "id": "scalar",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "le",
+                "ip"
+              ],
+              "interval": 30,
+              "interval_unit": "s",
+              "method": "AVG",
+              "metric_field": "bk_collector_exporter_sent_duration_seconds_bucket",
+              "refId": "a",
+              "result_table_id": "pushgateway_bk_collector",
+              "result_table_label": "component",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "ip",
+                  "method": "eq",
+                  "value": [
+                    "$ip"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "C",
+          "source": "histogram_quantile($qua, sum by (le, pod) (increase(bkmonitor:bk_collector_exporter_sent_duration_seconds_bucket{pod=~\"$pod\"}[1m])))",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "Exporter 发送耗时",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 80
+      },
+      "id": 155,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "9.1.0",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "hide": false,
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "$tag_pod",
+          "query_configs": [
+            {
+              "alias": "$tag_ip",
+              "data_label": "pushgateway_bk_collector",
+              "data_source_label": "bk_monitor",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "rate",
+                  "params": [
+                    {
+                      "id": "window",
+                      "value": "1m"
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "ip"
+              ],
+              "interval": 30,
+              "interval_unit": "s",
+              "method": "SUM",
+              "metric_field": "bk_collector_beat_sent_bytes_total",
+              "refId": "a",
+              "result_table_id": "pushgateway_bk_collector",
+              "result_table_label": "component",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "ip",
+                  "method": "eq",
+                  "value": [
+                    "$ip"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "source": "sum by (pod) (rate(bkmonitor:bk_collector_beat_sent_bytes_total{pod=~\"$pod\"}[1m]))",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "Beat 每秒发送字节总数",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 89
+      },
+      "id": 110,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "9.1.0",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "$tag_pod: [$qua] 分位",
+          "query_configs": [
+            {
+              "alias": "$tag_ip: [$qua] 分位",
+              "data_label": "pushgateway_bk_collector",
+              "data_source_label": "bk_monitor",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "rate",
+                  "params": [
+                    {
+                      "id": "window",
+                      "value": "1m"
+                    }
+                  ]
+                },
+                {
+                  "id": "histogram_quantile",
+                  "params": [
+                    {
+                      "id": "scalar",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "le",
+                "ip"
+              ],
+              "interval": 30,
+              "interval_unit": "s",
+              "method": "SUM",
+              "metric_field": "bk_collector_accumulator_gc_duration_seconds_bucket",
+              "refId": "a",
+              "result_table_id": "pushgateway_bk_collector",
+              "result_table_label": "component",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "ip",
+                  "method": "eq",
+                  "value": [
+                    "$ip"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "source": "histogram_quantile($qua, sum by (le, pod) (rate(bkmonitor:bk_collector_accumulator_gc_duration_seconds_bucket{pod=~\"$pod\"}[1m])))",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "Accumulator GC 耗时",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "bkmonitor-timeseries-datasource",
+        "uid": "${DS_蓝鲸监控_-_指标数据}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 89
+      },
+      "id": 109,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "9.1.0",
+      "targets": [
+        {
+          "cluster": [],
+          "datasource": {
+            "type": "bkmonitor-timeseries-datasource",
+            "uid": "${DS_蓝鲸监控_-_指标数据}"
+          },
+          "enableDownSampling": true,
+          "expressionList": [],
+          "format": "time_series",
+          "host": [],
+          "mode": "code",
+          "module": [],
+          "promqlAlias": "$tag_pod: [$qua] 分位",
+          "query_configs": [
+            {
+              "alias": "$tag_ip: [$qua] 分位",
+              "data_label": "pushgateway_bk_collector",
+              "data_source_label": "bk_monitor",
+              "data_type_label": "time_series",
+              "display": true,
+              "filter_dict": {},
+              "functions": [
+                {
+                  "id": "rate",
+                  "params": [
+                    {
+                      "id": "window",
+                      "value": "1m"
+                    }
+                  ]
+                },
+                {
+                  "id": "histogram_quantile",
+                  "params": [
+                    {
+                      "id": "scalar",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              ],
+              "group_by": [
+                "le",
+                "ip"
+              ],
+              "interval": 30,
+              "interval_unit": "s",
+              "method": "SUM",
+              "metric_field": "bk_collector_accumulator_published_duration_seconds_bucket",
+              "refId": "a",
+              "result_table_id": "pushgateway_bk_collector",
+              "result_table_label": "component",
+              "time_field": "time",
+              "where": [
+                {
+                  "key": "ip",
+                  "method": "eq",
+                  "value": [
+                    "$ip"
+                  ]
+                }
+              ]
+            }
+          ],
+          "refId": "A",
+          "source": "histogram_quantile($qua, sum by (le, pod) (rate(bkmonitor:bk_collector_accumulator_published_duration_seconds_bucket{pod=~\"$pod\"}[1m])))",
+          "step": "",
+          "type": "range"
+        }
+      ],
+      "title": "Accumulator 发送耗时",
+      "type": "timeseries"
     }
   ],
-  "refresh": "",
+  "refresh": "30s",
   "schemaVersion": 39,
   "tags": [],
   "templating": {
@@ -11034,7 +10981,7 @@
   "timepicker": {},
   "timezone": "",
   "title": "[Monitor] bk-collector",
-  "version": 13,
+  "version": 17,
   "weekStart": "",
   "__inputs": [
     {
